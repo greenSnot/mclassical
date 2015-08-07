@@ -9,6 +9,9 @@ var options=require('../config').options;
 var search=require('./search_tools');
 var utils=require('../utils');
 
+router.get('/',function(req,res){
+	res.render('index',{});
+});
 router.get('/get-source',function(req,res){
 	var url=req.query.url;
 	var format=req.query.format?req.query.format:'mp4';
@@ -22,10 +25,15 @@ router.get('/get-source',function(req,res){
 /* GET home page. */
 router.get('/search', function(req, res,next) {
 	var keyword_origin=req.query.keyword;
+	if(!keyword_origin||keyword_origin.length==0){
+	res.redirect('/');
+	return;
+}
 	var keyword=utils.before_translate_filter(keyword_origin);
 	var result={code:0,msg:'ok',platform:utils.getPlatform(req)};
 	search.google_translate(keyword).then(function(keyword_translated){
 		keyword_translated=utils.after_translate_filter(keyword_translated);
+console.log(keyword,keyword_translated);
 		when.all([
 				search.Youku(keyword),
 				search.Youku(keyword_translated),
