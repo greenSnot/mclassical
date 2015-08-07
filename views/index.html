@@ -1,0 +1,41 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="css/mclassical.css">
+<script src='js/zepto.min.js'></script>
+<script src='js/tween.min.js'></script>
+<script src='js/mclassical-utils.suiyiwannong.js'></script>
+<script src='js/mclassical-pano.suiyiwannong.js'></script>
+</head>
+<body>
+        <div id="sti-pano">
+            <div id="container">
+                <div id="camera">
+                </div>
+            </div>
+        </div>
+</body>
+<script>
+            // for(var i =0;i<360;i+=60){
+            //     for(var j=-70;j<80;j+=10){
+            //         var rx=j;
+            //         var ry=i+j/80*360;
+            //         var e=genElement('comment',0,{is_mosaic:1});
+            //         addSpriteByRotation(e,150,rx,ry);
+            //     }
+            // }
+        sti.init({
+            dom   : $('#sti-pano'), // Panorama dom
+            debug : false,          // Debug mode
+            rx    : 0,              // Rotation around X axis with degree
+            maxfov: 100,            // Max field of view
+            minfov: 100,             // Min field of view
+            fov   : 100,            // Default field of view
+
+            autoRotate: 0.1,
+
+            mode      : 'viewer'
+
+        });
+</script>
+
+</html>

@@ -1,0 +1,41 @@
+<%for(var i in result.imslp){%>
+<a href="<%=result.imslp[i].link%>">
+<%=result.imslp[i].title%>
+</a>
+<%}%>
+<%for(var i in result.youku){%>
+<div class="videos-wrap" data-link="<%=result.youku[i].link%>">
+<img src="<%=result.youku[i].thumbnail%>">
+<%=result.youku[i].title%>
+</div>
+<%}%>
+
+<script src="http://cdn.bootcss.com/zepto/1.0rc1/zepto.min.js"></script>
+<script>
+	function jump(){
+		var url=$(this).attr('data-link');
+		$.ajax({
+			type:'get',
+			async:false,
+			timeout:3000,
+			url:'/get-source?url='+url,
+			success:function(r){
+r=JSON.parse(r);
+				if(r.code!=0){
+					console.log(r.msg);
+					location.href=url;
+					return;
+				}
+				location.href=r.urls[0];
+			},
+			error:function(){
+				alert('time out');
+			}
+		});
+	}
+<%if(result.platform.indexOf('pc')>=0){%>
+	$('.videos-wrap').on('mouseup',jump);
+<%}else{%>
+	$('.videos-wrap').on('touchend',jump);
+<%}%>
+</script>
