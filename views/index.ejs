@@ -3,11 +3,11 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="viewport" content=" user-scalable=no, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0">
     <meta name="author" content="Calculon 0x00111111@gmail.com">
-<head>
-<link rel="stylesheet" type="text/css" href="css/mclassical.css">
-<script src='js/mclassical-base.js'></script>
-<script src='js/mclassical-pano.js'></script>
-</head>
+    <head>
+        <link rel="stylesheet" type="text/css" href="css/mclassical.css">
+        <script src='js/mclassical-base.js'></script>
+        <script src='js/mclassical-pano.js'></script>
+    </head>
 <body>
         <div id="pano">
             <div id="container">
@@ -15,7 +15,24 @@
                 </div>
             </div>
         </div>
+        <table id="music-details">
+            <tbody>
+                <tr>
+                    <td>
+                        <div id="music-wrap">
+                            <div id="music-album"></div>
+                            <div id="music-info-wrap">
+                                <div id="music-songname">songname</div>
+                                <div id="music-singer">singer</div>
+                                <div id="music-albumname">albumname</div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
+    <audio id="audio" autoplay="autoplay" style="width:0;height:0;visibility:hidden" ></audio>
 </body>
 <script>
 
