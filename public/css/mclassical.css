@@ -143,3 +143,8 @@ html,body{padding:0;margin:0;width:100%;height:100%;overflow:hidden;position:abs
                 margin-right:5px;
             }
 .music-content{width:90px;height:90px;background:#eee;margin-top:-45px;margin-left:-45px;border-radius:4px;}
+.music-content>.music-detail{position:absolute;top:-30px;width:20px;height:10px;background:#fff;visibility:hidden;}
+
+.music-content.showdetail{
+}
+.music-content.showdetail>.music-detail{visibility:visible;}

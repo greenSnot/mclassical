@@ -254,13 +254,21 @@
              element.appendChild(ad);
          }else if(type.indexOf('music')==0){
              var e=document.createElement('div');
+             var detail=document.createElement('div');
+             detail.className="music-detail";
+
              e.className=type+'-content';
              e.setAttribute('audio_url',extra.audio_url);
+             e.setAttribute('songname',extra.songname);
+             e.setAttribute('singername',extra.singername);
+             e.setAttribute('albumname',extra.albumname);
+             e.setAttribute('picture_big',extra.picture_big);
              e.setAttribute('rx',extra.rx);
              e.setAttribute('ry',extra.ry);
              e.style['backgroundImage']='url('+extra.picture_small+')';
              e.style['z-index']=extra.zindex;
              e.style['backgroundSize']='100%';
+             e.appendChild(detail);
              element.appendChild(e);
          }else{
              var e=document.createElement('div');
@@ -562,7 +570,10 @@
 
                  if(nearest[0].className.indexOf('music')==0){
                      $('.QQMusicAudio').remove();
+                     $('.music-content').removeClass('showdetail');
                      var content=nearest.find('.music-content');
+                     content.addClass('showdetail');
+
                      pano.autoRotate=0;
                      _setRxRy(content.attr('rx')*-1,content.attr('ry'),1);
 
@@ -612,7 +623,7 @@
              if(pano.ry%360-ry>180)pano.ry-=360;
              _ry=ry;
              tween
-                  .to({ry:_ry,rx:_rx},300)
+                  .to({ry:_ry,rx:_rx},500)
                   .start();
          }else{
              pano.rx=rx;

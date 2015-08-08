@@ -18,6 +18,9 @@ router.get('/',function(req,res){
         search.getQQMusicUrl('chopin'),
         search.getQQMusicUrl('beethoven')
     ];
+    urls.sort(function(a,b){
+        return Math.random()>.5 ? -1 : 1;
+    });
 	res.render('index',{QQMusicUrls:urls});
 });
 router.get('/get-source',function(req,res){
