@@ -272,7 +272,7 @@
      var _loadMusic=function(music){
          var t=music;
          var element=genElement('music',t.songid,t);
-         addSpriteByRotation(element,250,t.rx,t.ry);
+         addSpriteByRotation(element,350,t.rx,t.ry);
      }
 
      var _loadComments=function(comments){
@@ -555,9 +555,7 @@
              if(nearest){
 
                  if(nearest[0].className.indexOf('music')==0){
-                     $('.QQMusicAudio').each(function(){
-                         $(this)[0].pause();
-                     });
+                     $('.QQMusicAudio').remove();
                      $('html').append('<audio style="display:none" class="QQMusicAudio" autoplay="autoplay" src="'+nearest.find('.music-content').attr('audio_url')+'"></audio>');
                  }
             }
