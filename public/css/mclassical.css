@@ -142,3 +142,4 @@ html,body{padding:0;margin:0;width:100%;height:100%;overflow:hidden;position:abs
                 background-size:100%;
                 margin-right:5px;
             }
+.music-content{width:90px;height:90px;background:#eee;margin-top:-45px;margin-left:-45px;}

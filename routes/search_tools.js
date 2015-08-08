@@ -100,7 +100,7 @@ exports.separate2words_scws=function(source){
 	});
 }
 
-exports.QQMusic=function(keyword,page){
+exports.getQQMusicUrl=function(keyword,page){
 	var op={
 		keyword:utils.urlencode(keyword),
 		page:page?page:1,
@@ -113,7 +113,11 @@ exports.QQMusic=function(keyword,page){
 	for(var i in op){
 		url+='&'+i+'='+op[i];
 	}
-console.log(url);
+    return url;
+};
+
+exports.QQMusic=function(keyword,page){
+    var url=exports.getQQMusicUrl(keyword,page);
 	return getHtml(url);
 }
 

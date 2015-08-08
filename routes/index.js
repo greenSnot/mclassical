@@ -10,7 +10,15 @@ var search=require('./search_tools');
 var utils=require('../utils');
 
 router.get('/',function(req,res){
-	res.render('index',{});
+    var urls=[
+        search.getQQMusicUrl('chopin'),
+        search.getQQMusicUrl('listz'),
+        search.getQQMusicUrl('bach'),
+        search.getQQMusicUrl('paganini'),
+        search.getQQMusicUrl('chopin'),
+        search.getQQMusicUrl('beethoven')
+    ];
+	res.render('index',{QQMusicUrls:urls});
 });
 router.get('/get-source',function(req,res){
 	var url=req.query.url;

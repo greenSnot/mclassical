@@ -1,3 +1,32 @@
+var urlencode =function(str) {  
+    str = (str + '').toString();   
+
+    return encodeURIComponent(str).replace(/!/g, '%21').replace(/'/g, '%27').replace(/\(/g, '%28').  
+    replace(/\)/g, '%29').replace(/\*/g, '%2A').replace(/%20/g, '+');  
+} 
+var urldecode=function(zipStr){  
+    var uzipStr="";  
+    for(var i=0;i<zipStr.length;i++){  
+        var chr = zipStr.charAt(i);  
+        if(chr == "+"){  
+            uzipStr+=" ";  
+        }else if(chr=="%"){  
+            var asc = zipStr.substring(i+1,i+3);  
+            if(parseInt("0x"+asc)>0x7f){  
+                uzipStr+=decodeURI("%"+asc.toString()+zipStr.substring(i+3,i+9).toString());  
+                i+=8;  
+            }else{  
+                uzipStr+=AsciiToString(parseInt("0x"+asc));  
+                i+=2;  
+            }  
+        }else{  
+            uzipStr+= chr;  
+        }  
+    }  
+  
+    return uzipStr;  
+}  
+
 function speech(text){
     var src = 'http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&text=' + text;
     var audio= "<audio style='display:none' src='"+src+"' autoplay='autoplay' ></audio>";

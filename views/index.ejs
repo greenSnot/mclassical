@@ -5,24 +5,58 @@
 <script src='js/mclassical-pano.js'></script>
 </head>
 <body>
-        <div id="sti-pano">
+        <div id="pano">
             <div id="container">
                 <div id="camera">
                 </div>
             </div>
         </div>
+
 </body>
 <script>
-            // for(var i =0;i<360;i+=60){
-            //     for(var j=-70;j<80;j+=10){
-            //         var rx=j;
-            //         var ry=i+j/80*360;
-            //         var e=genElement('comment',0,{is_mosaic:1});
-            //         addSpriteByRotation(e,150,rx,ry);
-            //     }
-            // }
-        sti.init({
-            dom   : $('#sti-pano'), // Panorama dom
+
+        var QQMusicUrls=JSON.parse('<%-JSON.stringify(QQMusicUrls)%>');
+
+        var Musics={};
+        var ri=0;
+        var rj=-70;
+        for(var i in QQMusicUrls){
+            $.get(QQMusicUrls[i],function(res){
+                res=JSON.parse(res);
+                if(res.showapi_res_body&&res.showapi_res_body.pagebean&&res.showapi_res_body.pagebean.contentlist){
+                    var clist=res.showapi_res_body.pagebean.contentlist;
+                    for(var j in clist){
+                        if(j>14)break;
+                        Musics['QQMusic_'+clist[j].songid]={};
+                        Musics['QQMusic_'+clist[j].songid].songid=clist[j].songid;
+                        Musics['QQMusic_'+clist[j].songid].songname=clist[j].songname;
+                        Musics['QQMusic_'+clist[j].songid].singername=clist[j].singername;
+                        Musics['QQMusic_'+clist[j].songid].albumname=clist[j].albumname;
+                        Musics['QQMusic_'+clist[j].songid].audio_url=clist[j].m4a;
+                        Musics['QQMusic_'+clist[j].songid].picture_small=clist[j].albumpic_small;
+                        Musics['QQMusic_'+clist[j].songid].picture_big=clist[j].albumpic_big;
+
+                        if(rj>=70){
+                            rj=-70;
+                            ri+=60;
+                        }else{
+                            rj+=10;
+                        }
+                        Musics['QQMusic_'+clist[j].songid].rx=rj;
+                        Musics['QQMusic_'+clist[j].songid].ry=ri+rj/80*360;
+
+                        pano.loadMusic(Musics['QQMusic_'+clist[j].songid]);
+                    }
+                }else{
+                    console.log('error');
+                }
+
+            });
+        }
+
+
+        pano.init({
+            dom   : $('#pano'), // Panorama dom
             debug : false,          // Debug mode
             rx    : 0,              // Rotation around X axis with degree
             maxfov: 100,            // Max field of view
