@@ -575,7 +575,8 @@
                      content.addClass('showdetail');
 
                      pano.autoRotate=0;
-                     _setRxRy(content.attr('rx')*-1,content.attr('ry'),1);
+                     //_setRxRy(content.attr('rx')*-1,content.attr('ry'),1);
+                     _setRy(content.attr('ry'),1);
 
                      $('html').append('<audio style="display:none" class="QQMusicAudio" autoplay="autoplay" src="'+content.attr('audio_url')+'"></audio>');
                  }
@@ -655,6 +656,7 @@
                   .to({ry:_ry,rx:_rx},300)
                   .start();
          }else{
+             alert("!");
              pano.ry=ry;
          }
      }
