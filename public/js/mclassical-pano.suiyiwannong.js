@@ -256,7 +256,10 @@
              var e=document.createElement('div');
              e.className=type+'-content';
              e.setAttribute('audio_url',extra.audio_url);
+             e.setAttribute('rx',extra.rx);
+             e.setAttribute('ry',extra.ry);
              e.style['backgroundImage']='url('+extra.picture_small+')';
+             e.style['z-index']=extra.zindex;
              e.style['backgroundSize']='100%';
              element.appendChild(e);
          }else{
@@ -509,7 +512,7 @@
 
          if (touches.click) {     // Single click
 
-             var R=135;
+             var R=350;
 
              var ry=(x/pano.width-0.5)*pano.fov;
              var rx=(y/pano.height-0.5)*pano.fov*pano.height/pano.width;
@@ -535,19 +538,22 @@
              var ay=-rotation[1];
              var az=-rotation[2];
 
-             //var element=genElement('test',13,{});
-             //element.setAttribute('data-rx',(Math.asin(-xyz2[1]/rr)*180/Math.PI));
-             //addSpriteByPosition(element,ax,ay,az);
+             var click_rotation=position2Rotation(ax,-ay,az);
 
              var minOffset=0.4;
+             var minDistance=100;
              var nearest;
              $('.sprite').each(function(){
                  var matrix=text2Matrix($(this)[0].style.webkitTransform);
-                 var click_rotation=position2Rotation(ax,-ay,az);
-                 var object_rotation=position2Rotation(pano.cubeSize/2-matrix[12],matrix[13]-pano.cubeSize/2,-matrix[14]);
-                 var offset=Math.abs(click_rotation[0]-object_rotation[0])+Math.abs(click_rotation[1]-object_rotation[1]);
-                 if(offset<minOffset){
-                     minOffset=offset;
+                 //var object_rotation=position2Rotation(pano.cubeSize/2-matrix[12],matrix[13]-pano.cubeSize/2,-matrix[14]);
+                 //var offset=Math.abs(click_rotation[0]-object_rotation[0])+Math.abs(click_rotation[1]-object_rotation[1]);
+                 //if(offset<minOffset){
+                 //    minOffset=offset;
+                 //    nearest=$(this).children().eq(0);
+                 //}
+                 var distance=distance3D(ax,-ay,az,pano.cubeSize/2-matrix[12],matrix[13]-pano.cubeSize/2,-matrix[14]);
+                 if(distance<minDistance){
+                     minDistance=distance;
                      nearest=$(this).children().eq(0);
                  }
              });
@@ -556,7 +562,11 @@
 
                  if(nearest[0].className.indexOf('music')==0){
                      $('.QQMusicAudio').remove();
-                     $('html').append('<audio style="display:none" class="QQMusicAudio" autoplay="autoplay" src="'+nearest.find('.music-content').attr('audio_url')+'"></audio>');
+                     var content=nearest.find('.music-content');
+                     pano.autoRotate=0;
+                     _setRxRy(content.attr('rx')*-1,content.attr('ry'),1);
+
+                     $('html').append('<audio style="display:none" class="QQMusicAudio" autoplay="autoplay" src="'+content.attr('audio_url')+'"></audio>');
                  }
             }
 
@@ -593,12 +603,49 @@
          }
      }
 
-     var _setRx=function(rx){
-         pano.rx=rx;
+     var _setRxRy=function(rx,ry,smooth){
+         rx=parseFloat(rx);
+         ry=parseFloat(ry);
+         if(smooth){
+             _rx=rx;
+             if(ry-pano.ry%360>180)pano.ry+=360;
+             if(pano.ry%360-ry>180)pano.ry-=360;
+             _ry=ry;
+             tween
+                  .to({ry:_ry,rx:_rx},300)
+                  .start();
+         }else{
+             pano.rx=rx;
+             pano.ry=ry;
+         }
      }
 
-     var _setRy=function(ry){
-         pano.ry=ry;
+     var _setRx=function(rx,smooth){
+         rx=parseFloat(rx);
+         if(smooth){
+             _rx=rx;
+             tween
+                  .to({ry:_ry,rx:_rx},300)
+                  .start();
+         }else{
+             pano.rx=rx;
+         }
+     }
+
+     var _setRy=function(ry,smooth){
+         ry=parseFloat(ry);
+         if(smooth){
+             if(ry-pano.ry%360>180)pano.ry+=360;
+             if(pano.ry%360-ry>180)pano.ry-=360;
+             _ry=ry;
+             console.log('ry:'+_ry);
+             console.log('panory:'+pano.ry);
+             tween
+                  .to({ry:_ry,rx:_rx},300)
+                  .start();
+         }else{
+             pano.ry=ry;
+         }
      }
 
      $.extend(global.pano,{
