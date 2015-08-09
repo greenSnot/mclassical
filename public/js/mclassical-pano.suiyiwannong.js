@@ -257,9 +257,10 @@
              e.className=type+'-content';
              e.setAttribute('audio_url',extra.audio_url);
              e.setAttribute('songname',extra.songname);
-             e.setAttribute('singername',extra.singername);
+             e.setAttribute('singer',extra.singer);
              e.setAttribute('albumname',extra.albumname);
              e.setAttribute('picture_big',extra.picture_big);
+             e.setAttribute('picture_small',extra.picture_small);
              e.setAttribute('rx',extra.rx);
              e.setAttribute('ry',extra.ry);
              e.style['backgroundImage']='url('+extra.picture_small+')';
@@ -571,7 +572,8 @@
                      pano.autoRotate=0;
                      _setRxRy(content.attr('rx')*-1,content.attr('ry'),1);
 
-                     $('#music-album').css('background-image','url('+content.attr('picture_big')+')');
+                     $('#music-album').css('background-image','url('+content.attr('picture_small')+')');
+                     $('#music-album-full').css('background-image','url('+content.attr('picture_big')+')');
                      $('#music-songname').text(content.attr('songname'));
                      $('#music-albumname').text(content.attr('albumname'));
                      $('#music-singer').text(content.attr('singer'));

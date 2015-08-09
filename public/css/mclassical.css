@@ -162,6 +162,7 @@ html,body{padding:0;margin:0;width:100%;height:100%;overflow:hidden;position:abs
     width:100%;
     height:300px;
     position:relative;
+    opacity:0.1;
     -webkit-transition:all 0.3s ease-out;
     -webkit-transform:scale(0.3);
 }
@@ -169,24 +170,58 @@ html,body{padding:0;margin:0;width:100%;height:100%;overflow:hidden;position:abs
     visibility:visible;
 }
 #music-details.show #music-wrap{
+    opacity:1;
     -webkit-transform:scale(1);
 }
 #music-album{
     display:inline-block;
-    background-size:100%;
     height:300px;
+    background-size:100%;
+    position:relative;
+    border-radius:4px;
     width:300px;
-    background:#fff;
 }
 #music-info-wrap{
     position:absolute;
     width:100%;
     top:100%;
 }
+#music-album-full{
+    position:absolute;
+    top:0;
+    left:0;
+    border-radius:4px;
+    height:100%;
+    background-size:100%;
+    width:100%;
+}
 
 #music-songname,#music-singer,#music-albumname{
     width:100%;
+    font-size:15px;
+    color:#fff;
+    margin:3px;
+    text-shadow:1px 1px 1px #000;
+}
+#music-more{
+    display:inline-block;
+    width:120px;
+    height:30px;
+    line-height:30px;
     font-size:14px;
     color:#fff;
-    text-shadow:1px 1px 1px #000;
+    border-radius:3px;
+    margin-top:5px;
+    background-size:270%;
+    background-image:url(/images/texture1.jpg);
+}
+
+@media only screen and (max-width: 400px) {
+    #music-wrap{
+        height:200px;
+    }
+    #music-album{
+        width:200px;
+        height:200px;
+    }
 }

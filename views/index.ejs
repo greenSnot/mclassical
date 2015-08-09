@@ -20,11 +20,14 @@
                 <tr>
                     <td>
                         <div id="music-wrap">
-                            <div id="music-album"></div>
+                            <div id="music-album">
+                                <div id="music-album-full"></div>
+                            </div>
                             <div id="music-info-wrap">
                                 <div id="music-songname">songname</div>
                                 <div id="music-singer">singer</div>
                                 <div id="music-albumname">albumname</div>
+                                <div id="music-more">More</div>
                             </div>
                         </div>
                     </td>
@@ -48,11 +51,11 @@
                 if(res.showapi_res_body&&res.showapi_res_body.pagebean&&res.showapi_res_body.pagebean.contentlist){
                     var clist=res.showapi_res_body.pagebean.contentlist;
                     for(var j in clist){
-                        if(j>14)break;
+                        if(j>13)break;
                         Musics['QQMusic_'+clist[j].songid]={};
                         Musics['QQMusic_'+clist[j].songid].songid=clist[j].songid;
                         Musics['QQMusic_'+clist[j].songid].songname=clist[j].songname;
-                        Musics['QQMusic_'+clist[j].songid].singername=clist[j].singername;
+                        Musics['QQMusic_'+clist[j].songid].singer=clist[j].singername;
                         Musics['QQMusic_'+clist[j].songid].albumname=clist[j].albumname;
                         Musics['QQMusic_'+clist[j].songid].audio_url=clist[j].m4a;
                         Musics['QQMusic_'+clist[j].songid].picture_small=clist[j].albumpic_small;
@@ -78,13 +81,34 @@
         }
 
 
+        function moreInfo(e){
+            console.log("!");
+            e.stopPropagation();
+
+        }
+        function hideDetails(){
+            $('#music-details').removeClass('show');
+        }
+        var maxfov=120,fov=120,minfov=120;
+        if(checkMobile()){
+            maxfov=100;
+            fov=100;
+            minfov=100;
+
+            $('#music-details').on('touchend',hideDetails);
+            $('#music-more').on('touchend',moreInfo);
+        }else{
+            $('#music-details').on('mouseup',hideDetails);
+            $('#music-more').on('mouseup',moreInfo);
+        }
+
         pano.init({
             dom   : $('#pano'), // Panorama dom
             debug : false,          // Debug mode
             rx    : 0,              // Rotation around X axis with degree
-            maxfov: 100,            // Max field of view
-            minfov: 100,             // Min field of view
-            fov   : 100,            // Default field of view
+            maxfov: maxfov,            // Max field of view
+            minfov: minfov,             // Min field of view
+            fov   : fov,            // Default field of view
 
             autoRotate: 0.1,
 
