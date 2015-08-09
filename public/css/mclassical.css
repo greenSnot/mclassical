@@ -193,6 +193,7 @@ html,body{padding:0;margin:0;width:100%;height:100%;overflow:hidden;position:abs
     border-radius:4px;
     height:100%;
     background-size:100%;
+    box-shadow:1px 1px 5px #000;
     width:100%;
 }
 
@@ -206,14 +207,15 @@ html,body{padding:0;margin:0;width:100%;height:100%;overflow:hidden;position:abs
 #music-more{
     display:inline-block;
     width:120px;
-    height:30px;
-    line-height:30px;
+    height:35px;
+    line-height:35px;
     font-size:14px;
     color:#fff;
     border-radius:3px;
     margin-top:5px;
     background-size:270%;
-    background-image:url(/images/texture1.jpg);
+    background-color:#AF0C1D;
+    /*background-image:url(/images/texture1.jpg);*/
 }
 
 @media only screen and (max-width: 400px) {

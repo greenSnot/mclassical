@@ -10,18 +10,45 @@ var search=require('./search_tools');
 var utils=require('../utils');
 
 router.get('/',function(req,res){
-    var urls=[
-        search.getQQMusicUrl('chopin'),
-        search.getQQMusicUrl('listz'),
-        search.getQQMusicUrl('bach'),
-        search.getQQMusicUrl('paganini'),
-        search.getQQMusicUrl('chopin'),
-        search.getQQMusicUrl('beethoven')
-    ];
+
+    var keys=[
+             'Anne-Sophie Mutter',
+             'Pinchas Zukerman',
+             'Itzak Perlman',
+             'Salvatore Accardo',
+             'Leonid Kogan',
+             'Arthur Grumiaux',
+             'Yehudi Menuhin',
+             'David Oistrakh',
+             'Nathan Milstein',
+             'Jascha Heifetz',
+             'Fritz Kreisler',
+             'Niccolo Paganini',
+            // '吕思清',
+            // '李传韵',
+            // '宁峰',
+             'akiko suwanai',
+             'Midori Goto',
+            //'黄蒙拉',
+             'Henryk Wieniawski',
+             'Julia Fischer',
+             'Hilary Hahn',
+             'Joseph Szigeti',
+             'Vadim Repin', ///Violinist
+             'chopin',
+             'beethoven'
+            ];
+
+    var urls=[];
+    for(var i in keys){
+        urls.push(search.getQQMusicUrl(keys[i]));
+    }
+
     urls.sort(function(a,b){
         return Math.random()>.5 ? -1 : 1;
     });
-	res.render('index',{QQMusicUrls:urls});
+
+	res.render('index',{QQMusicUrls:urls.splice(0,6)});
 });
 router.get('/get-source',function(req,res){
 	var url=req.query.url;

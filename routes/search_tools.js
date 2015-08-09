@@ -102,7 +102,7 @@ exports.separate2words_scws=function(source){
 
 exports.getQQMusicUrl=function(keyword,page){
 	var op={
-		keyword:utils.urlencode(keyword),
+		keyword:keyword,
 		page:page?page:1,
 		showapi_appid:options.showapi.app_id,
 		showapi_timestamp:utils.timestamp()
