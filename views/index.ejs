@@ -51,7 +51,7 @@
                 if(res.showapi_res_body&&res.showapi_res_body.pagebean&&res.showapi_res_body.pagebean.contentlist){
                     var clist=res.showapi_res_body.pagebean.contentlist;
                     for(var j in clist){
-                        if(j>13)break;
+                        if(j>14)break;
                         Musics['QQMusic_'+clist[j].songid]={};
                         Musics['QQMusic_'+clist[j].songid].songid=clist[j].songid;
                         Musics['QQMusic_'+clist[j].songid].songname=clist[j].songname;
@@ -61,17 +61,17 @@
                         Musics['QQMusic_'+clist[j].songid].picture_small=clist[j].albumpic_small;
                         Musics['QQMusic_'+clist[j].songid].picture_big=clist[j].albumpic_big;
 
+                        Musics['QQMusic_'+clist[j].songid].rx=rj;
+                        Musics['QQMusic_'+clist[j].songid].ry=(ri+rj/80*360)%360;
+                        Musics['QQMusic_'+clist[j].songid].zindex=++zindex;
+
+                        pano.loadMusic(Musics['QQMusic_'+clist[j].songid]);
                         if(rj>=70){
                             rj=-70;
                             ri+=60;
                         }else{
                             rj+=10;
                         }
-                        Musics['QQMusic_'+clist[j].songid].rx=rj;
-                        Musics['QQMusic_'+clist[j].songid].ry=(ri+rj/80*360)%360;
-                        Musics['QQMusic_'+clist[j].songid].zindex=++zindex;
-
-                        pano.loadMusic(Musics['QQMusic_'+clist[j].songid]);
                     }
                 }else{
                     console.log('error');

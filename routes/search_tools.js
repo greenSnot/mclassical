@@ -110,6 +110,7 @@ exports.getQQMusicUrl=function(keyword,page){
 	var sign=utils.hex_md5(utils.showapi_genstr(op)+options.showapi.app_secret);
 	var url=options.qqmusic.search_url+'showapi_sign='+sign;
 
+    op.keyword=utils.urlencode(op.keyword);
 	for(var i in op){
 		url+='&'+i+'='+op[i];
 	}
