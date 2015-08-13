@@ -162,14 +162,6 @@
          }
 
          if(config){
-             //for(var i =0;i<360;i+=60){
-             //    for(var j=-70;j<80;j+=10){
-             //        var rx=j;
-             //        var ry=i+j/80*360;
-             //        var e=genElement('comment',0,{is_mosaic:1});
-             //        addSpriteByRotation(e,150,rx,ry);
-             //    }
-             //}
              _loadSpots(config.spots);
              _loadComments(config.comments);
 
@@ -461,7 +453,7 @@
          _rx=_rx>90?90  :_rx;
          _rx=_rx<-90?-90:_rx;
 
-         if(checkMobile()){
+         if(1||checkMobile()){
           tween
                .to({ry:_ry,rx:_rx},300)
                .start();
@@ -621,6 +613,7 @@
          rx=parseFloat(rx);
          ry=parseFloat(ry);
          if(smooth){
+             pano.ry=pano.ry%360;
              _rx=rx;
              if(ry-pano.ry%360>180)pano.ry+=360;
              if(pano.ry%360-ry>180)pano.ry-=360;
