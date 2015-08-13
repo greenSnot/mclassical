@@ -461,15 +461,15 @@
          _rx=_rx>90?90  :_rx;
          _rx=_rx<-90?-90:_rx;
 
-         //if(checkMobile()){
+         if(checkMobile()){
           tween
                .to({ry:_ry,rx:_rx},300)
                .start();
-         //}else{
-         //    pano.camera.style['-webkit-transition']='all 0.3s ease-out';
-         //    pano.rx=_rx;
-         //    pano.ry=_ry;
-         //}
+         }else{
+             pano.camera.style['-webkit-transition']='all 0.3s ease-out';
+             pano.rx=_rx;
+             pano.ry=_ry;
+         }
 
 
      };
