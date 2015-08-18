@@ -2,6 +2,18 @@ var when=require('when');
 var nodegrass=require('nodegrass');
 var options=require('./config').options;
 
+exports.htmldecode=function(str){
+      var s = "";
+      if(str.length == 0) return "";
+      s = str.replace(/&amp;/g,"&");
+      s = s.replace(/&lt;/g,"<");
+      s = s.replace(/&gt;/g,">");
+      s = s.replace(/&nbsp;/g," ");
+      s = s.replace(/&#39;/g,"\'");
+      s = s.replace(/&quot;/g,"\"");
+      return s;
+}
+
 exports.getHtmls=function(urls){
 	var list=[];
 	for(var i in urls){

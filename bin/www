@@ -12,6 +12,7 @@ var http = require('http');
  * Get port from environment and store in Express.
  */
 
+require('../config').options.server=process.env.MCLASSICAL_SERVER_NAME;
 var port = normalizePort(process.env.MCLASSICAL_PORT || '3000');
 app.set('port', port);
 

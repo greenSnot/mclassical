@@ -8,14 +8,33 @@ var options=require('../config').options;
 var getHtmls=utils.getHtmls;
 var getHtml=utils.getHtml;
 
+exports.google_translate_api=function(keyword,target){
+        console.log('google_translate_api');
+        target=target?target:'en';
+        var url=options.google.api.translate_url+'q='+utils.urlencode(keyword)+'&target='+target+'&key='+options.google.api.api_key;
+        return when.promise(function(resolve,reject){
+                getHtml(url).then(function(data){
+                        data=JSON.parse(data);
+                        data=data.data.translations.length?data.data.translations[0].translatedText:'';
+                        data=utils.htmldecode(utils.unicode2Chr(utils.urldecode(data)));
+                        resolve(data);
+                });
+        });
+}
+
 exports.google_translate=function(source){
-	return when.promise(function(resolve,reject){
-var url=options.google.translate_url+'keyword='+utils.urlencode(source);
-		getHtml(url).then(function(data){
-			data=JSON.parse(data).result;
-			resolve(data);
-		});
-	});
+    if(options.server!='HK'){
+	    return when.promise(function(resolve,reject){
+            var url=options.google.translate_url+'keyword='+utils.urlencode(source);
+	    	getHtml(url).then(function(data){
+	    		data=JSON.parse(data).result;
+	    		resolve(data);
+	    	});
+	    });
+    }else{
+        // api
+        return exports.google_translate_api(source);
+    }
 }
 
 exports.baidu_translate=function(source){
@@ -105,6 +124,42 @@ exports.Youku=function(keyword,page){
 	});
 }
 
+exports.google_imslp_api=function(keyword){
+        console.log('google_imslp_api');
+        var url=options.google.api.search_url+'q='+utils.urlencode(keyword)+'&cx='+options.google.api.search_engine_id+'&key='+options.google.api.api_key+'&fields=items(title,link)';
+        return when.promise(function(resolve,reject){
+                getHtml(url).then(function(data){
+                        data=JSON.parse(data);
+                        var result=[];
+                        if(data.error){
+                                console.log(data);
+                                return [];
+                        }
+                        data=data.items;
+                        for(var i in data){
+                                result.push({
+                                        title:data[i].title,
+                                        link:data[i].link});
+                        }
+                        resolve(result);
+                });
+        });
+}
+
+exports.google_imslp=function(keyword){
+    if(options.server=='HK'){
+        return exports.google_imslp_api(keyword);
+    }else{
+		return when.promise(function(resolve,reject){
+			var url=options.google.search_url+'keyword='+utils.urlencode(keyword);
+			getHtml(url).then(function(data){
+				data=JSON.parse(data).result;
+				resolve(data);
+			});
+		});
+    }
+};
+
 exports.Engine=function(keyword,engine){
 	if(engine=='google'){
 		return when.promise(function(resolve,reject){
@@ -162,7 +217,3 @@ exports.getVideoSource=function(format,url){
 		});
 	});
 };
-
-function google_imslp(keyword){
-};
-exports.google_imslp=google_imslp;

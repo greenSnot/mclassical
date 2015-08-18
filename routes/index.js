@@ -71,14 +71,14 @@ router.post('/search', function(req, res,next) {
 	var result={code:0,platform:utils.getPlatform(req),keyword:keyword_origin};
 	search.google_translate(keyword).then(function(keyword_translated){
 		keyword_translated=utils.after_translate_filter(keyword_translated);
-        console.log(keyword,keyword_translated);
+        console.log(keyword,' translated:'+keyword_translated);
 
         qlist=[];
         qlist_type=[];
         if(req.body.type){
             if(req.body.type=='scores'){
-                qlist.push(search.Engine(keyword,'google'));
-                qlist.push(search.Engine(keyword_translated,'google'));
+                qlist.push(search.google_imslp(keyword));
+                qlist.push(search.google_imslp(keyword_translated));
                 qlist_type.push('scores');
                 qlist_type.push('scores');
             }else if(req.body.type=='videos'){
