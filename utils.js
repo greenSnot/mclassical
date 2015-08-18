@@ -9,6 +9,7 @@ exports.before_translate_filter=function(text){
 }
 
 exports.after_translate_filter=function(text){
+    text=text.toLowerCase();
 	text=text.replace(/first/g, ' no 1 ')
 		 .replace(/second/g, ' no 2 ')
 		 .replace(/third/g, ' no 3 ')

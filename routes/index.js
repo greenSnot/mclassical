@@ -61,41 +61,64 @@ router.get('/get-source',function(req,res){
 });
 
 /* GET home page. */
-router.get('/search', function(req, res,next) {
-	var keyword_origin=req.query.keyword;
+router.post('/search', function(req, res,next) {
+	var keyword_origin=req.body.keyword;
 	if(!keyword_origin||keyword_origin.length==0){
-	res.redirect('/');
-	return;
-}
+    	res.redirect('/');
+    	return;
+    }
 	var keyword=utils.before_translate_filter(keyword_origin);
-	var result={code:0,msg:'ok',platform:utils.getPlatform(req)};
+	var result={code:0,platform:utils.getPlatform(req),keyword:keyword_origin};
 	search.google_translate(keyword).then(function(keyword_translated){
 		keyword_translated=utils.after_translate_filter(keyword_translated);
-console.log(keyword,keyword_translated);
-		when.all([
-				search.Youku(keyword),
-				search.Youku(keyword_translated),
-				search.Engine(keyword,'google'),
-				search.Engine(keyword_translated,'google')
-		]).then(function(datas){
-			//youku
+        console.log(keyword,keyword_translated);
+
+        qlist=[];
+        qlist_type=[];
+        if(req.body.type){
+            if(req.body.type=='scores'){
+                qlist.push(search.Engine(keyword,'google'));
+                qlist.push(search.Engine(keyword_translated,'google'));
+                qlist_type.push('scores');
+                qlist_type.push('scores');
+            }else if(req.body.type=='videos'){
+                qlist.push(search.Youku(keyword));
+                qlist.push(search.Youku(keyword_translated));
+                qlist_type.push('videos');
+                qlist_type.push('videos');
+            }else{
+                res.json({code:-2,msg:'type error'});
+                return;
+            }
+        }else{
+            res.json({code:-1,msg:'type is missing'});
+            return;
+        }
+		when.all(qlist).then(function(datas){
 			result.youku=[];
-			for(var i in datas[0]){
-				result.youku.push(datas[0][i]);
-			}
-			for(var i in datas[1]){
-				result.youku.push(datas[1][i]);
-			}
-			//imslp
 			result.imslp=[];
-			for(var i in datas[2]){
-				result.imslp.push(datas[2][i]);
-			}
-			for(var i in datas[3]){
-				result.imslp.push(datas[3][i]);
+            var imslp_ids={};
+            var youku_ids={};
+			for(var i in datas){
+                if(qlist_type[i]=='scores'){
+                    for(var j in datas[i]){
+                        if(!imslp_ids[datas[i][j].link]){
+                            imslp_ids[datas[i][j].link]=true;
+                            result.imslp.push(datas[i][j]);
+                        }
+                    }
+                }else if(qlist_type[i]=='videos'){
+                    for(var j in datas[i]){
+                        if(!youku_ids[datas[i][j].id]){
+                            youku_ids[datas[i][j].id]=true;
+                          result.youku.push(datas[i][j]);
+                        }
+                    }
+                }
 			}
 
-			res.render('search', { title: 'Results' ,keyword:keyword_origin,result:result});
+			//res.render('search', { title: 'Results' ,keyword:keyword_origin,result:result});
+			res.json(result);
 		})
 	})
 });

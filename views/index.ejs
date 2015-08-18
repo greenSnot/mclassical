@@ -9,35 +9,139 @@
         <script src='js/mclassical-pano.js'></script>
     </head>
 <body>
+        <span id="__getwidth"></span>
+        <div id="head">
+            <div id="logo">
+                <div id="search-wrap">
+                    <input id="search">
+                    <button id="btn-search">Search</button>
+                </div>
+                <div id="result-wrap">
+                    <div id="result-frame">
+                    </div>
+                    <div id="result">
+                        <div class="tabs">
+                            <div data-type="scores" class="tab selected">Score</div>
+                            <div data-type="videos" class="tab">Videos</div>
+                            <div data-type="audios" class="tab">Audios</div>
+                        </div>
+                        <div id="result-content">
+                        </div>
+                    </div>
+                </div>
+                <div id="magnifier">
+                    <div id="stick">
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="pano">
             <div id="container">
                 <div id="camera">
                 </div>
             </div>
         </div>
-        <table id="music-details">
-            <tbody>
-                <tr>
-                    <td>
-                        <div id="music-wrap">
-                            <div id="music-album">
-                                <div id="music-album-full"></div>
-                            </div>
-                            <div id="music-info-wrap">
-                                <div id="music-songname">songname</div>
-                                <div id="music-singer">singer</div>
-                                <div id="music-albumname">albumname</div>
-                                <div id="music-more">More</div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div id="music-details">
+             <div id="music-wrap">
+                 <div id="music-album">
+                     <div id="music-album-full"></div>
+                 </div>
+                 <div id="music-info-wrap">
+                     <div id="music-info">
+                         <div id="music-songname">songname</div>
+                         <div id="music-singer">singer</div>
+                         <div id="music-albumname">albumname</div>
+                     </div>
+                     <div id="music-more">More</div>
+                 </div>
+             </div>
+        </div>
 
     <audio id="audio" autoplay="autoplay" style="width:0;height:0;visibility:hidden" ></audio>
 </body>
+<script src="/js/template-native.js"></script>
+<script id="template-result" type="text/html">
+    <#for(var i in imslp){#>
+        <a class="result-imslp" href="<#=imslp[i].link#>"><#=imslp[i].title#></a>
+    <#}#>
+    <#for(var i in youku){#>
+        <a class="result-youku" href="<#=youku[i].link#>"><img src="<#=youku[i].thumbnail#>"><#=youku[i].title#></a>
+    <#}#>
+</script>
 <script>
+        template.config('openTag','<#');
+        template.config('closeTag','#>');
+
+        var height=window.innerHeight;
+        var width=window.innerWidth;
+        $('#result').width(width-30);
+        $('#result').height(height-100);
+        $('#search').width(width-70);
+        $('#btn-search').css('left',width-70-$('#btn-search').width());
+
+        $('#search-wrap').addClass('show');
+
+        var stopSearchAnimation=false;
+        function getTextWidth(str,fontsize) {
+            var d = document.getElementById('__getwidth');
+            d.style.fontSize=fontsize;
+            d.innerHTML = str;
+            return d.offsetWidth;
+        }
+
+        var autoTyping=[
+            'The magnifier of classical music'
+        ];
+
+        function searchPost(){
+            $.post('/search',{
+                    type:$('.tab.selected').attr('data-type'),
+                    keyword:$('#search').val()
+                },
+                function(res){
+                    if(res.code!=0){
+                        alert(res.msg);
+                        return;
+                    }
+                    $('#result-content').html(template('template-result',res));
+            });
+        }
+
+        function search(keyword){
+            $('#search').blur();
+            if($('#result-wrap').hasClass('show')){
+                $('#result-wrap').removeClass('show');
+                $('#result').html('');
+                setTimeout(function(){
+                        $('#result-wrap').addClass('show');
+                },500);
+            }else{
+                $('#result-wrap').addClass('show')
+            }
+            searchPost();
+        }
+
+        var inputstr='';
+        function changeInput(inputstr){
+            return function(){
+                if(!stopSearchAnimation){
+                    $('#search').val(inputstr);
+                }
+            }
+        }
+
+        var delay=0;
+        for(var i in autoTyping){
+            $('#search').val('');
+            inputstr='';
+            for(var j in autoTyping[i]){
+                inputstr+=autoTyping[i][j];
+                delay+=100;
+                setTimeout(changeInput(inputstr),delay);
+            }
+        }
+
 
         var QQMusicUrls=JSON.parse('<%-JSON.stringify(QQMusicUrls)%>');
 
@@ -54,9 +158,9 @@
                         if(j>14)break;
                         Musics['QQMusic_'+clist[j].songid]={};
                         Musics['QQMusic_'+clist[j].songid].songid=clist[j].songid;
-                        Musics['QQMusic_'+clist[j].songid].songname=clist[j].songname;
-                        Musics['QQMusic_'+clist[j].songid].singer=clist[j].singername;
-                        Musics['QQMusic_'+clist[j].songid].albumname=clist[j].albumname;
+                        Musics['QQMusic_'+clist[j].songid].songname=decodeURI(clist[j].songname);
+                        Musics['QQMusic_'+clist[j].songid].singer=decodeURI(clist[j].singername);
+                        Musics['QQMusic_'+clist[j].songid].albumname=decodeURI(clist[j].albumname);
                         Musics['QQMusic_'+clist[j].songid].audio_url=clist[j].m4a;
                         Musics['QQMusic_'+clist[j].songid].picture_small=clist[j].albumpic_small;
                         Musics['QQMusic_'+clist[j].songid].picture_big=clist[j].albumpic_big;
@@ -80,14 +184,40 @@
             });
         }
 
+        $('#search').focus(function(){
+            $(this).addClass('focus');
+        });
 
+        $('#search').blur(function(){
+            $(this).removeClass('focus');
+        });
+
+        function nothing(e){
+            e.stopPropagation();
+        }
         function moreInfo(e){
             e.stopPropagation();
-            alert('正在开发中');
+            stopSearchAnimation=true;
+            $('#search').val($('#music-songname').text());
+            search($('#music-songname').text());
         }
         function hideDetails(){
             $('#music-details').removeClass('show');
         }
+        function clearSearch(){
+            stopSearchAnimation=true;
+            $('#search').val('');
+        }
+        $('#search').on('focus',function(){
+            $('#search-wrap').addClass('showbtn');
+        });
+
+        function switchTab(){
+            $('.tab').removeClass('selected');
+            $(this).addClass('selected');
+            searchPost();
+        }
+
         var maxfov=120,fov=120,minfov=120;
         if(checkMobile()){
             maxfov=100;
@@ -96,19 +226,26 @@
 
             $('#music-details').on('touchend',hideDetails);
             $('#music-more').on('touchend',moreInfo);
+            $('#music-info').on('touchend',nothing);
+            $('#music-album').on('touchend',nothing);
+
+            $('#search').on('touchend',clearSearch);
+            $('#btn-search').on('touchend',function(){search($('#search').val());});
+            $('.tab').on('touchend',switchTab);
         }else{
             $('#music-details').on('mouseup',hideDetails);
             $('#music-more').on('mouseup',moreInfo);
+            $('#music-album').on('mouseup',nothing);
+            $('#search').on('mouseup',clearSearch);
+            $('#btn-search').on('mouseup',function(){search($('#search').val());});
+            $('.tab').on('mouseup',switchTab);
         }
 
         pano.init({
             dom   : $('#pano'), // Panorama dom
-            debug : false,          // Debug mode
-            rx    : 0,              // Rotation around X axis with degree
-            ry    : 800,              // Rotation around X axis with degree
-            maxfov: maxfov,            // Max field of view
-            minfov: minfov,             // Min field of view
-            fov   : fov,            // Default field of view
+            maxfov: maxfov,     // Max field of view
+            minfov: minfov,     // Min field of view
+            fov   : fov,        // Default field of view
 
             autoRotate: 0.1,
 
