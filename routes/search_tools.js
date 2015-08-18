@@ -5,33 +5,8 @@ var utils=require('../utils');
 var exec = require('child_process').exec;
 var options=require('../config').options;
 
-function getHtmls(urls){
-	var list=[];
-	for(var i in urls){
-		list.push(getHtml(urls[i]));
-	}
-	return when.all(list);
-}
-exports.getHtmls=getHtmls;
-
-function getHtml(url,data){
-	return when.promise(function(resolve,reject){
-		var headers=url.indexOf(options.baidu.search_url)>=0?options.baidu.headers:{
-		'Content-Type': 'application/x-www-form-urlencoded'
-};
-		if(data){
-			data._='_';
-			nodegrass.post(url,function(r){
-				resolve(r);	
-			},headers,data);
-		}else{
-			nodegrass.get(url,function(data){
-				resolve(data);	
-			},headers);
-		}
-	})	
-}
-exports.getHtml=getHtml;
+var getHtmls=utils.getHtmls;
+var getHtml=utils.getHtml;
 
 exports.google_translate=function(source){
 	return when.promise(function(resolve,reject){

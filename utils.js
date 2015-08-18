@@ -1,3 +1,32 @@
+var when=require('when');
+var nodegrass=require('nodegrass');
+var options=require('./config').options;
+
+exports.getHtmls=function(urls){
+	var list=[];
+	for(var i in urls){
+		list.push(getHtml(urls[i]));
+	}
+	return when.all(list);
+}
+
+exports.getHtml=function(url,data){
+	return when.promise(function(resolve,reject){
+		var headers=url.indexOf(options.baidu.search_url)>=0?options.baidu.headers:{
+		'Content-Type': 'application/x-www-form-urlencoded'
+};
+		if(data){
+			data._='_';
+			nodegrass.post(url,function(r){
+				resolve(r);	
+			},headers,data);
+		}else{
+			nodegrass.get(url,function(data){
+				resolve(data);	
+			},headers);
+		}
+	})	
+}
 
 exports.before_translate_filter=function(text){
 	text=text.substr(0,30);
