@@ -34,9 +34,24 @@ router.get('/',function(req,res){
              'Julia Fischer',
              'Hilary Hahn',
              'Joseph Szigeti',
-             'Vadim Repin', ///Violinist
-             'chopin',
-             'beethoven'
+             'Vadim Repin', ///Violinists
+
+             'Sergei Rachmaninoff',
+             'Josef Hoffman',
+             'Vladimir Horowitz',
+             'Ludwig Van Beethoven',
+             'Wolfgang Mozart',
+             'Fredric Chopin',
+             'Walter Wilhelm Gieseking',
+             'Arturo Benedetti Michelangeli',
+             'Emil Gilels',
+             'Anton Rubinstein',
+             'Hans von Bulow',
+             'Georges Cziffra',
+             'Maurizio Pollini',
+             'Alfred Cortot',//Pianists
+
+             'Franz Liszt'
             ];
 
     var urls=[];

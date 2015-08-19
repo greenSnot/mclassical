@@ -11,7 +11,7 @@ var getHtml=utils.getHtml;
 exports.google_translate_api=function(keyword,target){
         console.log('google_translate_api');
         target=target?target:'en';
-        var url=options.google.api.translate_url+'q='+utils.urlencode(keyword)+'&target='+target+'&key='+options.google.api.api_key;
+        var url=options.google.api.translate_url+'q='+utils.urlencode(keyword)+'&source=zh-CN&target='+target+'&key='+options.google.api.api_key;
         return when.promise(function(resolve,reject){
                 getHtml(url).then(function(data){
                         data=JSON.parse(data);
