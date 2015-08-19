@@ -103,7 +103,7 @@ td,tr,table{
 }
 #music-details.show #music-wrap{
     opacity:1;
-    -webkit-transform:scale(1);
+    -webkit-transform:scale(1) translateY(-30px);
 }
 #music-album{
     display:inline-block;
