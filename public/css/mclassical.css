@@ -180,7 +180,6 @@ td,tr,table{
           z-index:1000;
 
         }
-#pano{display:none}
         #magnifier:after{
             position:absolute;
             content:'';
@@ -223,7 +222,7 @@ td,tr,table{
             #result-wrap.show{
                 visibility:visible;opacity:1;-webkit-transform:rotateZ(60deg) translate3d(15px,-23px,0) translate3d(50%,50%,0);
             }
-            #result-frame{min-width:60px;height:34px;border:0;padding:0 10px 0 17px;margin:0;border-radius:0 3px 3px 0;background:rgba(0,0,0,0.3);box-shadow:0px 0px 6px rgba(0,0,0,0.3);line-height:35px;font-size:15px;color:#ddd;text-shadow:0px 0px 3px #404040;visibility:hidden;}
+            #result-stick{width:30px;height:34px;border:0;padding:0 10px 0 17px;margin:0;border-radius:0 3px 3px 0;background:rgba(193,193,193,0.3);box-shadow:0px 0px 6px rgba(0,0,0,0.3);line-height:35px;font-size:15px;color:#ddd;text-shadow:0px 0px 3px #404040;}
             #result{
                 display:-webkit-box;
                 -webkit-box-orient:vertical;
@@ -244,8 +243,11 @@ td,tr,table{
                 -webkit-overflow-scrolling:touch;
             }
             .result-imslp{
-                display:inline-block;
-                margin:3px;
+                box-sizing:border-box;
+                -webkit-box-align:center;
+                min-height:46px;
+                display:-webkit-box;
+                margin:3px 0 7px 0;
                 font-size:14px;
                 color:#fdfdfd;
                 text-shadow:0px 0px 3px #666;
@@ -257,8 +259,12 @@ td,tr,table{
                 background-color:#DEDEDE;
             }
             .result-youku{
-                display:inline-block;
-                margin:3px;
+                box-sizing:border-box;
+                -webkit-box-align:center;
+                min-height:46px;
+                display:-webkit-box;
+                margin:3px 0 7px 0;
+                -webkit-orient:horizontal;
                 font-size:14px;
                 color:#fdfdfd;
                 text-shadow:0px 0px 3px #666;
@@ -268,6 +274,9 @@ td,tr,table{
             }
             .result-youku:nth-child(even){
                 background-color:#DEDEDE;
+            }
+            .youku-info{
+                -webkit-box-flex:1;
             }
             #search-wrap{
                 text-align:center;

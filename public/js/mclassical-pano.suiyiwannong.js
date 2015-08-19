@@ -564,15 +564,7 @@
                      pano.autoRotate=0;
                      _setRxRy(content.attr('rx')*-1,content.attr('ry'),1);
 
-                     setTimeout(function(){
-                        $('#music-album').css('background-image','url('+content.attr('picture_small')+')');
-                        $('#music-album-full').css('background-image','url('+content.attr('picture_big')+')');
-                        $('#music-songname').text(content.attr('songname'));
-                        $('#music-albumname').text(content.attr('albumname'));
-                        $('#music-singer').text(content.attr('singer'));
-                        $('#music-details').addClass('show');
-                     },300);
-                     $('#audio').attr('src',content.attr('audio_url'));
+                     pano.musicClick(content);
                  }
             }
 

@@ -17,7 +17,7 @@
                     <button id="btn-search">Search</button>
                 </div>
                 <div id="result-wrap">
-                    <div id="result-frame">
+                    <div id="result-stick">
                     </div>
                     <div id="result">
                         <div class="tabs">
@@ -63,10 +63,10 @@
 <script src="/js/template-native.js"></script>
 <script id="template-result" type="text/html">
     <#for(var i in imslp){#>
-        <a class="result-imslp" href="<#=imslp[i].link#>"><#=imslp[i].title#></a>
+        <a class="result-imslp" target="_Blank" href="<#=imslp[i].link#>"><#=imslp[i].title#></a>
     <#}#>
     <#for(var i in youku){#>
-        <a class="result-youku" href="<#=youku[i].link#>"><img src="<#=youku[i].thumbnail#>"><#=youku[i].title#></a>
+        <a class="result-youku" href="<#=youku[i].link#>"><img class="result-youku-img" width="150"src="<#=youku[i].thumbnail#>"><div class="youku-info"><#=youku[i].title#></div></a>
     <#}#>
 </script>
 <script>
@@ -200,6 +200,7 @@
             stopSearchAnimation=true;
             $('#search').val($('#music-songname').text());
             search($('#music-songname').text());
+            $('#music-details').removeClass('show');
         }
         function hideDetails(){
             $('#music-details').removeClass('show');
@@ -216,6 +217,9 @@
             $('.tab').removeClass('selected');
             $(this).addClass('selected');
             searchPost();
+        }
+        function hideResult(){
+            $('#result-wrap').removeClass('show');
         }
 
         var maxfov=120,fov=120,minfov=120;
@@ -241,11 +245,26 @@
             $('.tab').on('mouseup',switchTab);
         }
 
+        function musicClick(content){
+            setTimeout(function(){
+                $('#music-album').css('background-image','url('+content.attr('picture_small')+')');
+                $('#music-album-full').css('background-image','url('+content.attr('picture_big')+')');
+                $('#music-songname').text(content.attr('songname'));
+                $('#music-albumname').text(content.attr('albumname'));
+                $('#music-singer').text(content.attr('singer'));
+                $('#music-details').addClass('show');
+            },300);
+            $('#audio').attr('src',content.attr('audio_url'));
+            $('#result-wrap').removeClass('show');
+        }
+
         pano.init({
             dom   : $('#pano'), // Panorama dom
             maxfov: maxfov,     // Max field of view
             minfov: minfov,     // Min field of view
             fov   : fov,        // Default field of view
+
+            musicClick:musicClick,
 
             autoRotate: 0.1,
 
