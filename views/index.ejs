@@ -12,7 +12,7 @@
         <span id="__getwidth"></span>
         <div id="head">
             <div id="logo">
-                <div id="search-wrap">
+                <div id="search-wrap" class="start">
                     <input id="search">
                     <button id="btn-search">Search</button>
                 </div>
@@ -27,6 +27,10 @@
                         </div>
                         <div id="result-content">
                         </div>
+                    </div>
+                </div>
+                <div id="about-wrap" style="display:none">
+                    <div id="about-stick">
                     </div>
                 </div>
                 <div id="magnifier">
@@ -68,6 +72,16 @@
     <#for(var i in youku){#>
         <a class="result-youku" href="<#=youku[i].link#>"><img class="result-youku-img" width="150"src="<#=youku[i].thumbnail#>"><div class="youku-info"><#=youku[i].title#></div></a>
     <#}#>
+    <#for(var i in qqmusic){#>
+        <a class="result-qqmusic" href="<#=qqmusic[i].m4a#>">
+            <img class="result-qqmusic-img" width="150"src="<#=qqmusic[i].albumpic_big#>">
+            <div class="qqmusic-info">
+                <div><#=qqmusic[i].songname#></div>
+                <div><#=qqmusic[i].albumname#></div>
+                <div><#=qqmusic[i].singername#></div>
+            </div>
+        </a>
+    <#}#>
 </script>
 <script>
         template.config('openTag','<#');
@@ -80,6 +94,7 @@
         $('#search').width(width-70);
         $('#btn-search').css('left',width-70-$('#btn-search').width());
 
+        $('#search-wrap').removeClass('start');
         $('#search-wrap').addClass('show');
 
         var stopSearchAnimation=false;
@@ -110,9 +125,10 @@
 
         function search(keyword){
             $('#search').blur();
+            $('#search-wrap').addClass('show');
+            $('#result-content').html('');
             if($('#result-wrap').hasClass('show')){
                 $('#result-wrap').removeClass('show');
-                $('#result-content').html('');
                 setTimeout(function(){
                         $('#result-wrap').addClass('show');
                 },500);
@@ -222,6 +238,17 @@
         function hideResult(){
             $('#result-wrap').removeClass('show');
         }
+        function magnifierClick(){
+            if($('#search-wrap').hasClass('show')){
+                $('#search-wrap').removeClass('show');
+                $('#result-wrap').removeClass('show');
+                $('#about-wrap').removeClass('show');
+            }else{
+                $('#search-wrap').addClass('show');
+                $('#about-wrap').addClass('show');
+                $('#result-wrap').removeClass('show');
+            }
+        }
 
         var maxfov=120,fov=120,minfov=120;
         if(checkMobile()){
@@ -237,6 +264,7 @@
             $('#search').on('touchend',clearSearch);
             $('#btn-search').on('touchend',function(){hideDetails();search($('#search').val());});
             $('.tab').on('touchend',switchTab);
+            $('#magnifier').on('touchend',magnifierClick);
         }else{
             $('#music-details').on('mouseup',hideDetails);
             $('#music-more').on('mouseup',moreInfo);
@@ -244,18 +272,20 @@
             $('#search').on('mouseup',clearSearch);
             $('#btn-search').on('mouseup',function(){hideDetails();search($('#search').val());});
             $('.tab').on('mouseup',switchTab);
+            $('#magnifier').on('mouseup',magnifierClick);
         }
 
         function musicClick(content){
-            setTimeout(function(){
-                $('#music-album').css('background-image','url('+content.attr('picture_small')+')');
-                $('#music-album-full').css('background-image','url('+content.attr('picture_big')+')');
-                $('#music-songname').text(content.attr('songname'));
-                $('#music-albumname').text(content.attr('albumname'));
-                $('#music-singer').text(content.attr('singer'));
-                $('#music-details').addClass('show');
-            },300);
-            $('#audio').attr('src',content.attr('audio_url'));
+            $('#search-wrap').removeClass('show');
+                setTimeout(function(){
+                    $('#music-album').css('background-image','url('+content.attr('picture_small')+')');
+                    $('#music-album-full').css('background-image','url('+content.attr('picture_big')+')');
+                    $('#music-songname').text(content.attr('songname'));
+                    $('#music-albumname').text(content.attr('albumname'));
+                    $('#music-singer').text(content.attr('singer'));
+                    $('#music-details').addClass('show');
+                },300);
+                $('#audio').attr('src',content.attr('audio_url'));
             $('#result-wrap').removeClass('show');
         }
 

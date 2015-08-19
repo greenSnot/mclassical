@@ -86,6 +86,11 @@ router.post('/search', function(req, res,next) {
                 qlist.push(search.Youku(keyword_translated));
                 qlist_type.push('videos');
                 qlist_type.push('videos');
+            }else if(req.body.type=='audios'){
+                qlist.push(search.QQMusic(keyword));
+                qlist.push(search.QQMusic(keyword_translated));
+                qlist_type.push('audios');
+                qlist_type.push('audios');
             }else{
                 res.json({code:-2,msg:'type error'});
                 return;
@@ -97,8 +102,10 @@ router.post('/search', function(req, res,next) {
 		when.all(qlist).then(function(datas){
 			result.youku=[];
 			result.imslp=[];
+            result.qqmusic=[];
             var imslp_ids={};
             var youku_ids={};
+            var qqmusic_ids={};
 			for(var i in datas){
                 if(qlist_type[i]=='scores'){
                     for(var j in datas[i]){
@@ -111,7 +118,14 @@ router.post('/search', function(req, res,next) {
                     for(var j in datas[i]){
                         if(!youku_ids[datas[i][j].id]){
                             youku_ids[datas[i][j].id]=true;
-                          result.youku.push(datas[i][j]);
+                            result.youku.push(datas[i][j]);
+                        }
+                    }
+                }else if(qlist_type[i]=='audios'){
+                    for(var j in datas[i]){
+                        if(!qqmusic_ids[datas[i][j].songid]){
+                            qqmusic_ids[datas[i][j].songid]=true;
+                            result.qqmusic.push(datas[i][j]);
                         }
                     }
                 }

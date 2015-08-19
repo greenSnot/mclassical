@@ -113,7 +113,16 @@ exports.getQQMusicUrl=function(keyword,page){
 
 exports.QQMusic=function(keyword,page){
     var url=exports.getQQMusicUrl(keyword,page);
-	return getHtml(url);
+	return when.promise(function(resolve,reject){
+        getHtml(url).then(function(data){
+            data=JSON.parse(data);
+            if(data.showapi_res_body&&data.showapi_res_body.pagebean&&data.showapi_res_body.pagebean.contentlist){
+                resolve(data.showapi_res_body.pagebean.contentlist);
+            }else{
+                resolve([]);
+            }
+        });
+    });
 }
 
 exports.Youku=function(keyword,page){
