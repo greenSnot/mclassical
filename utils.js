@@ -27,11 +27,11 @@ exports.getHtml=function(url,data){
 		var headers=url.indexOf(options.baidu.search_url)>=0?options.baidu.headers:{
 		'Content-Type': 'application/x-www-form-urlencoded'
 };
-		if(data){
+		if(data!=undefined){
 			data._='_';
 			nodegrass.post(url,function(r){
-				resolve(r);	
-			},headers,data);
+				resolve(r);
+			},headers,data,'utf8');
 		}else{
 			nodegrass.get(url,function(data){
 				resolve(data);	

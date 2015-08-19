@@ -113,10 +113,10 @@ exports.getQQMusicUrl=function(keyword,page){
 
 exports.QQMusic=function(keyword,page){
     if(options.server=='HK'){
-        var url=options.servers.SZ+'/search';
+        var url='http://'+options.servers.SZ+'/search';
 	    return when.promise(function(resolve,reject){
-            getHtml(url,{keyword:keyword}).then(function(data){
-                console.log(data);
+            getHtml(url,{keyword:keyword,type:'audios'}).then(function(data){
+                data=JSON.parse(data);
                 resolve(data.qqmusic);
             });
         });
@@ -136,11 +136,22 @@ exports.QQMusic=function(keyword,page){
 }
 
 exports.Youku=function(keyword,page){
-	var url=options.youku.search_url+'?client_id='+options.youku.client_id+'&keyword='+utils.urlencode(keyword);
-	return getHtml(url).then(function(data){
-		data=utils.unicode2Chr(data);
-		return JSON.parse(data).videos;
-	});
+    if(options.server=='HK'){
+        var url='http://'+options.servers.SZ+'/search';
+	    return when.promise(function(resolve,reject){
+            getHtml(url,{keyword:keyword,type:'videos'}).then(function(data){
+                data=JSON.parse(data);
+                resolve(data.youku);
+            });
+        });
+    }else{
+        
+	    var url=options.youku.search_url+'?client_id='+options.youku.client_id+'&keyword='+utils.urlencode(keyword);
+	    return getHtml(url).then(function(data){
+	    	data=utils.unicode2Chr(data);
+	    	return JSON.parse(data).videos;
+	    });
+    }
 }
 
 exports.google_imslp_api=function(keyword){
