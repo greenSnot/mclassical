@@ -112,17 +112,27 @@ exports.getQQMusicUrl=function(keyword,page){
 };
 
 exports.QQMusic=function(keyword,page){
-    var url=exports.getQQMusicUrl(keyword,page);
-	return when.promise(function(resolve,reject){
-        getHtml(url).then(function(data){
-            data=JSON.parse(data);
-            if(data.showapi_res_body&&data.showapi_res_body.pagebean&&data.showapi_res_body.pagebean.contentlist){
-                resolve(data.showapi_res_body.pagebean.contentlist);
-            }else{
-                resolve([]);
-            }
+    if(options.server=='HK'){
+        var url=options.servers.SZ+'/search';
+	    return when.promise(function(resolve,reject){
+            getHtml(url,{keyword:keyword}).then(function(data){
+                console.log(data);
+                resolve(data.qqmusic);
+            });
         });
-    });
+    }else{
+        var url=exports.getQQMusicUrl(keyword,page);
+	    return when.promise(function(resolve,reject){
+            getHtml(url).then(function(data){
+                data=JSON.parse(data);
+                if(data.showapi_res_body&&data.showapi_res_body.pagebean&&data.showapi_res_body.pagebean.contentlist){
+                    resolve(data.showapi_res_body.pagebean.contentlist);
+                }else{
+                    resolve([]);
+                }
+            });
+        });
+    }
 }
 
 exports.Youku=function(keyword,page){

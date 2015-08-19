@@ -68,4 +68,9 @@ exports.options={
 		access_key:'10xk15j1nj',
 		secret_key:'zi1iy0m2hxml2i21kwll4wx3iw5j0h153lw1m4w5'
 	}
+    servers:{
+        HK:'118.193.172.214',
+        SZ:'112.74.211.14',
+        USA:'198.11.178.157'
+    }
 }
