@@ -21,7 +21,7 @@
                     </div>
                     <div id="result">
                         <div class="tabs">
-                            <div data-type="scores" class="tab selected">Score</div>
+                            <div data-type="scores" class="tab selected">Scores</div>
                             <div data-type="videos" class="tab">Videos</div>
                             <div data-type="audios" class="tab">Audios</div>
                         </div>
@@ -112,7 +112,7 @@
             $('#search').blur();
             if($('#result-wrap').hasClass('show')){
                 $('#result-wrap').removeClass('show');
-                $('#result').html('');
+                $('#result-content').html('');
                 setTimeout(function(){
                         $('#result-wrap').addClass('show');
                 },500);
