@@ -247,8 +247,52 @@ td,tr,table{
             #result-content{
                 -webkit-box-flex:1;
                 padding:5px;
-                overflow:scroll;
+                box-sizing:border-box;
+                overflow-y:scroll;
                 -webkit-overflow-scrolling:touch;
+            }
+            #result-loading{
+                width:30px;
+                height:30px;
+                margin-left:calc(50% - 15px);
+                margin-top:calc(50% + 50px);
+                background:#fff;
+                position:relative;
+                border-radius:100%;
+                -webkit-animation:result-loading .9s 0.3s infinite alternate;
+            }
+            #result-loading:after{
+                content:'';
+                width:30px;
+                display:block;
+                height:30px;
+                background:#fff;
+                margin-left:130%;
+                margin-top:-100%;
+                border-radius:100%;
+                -webkit-animation:result-loading .9s .6s infinite;
+            }
+            #result-loading:before{
+                content:'';
+                display:block;
+                width:30px;
+                top:0;
+                height:30px;
+                background:#fff;
+                margin-left:-130%;
+                border-radius:100%;
+                -webkit-animation:result-loading .9s infinite;
+            }
+            @-webkit-keyframes result-loading{
+                0%{
+                    -webkit-transform: scale(1);
+                }
+                50%{
+                    -webkit-transform: scale(0.9);
+                }
+                100%{
+                    -webkit-transform: scale(1);
+                }
             }
             .result-imslp{
                 box-sizing:border-box;

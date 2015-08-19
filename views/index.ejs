@@ -110,6 +110,7 @@
         ];
 
         function searchPost(){
+            $('#result-content').html('<div id="result-loading"></div>');
             $.post('/search',{
                     type:$('.tab.selected').attr('data-type'),
                     keyword:$('#search').val()
@@ -210,9 +211,11 @@
 
         function nothing(e){
             e.stopPropagation();
+            e.preventDefault();
         }
         function moreInfo(e){
             e.stopPropagation();
+            e.preventDefault();
             stopSearchAnimation=true;
             $('#search').val($('#music-songname').text());
             search($('#music-songname').text());
@@ -230,6 +233,7 @@
         });
 
         function switchTab(){
+            if(contentScrolling)return;
             $('.tab').removeClass('selected');
             $(this).addClass('selected');
             $('#result-content').html('');
@@ -250,6 +254,7 @@
             }
         }
 
+        var contentScrolling=false;
         var maxfov=120,fov=120,minfov=120;
         if(checkMobile()){
             maxfov=100;
@@ -264,6 +269,8 @@
             $('#search').on('touchend',clearSearch);
             $('#btn-search').on('touchend',function(){hideDetails();search($('#search').val());});
             $('.tab').on('touchstart',switchTab);
+            $('#result-content').on('touchstart',function(){contentScrolling=true;});
+            $('#result-content').on('touchend',function(){contentScrolling=false;});
             $('#magnifier').on('touchstart',magnifierClick);
         }else{
             $('#music-details').on('mouseup',hideDetails);
