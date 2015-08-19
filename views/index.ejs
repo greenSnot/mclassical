@@ -110,7 +110,7 @@
         ];
 
         function searchPost(){
-            $('#result-content').html('<div id="result-loading"></div>');
+            $('#result-content').html('<div id="result-loading-wrap"><div id="result-loading"></div></div>');
             $.post('/search',{
                     type:$('.tab.selected').attr('data-type'),
                     keyword:$('#search').val()
@@ -127,7 +127,6 @@
         function search(keyword){
             $('#search').blur();
             $('#search-wrap').addClass('show');
-            $('#result-content').html('');
             if($('#result-wrap').hasClass('show')){
                 $('#result-wrap').removeClass('show');
                 setTimeout(function(){
@@ -211,7 +210,6 @@
 
         function nothing(e){
             e.stopPropagation();
-            e.preventDefault();
         }
         function moreInfo(e){
             e.stopPropagation();
@@ -236,7 +234,6 @@
             if(contentScrolling)return;
             $('.tab').removeClass('selected');
             $(this).addClass('selected');
-            $('#result-content').html('');
             searchPost();
         }
         function hideResult(){
