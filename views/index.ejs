@@ -256,15 +256,15 @@
             fov=100;
             minfov=100;
 
-            $('#music-details').on('touchend',hideDetails);
-            $('#music-more').on('touchend',moreInfo);
-            $('#music-info').on('touchend',nothing);
-            $('#music-album').on('touchend',nothing);
+            $('#music-details').on('touchstart',hideDetails);
+            $('#music-more').on('touchstart',moreInfo);
+            $('#music-info').on('touchstart',nothing);
+            $('#music-album').on('touchstart',nothing);
 
             $('#search').on('touchend',clearSearch);
             $('#btn-search').on('touchend',function(){hideDetails();search($('#search').val());});
-            $('.tab').on('touchend',switchTab);
-            $('#magnifier').on('touchend',magnifierClick);
+            $('.tab').on('touchstart',switchTab);
+            $('#magnifier').on('touchstart',magnifierClick);
         }else{
             $('#music-details').on('mouseup',hideDetails);
             $('#music-more').on('mouseup',moreInfo);
