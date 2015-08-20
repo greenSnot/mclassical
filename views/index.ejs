@@ -7,6 +7,7 @@
         <link rel="stylesheet" type="text/css" href="css/mclassical.css">
         <script src='js/mclassical-base.js'></script>
         <script src='js/mclassical-pano.js'></script>
+        <title>古典音乐放大镜</title>
     </head>
 <body>
         <span id="__getwidth"></span>
@@ -66,19 +67,19 @@
 </body>
 <script src="/js/template-native.js"></script>
 <script id="template-result" type="text/html">
-    <#for(var i in imslp){#>
-        <a class="result-imslp" target="_Blank" href="<#=imslp[i].link#>"><#=imslp[i].title#></a>
+    <#for(var i in scores){#>
+        <a class="result-score" target="_Blank" href="<#=scores[i].link#>"><#=scores[i].title#></a>
     <#}#>
-    <#for(var i in youku){#>
-        <a class="result-youku" href="<#=youku[i].link#>"><img class="result-youku-img" width="150"src="<#=youku[i].thumbnail#>"><div class="youku-info"><#=youku[i].title#></div></a>
+    <#for(var i in videos){#>
+        <a class="result-video" href="<#=videos[i].link#>"><img class="result-video-img" width="150"src="<#=videos[i].thumbnail#>"><div class="video-info"><#=videos[i].title#></div></a>
     <#}#>
-    <#for(var i in qqmusic){#>
-        <a class="result-qqmusic" href="<#=qqmusic[i].m4a#>">
-            <img class="result-qqmusic-img" width="150"src="<#=qqmusic[i].albumpic_big#>">
-            <div class="qqmusic-info">
-                <div><#=qqmusic[i].songname#></div>
-                <div><#=qqmusic[i].albumname#></div>
-                <div><#=qqmusic[i].singername#></div>
+    <#for(var i in audios){#>
+        <a class="result-audio" href="<#=audios[i].m4a#>">
+            <img class="result-audio-img" width="150"src="<#=audios[i].albumpic_big#>">
+            <div class="audio-info">
+                <div><#=audios[i].songname#></div>
+                <div><#=audios[i].albumname#></div>
+                <div><#=audios[i].singername#></div>
             </div>
         </a>
     <#}#>

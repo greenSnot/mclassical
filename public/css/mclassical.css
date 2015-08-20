@@ -297,7 +297,7 @@ td,tr,table{
                     -webkit-transform: scale(0.9);
                 }
             }
-            .result-imslp{
+            .result-score{
                 box-sizing:border-box;
                 -webkit-box-align:center;
                 min-height:46px;
@@ -310,10 +310,10 @@ td,tr,table{
                 padding:6px;
                 border-radius:3px;
             }
-            .result-imslp:nth-child(even){
+            .result-score:nth-child(even){
                 background-color:#DEDEDE;
             }
-            .result-qqmusic{
+            .result-audio{
                 box-sizing:border-box;
                 -webkit-box-align:center;
                 min-height:46px;
@@ -327,13 +327,13 @@ td,tr,table{
                 padding:6px;
                 border-radius:3px;
             }
-            .result-qqmusic:nth-child(even){
+            .result-audio:nth-child(even){
                 background-color:#DEDEDE;
             }
-            .qqmusic-info{
+            .audio-info{
                 -webkit-box-flex:1;
             }
-            .result-youku{
+            .result-video{
                 box-sizing:border-box;
                 -webkit-box-align:center;
                 min-height:46px;
@@ -347,10 +347,10 @@ td,tr,table{
                 padding:6px;
                 border-radius:3px;
             }
-            .result-youku:nth-child(even){
+            .result-video:nth-child(even){
                 background-color:#DEDEDE;
             }
-            .youku-info{
+            .video-info{
                 -webkit-box-flex:1;
             }
             #search-wrap{

@@ -83,6 +83,7 @@ router.post('/search', function(req, res,next) {
     	return;
     }
     keyword_origin=keyword_origin.substr(0,30);
+    keyword_origin=keyword_origin.trim();
 	var keyword=utils.before_translate_filter(keyword_origin);
 	var result={code:0,platform:utils.getPlatform(req),keyword:keyword_origin};
 	search.google_translate(keyword).then(function(keyword_translated){
@@ -120,32 +121,32 @@ router.post('/search', function(req, res,next) {
             return;
         }
 		when.all(qlist).then(function(datas){
-			result.youku=[];
-			result.imslp=[];
-            result.qqmusic=[];
-            var imslp_ids={};
-            var youku_ids={};
-            var qqmusic_ids={};
+			result.videos=[];
+			result.scores=[];
+            result.audios=[];
+            var scores_ids={};
+            var videos_ids={};
+            var audios_ids={};
 			for(var i in datas){
                 if(qlist_type[i]=='scores'){
                     for(var j in datas[i]){
-                        if(!imslp_ids[datas[i][j].link]){
-                            imslp_ids[datas[i][j].link]=true;
-                            result.imslp.push(datas[i][j]);
+                        if(!scores_ids[datas[i][j].link]){
+                            scores_ids[datas[i][j].link]=true;
+                            result.scores.push(datas[i][j]);
                         }
                     }
                 }else if(qlist_type[i]=='videos'){
                     for(var j in datas[i]){
-                        if(!youku_ids[datas[i][j].id]){
-                            youku_ids[datas[i][j].id]=true;
-                            result.youku.push(datas[i][j]);
+                        if(!videos_ids[datas[i][j].id]){
+                            videos_ids[datas[i][j].id]=true;
+                            result.videos.push(datas[i][j]);
                         }
                     }
                 }else if(qlist_type[i]=='audios'){
                     for(var j in datas[i]){
-                        if(!qqmusic_ids[datas[i][j].songid]){
-                            qqmusic_ids[datas[i][j].songid]=true;
-                            result.qqmusic.push(datas[i][j]);
+                        if(!audios_ids[datas[i][j].songid]){
+                            audios_ids[datas[i][j].songid]=true;
+                            result.audios.push(datas[i][j]);
                         }
                     }
                 }
