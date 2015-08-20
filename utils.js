@@ -83,7 +83,7 @@ exports.after_translate_filter=function(text){
 }
 
 exports.after_translate_mix=function(key,map){
-    if(key.indexOf('legend'>=0)){
+    if(key.indexOf('legend')>=0){
         map['legende']=true;
     }
     map[key]=true;
