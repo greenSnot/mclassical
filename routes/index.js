@@ -82,30 +82,35 @@ router.post('/search', function(req, res,next) {
     	res.redirect('/');
     	return;
     }
+    keyword_origin=keyword_origin.substr(0,30);
 	var keyword=utils.before_translate_filter(keyword_origin);
 	var result={code:0,platform:utils.getPlatform(req),keyword:keyword_origin};
 	search.google_translate(keyword).then(function(keyword_translated){
 		keyword_translated=utils.after_translate_filter(keyword_translated);
-        console.log(keyword,' translated:'+keyword_translated);
+
+        var keywords={};
+        utils.after_translate_mix(keyword_origin,keywords);
+        utils.after_translate_mix(keyword_translated,keywords);
+        console.log(keywords);
 
         qlist=[];
         qlist_type=[];
         if(req.body.type){
             if(req.body.type=='scores'){
-                qlist.push(search.google_imslp(keyword));
-                qlist.push(search.google_imslp(keyword_translated));
-                qlist_type.push('scores');
-                qlist_type.push('scores');
+                for(var i in keywords){
+                    qlist.push(search.google_imslp(i));
+                    qlist_type.push('scores');
+                }
             }else if(req.body.type=='videos'){
-                qlist.push(search.Youku(keyword));
-                qlist.push(search.Youku(keyword_translated));
-                qlist_type.push('videos');
-                qlist_type.push('videos');
+                for(var i in keywords){
+                    qlist.push(search.Youku(i));
+                    qlist_type.push('videos');
+                }
             }else if(req.body.type=='audios'){
-                qlist.push(search.QQMusic(keyword));
-                qlist.push(search.QQMusic(keyword_translated));
-                qlist_type.push('audios');
-                qlist_type.push('audios');
+                for(var i in keywords){
+                    qlist.push(search.QQMusic(i));
+                    qlist_type.push('audios');
+                }
             }else{
                 res.json({code:-2,msg:'type error'});
                 return;

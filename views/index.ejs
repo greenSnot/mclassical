@@ -224,7 +224,9 @@
         }
         function clearSearch(){
             stopSearchAnimation=true;
-            $('#search').val('');
+            if($('#search').val()==autoTyping[0]){
+                $('#search').val('');
+            }
         }
         $('#search').on('focus',function(){
             $('#search-wrap').addClass('showbtn');
@@ -240,6 +242,7 @@
             $('#result-wrap').removeClass('show');
         }
         function magnifierClick(){
+            $('#search').blur();
             if($('#search-wrap').hasClass('show')){
                 $('#search-wrap').removeClass('show');
                 $('#result-wrap').removeClass('show');

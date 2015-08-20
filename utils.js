@@ -41,10 +41,9 @@ exports.getHtml=function(url,data){
 }
 
 exports.before_translate_filter=function(text){
-	text=text.substr(0,30);
 	text=text.replace(/创意曲/g,' inventions ')
 	         .replace(/无伴奏组曲/g,' partita ')
-	         .replace(/无伴奏/g,' ')
+	         .replace(/无伴奏/g,' partita')
 	         .replace(/组曲/g,' partita ');
 	return text;
 }
@@ -81,6 +80,13 @@ exports.after_translate_filter=function(text){
 		 .replace(/ninety/g, '90')
 		 .replace(/-/g, ' ');
 	return text;
+}
+
+exports.after_translate_mix=function(key,map){
+    if(key.indexOf('legend'>=0)){
+        map['legende']=true;
+    }
+    map[key]=true;
 }
 
 exports.unicode2Chr=function(str) { 
