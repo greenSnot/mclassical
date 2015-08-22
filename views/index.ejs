@@ -71,10 +71,10 @@
         <a class="result-score" target="_Blank" href="<#=scores[i].link#>"><#=scores[i].title#></a>
     <#}#>
     <#for(var i in videos){#>
-        <a class="result-video" href="<#=videos[i].link#>"><img class="result-video-img" width="150"src="<#=videos[i].thumbnail#>"><div class="video-info"><#=videos[i].title#></div></a>
+        <a class="result-video" target="_Blank"  href="<#=videos[i].link#>"><img class="result-video-img" width="150"src="<#=videos[i].thumbnail#>"><div class="video-info"><#=videos[i].title#></div></a>
     <#}#>
     <#for(var i in audios){#>
-        <a class="result-audio" href="<#=audios[i].m4a#>">
+        <a class="result-audio"  target="_Blank" href="<#=audios[i].m4a#>">
             <img class="result-audio-img" width="150"src="<#=audios[i].albumpic_big#>">
             <div class="audio-info">
                 <div><#=audios[i].songname#></div>

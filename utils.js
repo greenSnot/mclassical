@@ -2,6 +2,25 @@ var when=require('when');
 var nodegrass=require('nodegrass');
 var options=require('./config').options;
 
+exports.dbFilter=function(text){
+    text=text.toLowerCase();
+    var e=/^[A-Za-z0-9\è\é\ê\ë\ē\ė\ę\È\É\Ê\Ë\Ē\Ė\Ę\ÿ\Ÿ\Ü\Ù\Ú\Ū\û\ü\ù\ú\ū\î\ï\í\ī\į\ì\Î\Ï\Í\Ī\Į\Ì\Ô\Ö\Ò\Ó\Œ\Ø\Ō\Õ\ô\ö\ò\ó\œ\ø\ō\õ\à\á\â\ä\æ\ã\å\ā\À\Á\Â\Ä\Æ\Ã\Å\Ā\ß\ś\š\Ś\Š\ł\Ł\ž\ź\ż\Ž\Ź\Ż\ç\ć\č\Ç\Ć\Č\Ñ\Ń\ñ\ń]+$/;
+    var blank=/\ +/g;
+    if(e.test(text)){
+        return text.replace(blank,' ');
+    }else{
+        var final='';
+        for(var i in text){
+            if(!e.test(text[i])){
+                final+=' ';
+            }else{
+                final+=text[i];
+            }
+        }
+        return final.replace(blank,' ');
+    }
+}
+
 exports.htmldecode=function(str){
       var s = "";
       if(str.length == 0) return "";

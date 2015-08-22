@@ -96,7 +96,7 @@ exports.separate2words_scws=function(source){
 
 exports.getQQMusicUrl=function(keyword,page){
 	var op={
-		keyword:keyword,
+		keyword:utils.urlencode(keyword),
 		page:page?page:1,
 		showapi_appid:options.showapi.app_id,
 		showapi_timestamp:utils.timestamp()
@@ -126,7 +126,8 @@ exports.QQMusic=function(keyword,page){
             getHtml(url).then(function(data){
                 data=JSON.parse(data);
                 if(data.showapi_res_body&&data.showapi_res_body.pagebean&&data.showapi_res_body.pagebean.contentlist){
-                    resolve(data.showapi_res_body.pagebean.contentlist);
+                    var t=data.showapi_res_body.pagebean.contentlist;
+                    resolve(t);
                 }else{
                     resolve([]);
                 }

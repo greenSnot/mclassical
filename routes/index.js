@@ -24,16 +24,20 @@ router.get('/',function(req,res){
              'Jascha Heifetz',
              'Fritz Kreisler',
              'Niccolo Paganini',
-             //'吕思清',
-             //'李传韵',
-             //'宁峰',
-             //'黄蒙拉',
+             '吕思清',
+             'nin feng',
+             '黄蒙拉',
              'akiko suwanai',
              'Midori Goto',
              'Henryk Wieniawski',
              'Julia Fischer',
              'Hilary Hahn',
              'Joseph Szigeti',
+
+             'Ingolf Turban',
+             'Denes Zsigmondy',
+             'Volker Reinhold',
+             'Vasko Vassilev',
              'Vadim Repin', ///Violinists
 
              'Sergei Rachmaninoff',
@@ -42,14 +46,31 @@ router.get('/',function(req,res){
              'Ludwig Van Beethoven',
              'Wolfgang Mozart',
              'Fredric Chopin',
-             'Walter Wilhelm Gieseking',
              'Arturo Benedetti Michelangeli',
              'Emil Gilels',
              'Anton Rubinstein',
              'Hans von Bulow',
              'Georges Cziffra',
+             'Ignaz Friedman',
+             'David Nadien',
+             'Glenn Gould',
+             'Julius Katchen',
+             'Sviatoslav Richte',
              'Maurizio Pollini',
              'Alfred Cortot',//Pianists
+
+             'Hollywood Orchestra',
+             '杨雪霏',
+             'Juliette Kang','Henry Doktorski','Chen Xingfu',
+             'Bruno Walter','Elmar Oliveira','Peter Serkin','I Salonisti',
+             'Vladimir Ashkenazy','Dubravka Tomsic','Joseph Cooper','Vladimir Ashkenazy','Shura Cherkassky','Daniela Ruso','Sviatoslav Richte','Benjamin Schmid','Cyprien Katsaris',
+             'Kantorow','Kyung Wha Chung','Johannes Brahms','Tal & Groethuysen','Alexis Weissenberg','András Schiff','The Palm Court Orchestra',
+             'Clara Haskil','Eric Hammerstein','Maria Barrientos','Ray Chen','Annette-Barbara Vogel','Natalia Walewska','Radu Lupu',
+             '文薇','Rachel Barton Pine','Manuel Quiroga','Emanuel Vardi','Gidon Kremer','André Previn','Herbert Von Karajan',
+             'Simone Dinnerstein','Angela Hewitt','Nigel Kennedy','Marcelle Meyer','Daniel Fuchs','Janine Johnson','Renaud','Leslie Howard','Julian Olevsky',
+             'Bob Eberly','Geschwister buchberger','Rosa Ponselle','Vladimir Horowitz','Alfred Cortot','Gil Shaham','Göran Söllscher','Ivan Moravec','Marian Migdal','Levon Ambartsumian',
+             'Frida Bauer','Andres Segovia','Mauro Giuliani','Heinrich Schiff','John Williams','Seiji Ozawa','Samson François',
+             'Barbara Bonney','Fritz Wunderlich','Martha Argerich','Andres Alen','St. Martin\'s Orchestra','Barry Wordsworth','Bernard Haitink','Paul Coker','Neville Marriner','John Lenehan',
 
              'Franz Liszt'
             ];
@@ -65,6 +86,7 @@ router.get('/',function(req,res){
 
 	res.render('index',{QQMusicUrls:urls.splice(0,6)});
 });
+
 router.get('/get-source',function(req,res){
 	var url=req.query.url;
 	var format=req.query.format?req.query.format:'mp4';
@@ -76,86 +98,4 @@ router.get('/get-source',function(req,res){
 });
 
 /* GET home page. */
-router.post('/search', function(req, res,next) {
-	var keyword_origin=req.body.keyword;
-	if(!keyword_origin||keyword_origin.length==0){
-    	res.redirect('/');
-    	return;
-    }
-    keyword_origin=keyword_origin.substr(0,30);
-    keyword_origin=keyword_origin.trim();
-	var keyword=utils.before_translate_filter(keyword_origin);
-	var result={code:0,platform:utils.getPlatform(req),keyword:keyword_origin};
-	search.google_translate(keyword).then(function(keyword_translated){
-		keyword_translated=utils.after_translate_filter(keyword_translated);
-
-        var keywords={};
-        utils.after_translate_mix(keyword_origin,keywords);
-        utils.after_translate_mix(keyword_translated,keywords);
-        console.log(keywords);
-
-        qlist=[];
-        qlist_type=[];
-        if(req.body.type){
-            if(req.body.type=='scores'){
-                for(var i in keywords){
-                    qlist.push(search.google_imslp(i));
-                    qlist_type.push('scores');
-                }
-            }else if(req.body.type=='videos'){
-                for(var i in keywords){
-                    qlist.push(search.Youku(i));
-                    qlist_type.push('videos');
-                }
-            }else if(req.body.type=='audios'){
-                for(var i in keywords){
-                    qlist.push(search.QQMusic(i));
-                    qlist_type.push('audios');
-                }
-            }else{
-                res.json({code:-2,msg:'type error'});
-                return;
-            }
-        }else{
-            res.json({code:-1,msg:'type is missing'});
-            return;
-        }
-		when.all(qlist).then(function(datas){
-			result.videos=[];
-			result.scores=[];
-            result.audios=[];
-            var scores_ids={};
-            var videos_ids={};
-            var audios_ids={};
-			for(var i in datas){
-                if(qlist_type[i]=='scores'){
-                    for(var j in datas[i]){
-                        if(!scores_ids[datas[i][j].link]){
-                            scores_ids[datas[i][j].link]=true;
-                            result.scores.push(datas[i][j]);
-                        }
-                    }
-                }else if(qlist_type[i]=='videos'){
-                    for(var j in datas[i]){
-                        if(!videos_ids[datas[i][j].id]){
-                            videos_ids[datas[i][j].id]=true;
-                            result.videos.push(datas[i][j]);
-                        }
-                    }
-                }else if(qlist_type[i]=='audios'){
-                    for(var j in datas[i]){
-                        if(!audios_ids[datas[i][j].songid]){
-                            audios_ids[datas[i][j].songid]=true;
-                            result.audios.push(datas[i][j]);
-                        }
-                    }
-                }
-			}
-
-			//res.render('search', { title: 'Results' ,keyword:keyword_origin,result:result});
-			res.json(result);
-		})
-	})
-});
-
 module.exports = router;
