@@ -15,23 +15,44 @@
             <div id="logo">
                 <div id="search-wrap" class="start">
                     <input id="search">
-                    <button id="btn-search">Search</button>
+                    <button id="btn-search"><%=language.search%></button>
                 </div>
                 <div id="result-wrap">
                     <div id="result-stick">
                     </div>
                     <div id="result">
                         <div class="tabs">
-                            <div data-type="scores" class="tab selected">Scores</div>
-                            <div data-type="videos" class="tab">Videos</div>
-                            <div data-type="audios" class="tab">Audios</div>
+                            <div data-type="scores" class="tab selected"><%=language.scores%></div>
+                            <div data-type="videos" class="tab"><%=language.videos%></div>
+                            <div data-type="audios" class="tab"><%=language.audios%></div>
                         </div>
                         <div id="result-content">
                         </div>
                     </div>
                 </div>
-                <div id="about-wrap" style="display:none">
-                    <div id="about-stick">
+                <div id="introduction-wrap">
+                    <div id="introduction-stick">
+                    </div>
+                    <div id="introduction">
+                        <div id="introduction-title">dsf</div>
+                        <div id="introduction-content">
+                            introduction
+                        </div>
+                    </div>
+                </div>
+                <div class="other-wrap volunteer">
+                    <div class="other-stick">
+                        <%=language.volunteer%>
+                    </div>
+                </div>
+                <div class="other-wrap about">
+                    <div class="other-stick">
+                        <%=language.about%>
+                    </div>
+                </div>
+                <div class="other-wrap help">
+                    <div class="other-stick">
+                        <%=language.help%>
                     </div>
                 </div>
                 <div id="magnifier">
@@ -58,7 +79,7 @@
                          <div id="music-singer">singer</div>
                          <div id="music-albumname">albumname</div>
                      </div>
-                     <div id="music-more">More</div>
+                     <div id="music-more"><%=language.more%></div>
                  </div>
              </div>
         </div>
@@ -67,6 +88,9 @@
 </body>
 <script src="/js/template-native.js"></script>
 <script id="template-result" type="text/html">
+    <#if(scores.length==0&&videos.length==0&&audios.length==0){#>
+        <%=language.noResult%>
+    <#}#>
     <#for(var i in scores){#>
         <a class="result-score" target="_Blank" href="<#=scores[i].link#>"><#=scores[i].title#></a>
     <#}#>
@@ -75,7 +99,7 @@
     <#}#>
     <#for(var i in audios){#>
         <a class="result-audio"  target="_Blank" href="<#=audios[i].m4a#>">
-            <img class="result-audio-img" width="150"src="<#=audios[i].albumpic_big#>">
+            <img class="result-audio-img" width="150" height="150" src="<#=audios[i].albumpic_big#>">
             <div class="audio-info">
                 <div><#=audios[i].songname#></div>
                 <div><#=audios[i].albumname#></div>
@@ -92,8 +116,9 @@
         var width=window.innerWidth;
         $('#result').width(width-30);
         $('#result').height(height-100);
-        $('#search').width(width-70);
-        $('#btn-search').css('left',width-70-$('#btn-search').width());
+        $('#introduction').width(width-30);
+        $('#introduction').height(height-100);
+        $('#search').width(width-53);
 
         $('#search-wrap').removeClass('start');
         $('#search-wrap').addClass('show');
@@ -224,7 +249,10 @@
             $('#music-details').removeClass('show');
         }
         function clearSearch(){
-            stopSearchAnimation=true;
+            if(stopSearchAnimation==false){
+                $('#search').val('');
+                stopSearchAnimation=true;
+            }
             if($('#search').val()==autoTyping[0]){
                 $('#search').val('');
             }
@@ -242,19 +270,76 @@
         function hideResult(){
             $('#result-wrap').removeClass('show');
         }
+        function showOthers(){
+            var delay=0;
+            $('.other-wrap').each(function(){
+                var self=$(this);
+                setTimeout(function(){
+                    self.addClass('show');
+                },delay);
+                delay+=50;
+            });
+            $('#result-wrap').removeClass('show');
+        }
+        function hideOthers(){
+             var delay=0;
+             $('.other-wrap').each(function(){
+                 var self=$(this);
+                 setTimeout(function(){
+                     self.removeClass('show');
+                 },delay);
+                 delay+=50;
+             });
+        }
         function magnifierClick(){
             $('#search').blur();
             if($('#search-wrap').hasClass('show')){
                 $('#search-wrap').removeClass('show');
                 $('#result-wrap').removeClass('show');
-                $('#about-wrap').removeClass('show');
+                $('#introduction-wrap').removeClass('show');
+                hideOthers();
             }else{
                 $('#search-wrap').addClass('show');
-                $('#about-wrap').addClass('show');
-                $('#result-wrap').removeClass('show');
+                showOthers();
             }
         }
 
+        function hideSearch(){
+            $('#search-wrap').removeClass('show');
+            $('#search-wrap').removeClass('start');
+        }
+
+        function showAbout(){
+            hideDetails();
+            hideOthers();
+            $('#introduction-title').text('<%-language.about%>');
+            $('#introduction-wrap').addClass('show');
+            $('#introduction-content').html('<%-language.about_content%>');
+        }
+        function showVolunteer(){
+            hideDetails();
+            hideOthers();
+            $('#introduction-title').text('<%-language.volunteer%>');
+            $('#introduction-wrap').addClass('show');
+            $('#introduction-content').html('<%-language.volunteer_content%>');
+        }
+        function hideIntroduction(){
+            $('#introduction-wrap').removeClass('show');
+        }
+        function showHelp(){
+            hideDetails();
+            hideOthers();
+            $('#introduction-title').text('<%-language.help%>');
+            $('#introduction-wrap').addClass('show');
+            $('#introduction-content').html('<%-language.help_content%>');
+        }
+
+        function hideAll(){
+            hideOthers();
+            hideSearch();
+            hideIntroduction();
+            hideDetails();
+        }
         var contentScrolling=false;
         var maxfov=120,fov=120,minfov=120;
         if(checkMobile()){
@@ -268,22 +353,38 @@
             $('#music-album').on('touchstart',nothing);
 
             $('#search').on('touchend',clearSearch);
-            $('#btn-search').on('touchend',function(){hideDetails();search($('#search').val());});
+            $('#btn-search').on('touchend',function(){hideDetails();
+                $('#introduction-wrap').removeClass('show');
+                hideOthers();
+            search($('#search').val());});
             $('.tab').on('touchstart',switchTab);
             $('#result-content').on('touchstart',function(){contentScrolling=true;});
             $('#result-content').on('touchend',function(){contentScrolling=false;});
             $('#magnifier').on('touchstart',magnifierClick);
+            $('.about').on('touchend',showAbout);
+            $('.volunteer').on('touchend',showVolunteer);
+            $('.help').on('touchend',showHelp);
+            $('#introduction-content').on('touchend',hideAll);
         }else{
             $('#music-details').on('mouseup',hideDetails);
             $('#music-more').on('mouseup',moreInfo);
             $('#music-album').on('mouseup',nothing);
             $('#search').on('mouseup',clearSearch);
-            $('#btn-search').on('mouseup',function(){hideDetails();search($('#search').val());});
+            $('#btn-search').on('mouseup',function(){hideDetails();
+                $('#introduction-wrap').removeClass('show');
+                hideOthers();
+            search($('#search').val());});
             $('.tab').on('mouseup',switchTab);
             $('#magnifier').on('mouseup',magnifierClick);
+            $('.about').on('mouseup',showAbout);
+            $('.volunteer').on('mouseup',showVolunteer);
+            $('.help').on('mouseup',showHelp);
+            $('#introduction-content').on('mouseup',hideAll);
         }
 
         function musicClick(content){
+            hideOthers();
+            hideIntroduction();
             $('#search-wrap').removeClass('show');
                 setTimeout(function(){
                     $('#music-album').css('background-image','url('+content.attr('picture_small')+')');
@@ -310,6 +411,7 @@
             mode      : 'viewer'
 
         });
+        showVolunteer();
 </script>
 
 </html>

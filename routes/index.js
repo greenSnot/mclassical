@@ -84,7 +84,7 @@ router.get('/',function(req,res){
         return Math.random()>.5 ? -1 : 1;
     });
 
-	res.render('index',{QQMusicUrls:urls.splice(0,6)});
+	res.render('index',{QQMusicUrls:urls.splice(0,6),language:options.languages[req.query.language]?options.languages[req.query.language]:options.languages.cn});
 });
 
 router.get('/get-source',function(req,res){
