@@ -356,6 +356,7 @@
             var self=$(this);
             $('#introduction-title').text(self.attr('data-title'));
             $('#introduction-wrap').addClass('show');
+            $('#audio')[0].pause();
             $('#introduction-content').html(template('template-youku',{youku_id:self.attr('data-id'),height:$('#introduction-content').height()-20,width:$('#introduction-content').width()-20}));
             player = new YKU.Player('youkuplayer',{
             styleid: '0',
