@@ -147,6 +147,7 @@ exports.Youku=function(keyword,page){
         });
     }else{
         
+        console.log('youku_api');
 	    var url=options.youku.search_url+'?client_id='+options.youku.client_id+'&keyword='+utils.urlencode(keyword);
 	    return getHtml(url).then(function(data){
 	    	data=utils.unicode2Chr(data);

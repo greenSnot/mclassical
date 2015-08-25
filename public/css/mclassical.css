@@ -488,6 +488,8 @@ td,tr,table{
             }
 
             #introduction-content{
+                display:-webkit-box;
+                -webkit-box-flex:1;
     font-size: 14px;
     text-align:start;
     padding:10px;

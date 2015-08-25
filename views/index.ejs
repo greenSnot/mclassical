@@ -98,7 +98,7 @@
         <a class="result-score" target="_Blank" href="<#=scores[i].link#>"><#=scores[i].title#></a>
     <#}#>
     <#for(var i in videos){#>
-        <a class="result-video" target="_Blank"  href="<#=videos[i].link#>"><img class="result-video-img" width="150"src="<#=videos[i].thumbnail#>"><div class="video-info"><#=videos[i].title#></div></a>
+        <a class="result-video" data-id="<#=videos[i].id#>" target="_Blank" data-title="<#=videos[i].title#>" data-link="<#=videos[i].link#>"><img class="result-video-img" width="150"src="<#=videos[i].thumbnail#>"><div class="video-info"><#=videos[i].title#></div></a>
     <#}#>
     <#for(var i in audios){#>
         <a class="result-audio"  target="_Blank" href="<#=audios[i].m4a#>">
@@ -110,6 +110,11 @@
             </div>
         </a>
     <#}#>
+</script>
+<script type="text/javascript" src="http://player.youku.com/jsapi">
+</script>
+<script id="template-youku" type="text/html">
+    <div id="youkuplayer" style="height:<#=width#>px;width:<#=height#>px;display:block;"></div>
 </script>
 <script>
         template.config('openTag','<#');
@@ -270,7 +275,7 @@
             $(this).addClass('selected');
             searchPost();
         }
-        function hideResult(){
+        function hideResults(){
             $('#result-wrap').removeClass('show');
         }
         function showOthers(){
@@ -343,8 +348,26 @@
             hideIntroduction();
             hideDetails();
         }
+
+        function showIframe(){
+            hideDetails();
+            hideResults();
+            hideOthers();
+            var self=$(this);
+            $('#introduction-title').text(self.attr('data-title'));
+            $('#introduction-wrap').addClass('show');
+            $('#introduction-content').html(template('template-youku',{youku_id:self.attr('data-id'),height:$('#introduction-content').height()-20,width:$('#introduction-content').width()-20}));
+            player = new YKU.Player('youkuplayer',{
+            styleid: '0',
+            client_id: '<%=youku_client_id%>',
+            vid: self.attr('data-id')
+            });
+        }
+
         var contentScrolling=false;
         var maxfov=120,fov=120,minfov=120;
+
+        var result_wrap=$('#result-wrap');
         if(checkMobile()){
             maxfov=100;
             fov=100;
@@ -367,7 +390,7 @@
             $('.about').on('touchend',showAbout);
             $('.volunteer').on('touchend',showVolunteer);
             $('.help').on('touchend',showHelp);
-            $('#introduction-content').on('touchend',hideAll);
+            result_wrap.delegate('.result-video','click',showIframe);
         }else{
             $('#music-details').on('mouseup',hideDetails);
             $('#music-more').on('mouseup',moreInfo);
@@ -382,7 +405,7 @@
             $('.about').on('mouseup',showAbout);
             $('.volunteer').on('mouseup',showVolunteer);
             $('.help').on('mouseup',showHelp);
-            $('#introduction-content').on('mouseup',hideAll);
+            result_wrap.delegate('.result-video','click',showIframe);
         }
 
         function musicClick(content){
@@ -414,7 +437,6 @@
             mode      : 'viewer'
 
         });
-        showVolunteer();
 </script>
 
 </html>
