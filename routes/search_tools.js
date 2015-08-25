@@ -117,7 +117,7 @@ exports.QQMusic=function(keyword,page){
 	    return when.promise(function(resolve,reject){
             getHtml(url,{keyword:keyword,type:'audios'}).then(function(data){
                 data=JSON.parse(data);
-                resolve(data.qqmusic);
+                resolve(data.audios);
             });
         });
     }else{
@@ -142,7 +142,7 @@ exports.Youku=function(keyword,page){
 	    return when.promise(function(resolve,reject){
             getHtml(url,{keyword:keyword,type:'videos'}).then(function(data){
                 data=JSON.parse(data);
-                resolve(data.youku);
+                resolve(data.videos);
             });
         });
     }else{
