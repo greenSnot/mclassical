@@ -10,6 +10,10 @@ var search=require('./search_tools');
 var utils=require('../utils');
 
 router.get('/',function(req,res){
+    if(utils.getPlatform(req).indexOf('pc')>=0){
+        res.render('wiki',{});
+        return;
+    }
 
     var keys=[
              'Anne-Sophie Mutter',

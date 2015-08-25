@@ -88,7 +88,10 @@
 </body>
 <script src="/js/template-native.js"></script>
 <script id="template-result" type="text/html">
-    <#if(scores.length==0&&videos.length==0&&audios.length==0){#>
+    <#if(
+    (scores&&scores.length==0)&&
+    (videos&&videos.length==0)&&
+    (audios&&audios.length==0)){#>
         <%=language.noResult%>
     <#}#>
     <#for(var i in scores){#>

@@ -19,7 +19,7 @@ router.post('/', function(req,res) {
     keyword_origin=utils.dbFilter(keyword_origin.substr(0,60).toLowerCase());
     keyword_origin=keyword_origin.trim();
 	var keyword=utils.before_translate_filter(keyword_origin);
-	var result={code:0,platform:utils.getPlatform(req),keyword:keyword_origin};
+	var result={code:0,keyword:keyword_origin};
 	search.google_translate(keyword).then(function(keyword_translated){
 		keyword_translated=utils.after_translate_filter(keyword_translated);
 
@@ -85,6 +85,15 @@ router.post('/', function(req,res) {
                     }
                 }
 			}
+            if(result.audios.length==0){
+                delete(result.audios);
+            }
+            if(result.videos.length==0){
+                delete(result.videos);
+            }
+            if(result.scores.length==0){
+                delete(result.scores);
+            }
 
 			res.json(result);
 		})

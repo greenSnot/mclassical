@@ -166,9 +166,6 @@ exports.getPlatform=function(req){
 	return 'pc';
     }
     var r='';
-    if(req.query&&req.query.platform){
-        return req.query.platform;
-    }
 
     if(ua.indexOf('iPhone')>=0){
         r+='iPhone';
