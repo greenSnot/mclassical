@@ -25,7 +25,15 @@ var urldecode=function(zipStr){
     }  
   
     return uzipStr;  
-}  
+}
+
+function htmlencode(value){
+  return $('<div/>').text(value).html();
+}
+
+function htmldecode(value){
+  return $('<div/>').html(value).text();
+}
 
 function speech(text){
     var src = 'http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&text=' + text;

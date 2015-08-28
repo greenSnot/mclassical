@@ -18,8 +18,7 @@
                     <button id="btn-search"><%=language.search%></button>
                 </div>
                 <div id="result-wrap">
-                    <div id="result-stick">
-                    </div>
+                    <div id="result-stick"></div>
                     <div id="result">
                         <div class="tabs">
                             <div data-type="scores" class="tab selected"><%=language.scores%></div>
@@ -81,40 +80,76 @@
                      </div>
                      <div id="music-more"><%=language.more%></div>
                  </div>
+                 <div class="audiojsZ">
+                    <audio id="audio"></audio>
+                    <div class="play-pauseZ">
+                      <p class="playZ"></p>
+                      <p class="pauseZ"></p>
+                      <p class="loadingZ"></p>
+                      <p class="errorZ"></p>
+                    </div>
+                    <div class="scrubberZ">
+                      <div class="progressZ"></div>
+                      <div class="loadedZ"></div>
+                    </div>
+                    <div class="timeZ" style="display:none">
+                      <em class="playedZ">00:00</em>/<strong class="durationZ">00:00</strong>
+                    </div>
+                    <div class="error-messageZ"></div>
+                 </div>
              </div>
         </div>
 
-    <audio id="audio" autoplay="autoplay" style="width:0;height:0;visibility:hidden" ></audio>
 </body>
 <script src="/js/template-native.js"></script>
 <script id="template-result" type="text/html">
     <#if(
-    (scores&&scores.length==0)&&
-    (videos&&videos.length==0)&&
-    (audios&&audios.length==0)){#>
+    (scores==undefined||(scores&&scores.length==0))&&
+    (videos==undefined||(videos&&videos.length==0))&&
+    (audios==undefined||(audios&&audios.length==0))){#>
         <%=language.noResult%>
     <#}#>
     <#for(var i in scores){#>
         <a class="result-score" target="_Blank" href="<#=scores[i].link#>"><#=scores[i].title#></a>
     <#}#>
     <#for(var i in videos){#>
-        <a class="result-video" data-id="<#=videos[i].id#>" target="_Blank" data-title="<#=videos[i].title#>" data-link="<#=videos[i].link#>"><img class="result-video-img" width="150"src="<#=videos[i].thumbnail#>"><div class="video-info"><#=videos[i].title#></div></a>
+        <div class="result-video" data-id="<#=videos[i].id#>" target="_Blank" data-title="<#=videos[i].title#>" data-link="<#=videos[i].link#>"><img class="result-video-img" width="150"src="<#=videos[i].thumbnail#>"><div class="video-info"><#=videos[i].title#></div></div>
     <#}#>
     <#for(var i in audios){#>
-        <a class="result-audio"  target="_Blank" href="<#=audios[i].m4a#>">
-            <img class="result-audio-img" width="150" height="150" src="<#=audios[i].albumpic_big#>">
-            <div class="audio-info">
-                <div><#=audios[i].songname#></div>
-                <div><#=audios[i].albumname#></div>
-                <div><#=audios[i].singername#></div>
+        <a class="result-audio"  target="_Blank" data-id="<#=audios[i].songid#>">
+            <div style="display:-webkit-box;-webkit-box-orient:horizontal;">
+                <img class="result-audio-img" width="150" height="150" src="<#=audios[i].albumpic_big#>">
+                <div class="audio-info">
+                    <div><#=audios[i].songname#></div>
+                    <div><#=audios[i].albumname#></div>
+                    <div><#=audios[i].singername#></div>
+                </div>
             </div>
+                 <div class="audiojsZ">
+                    <audio data-url="<#=audios[i].m4a#>" src="<#=audios[i].m4a#>"></audio>
+                    <div class="play-pauseZ">
+                      <p class="playZ"></p>
+                      <p class="pauseZ"></p>
+                      <p class="loadingZ"></p>
+                      <p class="errorZ"></p>
+                    </div>
+                    <div class="scrubberZ inresult">
+                      <div class="progressZ"></div>
+                      <div class="loadedZ"></div>
+                    </div>
+                    <div class="timeZ" style="display:none">
+                      <em class="playedZ">00:00</em>/<strong class="durationZ">00:00</strong>
+                    </div>
+                    <div class="error-messageZ"></div>
+                 </div>
         </a>
     <#}#>
 </script>
 <script type="text/javascript" src="http://player.youku.com/jsapi">
 </script>
+<script src="js/audio.min.js"></script>
 <script id="template-youku" type="text/html">
-    <div id="youkuplayer" style="height:<#=width#>px;width:<#=height#>px;display:block;"></div>
+    <div id="youkuplayer<#=youku_id#>" style="height:<#=height#>px;width:100%;display:block;"></div>
 </script>
 <script>
         template.config('openTag','<#');
@@ -145,18 +180,50 @@
 
         function searchPost(){
             $('#result-content').html('<div id="result-loading-wrap"><div id="result-loading"></div></div>');
-            $.post('/search',{
+            $.ajax({
+                url:'/search',
+                type:'post',
+                data:{
                     type:$('.tab.selected').attr('data-type'),
                     keyword:$('#search').val()
                 },
-                function(res){
+                timeout:6000,
+                success:function(res){
                     if(res.code!=0){
                         alert(res.msg);
                         return;
                     }
                     $('#result-content').html(template('template-result',res));
+                    if($('.tab.selected').attr('data-type')=='audios'){
+                        $('#result-content').find('audio').each(function(){
+                            audios[$(this).attr('data-id')]=audiojs.create($(this)[0], {
+                                css: false,
+                                createPlayer: {
+                                  markup: false,
+                                  playPauseClass: 'play-pauseZ',
+                                  scrubberClass: 'scrubberZ',
+                                  progressClass: 'progressZ',
+                                  loaderClass: 'loadedZ',
+                                  timeClass: 'timeZ',
+                                  durationClass: 'durationZ',
+                                  playedClass: 'playedZ',
+                                  errorMessageClass: 'error-messageZ',
+                                  playingClass: 'playingZ',
+                                  loadingClass: 'loadingZ',
+                                  errorClass: 'errorZ'
+                                }
+                            });
+                        });
+                    }
+                },
+                error:function(){
+                    console.log("error");
+                }
             });
         }
+
+        var audios={};
+
 
         function search(keyword){
             $('#search').blur();
@@ -207,10 +274,10 @@
                     for(var j in clist){
                         if(j>14)break;
                         Musics['QQMusic_'+clist[j].songid]={};
-                        Musics['QQMusic_'+clist[j].songid].songid=clist[j].songid;
-                        Musics['QQMusic_'+clist[j].songid].songname=decodeURI(clist[j].songname);
-                        Musics['QQMusic_'+clist[j].songid].singer=decodeURI(clist[j].singername);
-                        Musics['QQMusic_'+clist[j].songid].albumname=decodeURI(clist[j].albumname);
+                        Musics['QQMusic_'+clist[j].songid].songid=urldecode(clist[j].songid);
+                        Musics['QQMusic_'+clist[j].songid].songname=urldecode(clist[j].songname);
+                        Musics['QQMusic_'+clist[j].songid].singer=urldecode(clist[j].singername);
+                        Musics['QQMusic_'+clist[j].songid].albumname=urldecode(clist[j].albumname);
                         Musics['QQMusic_'+clist[j].songid].audio_url=clist[j].m4a;
                         Musics['QQMusic_'+clist[j].songid].picture_small=clist[j].albumpic_small;
                         Musics['QQMusic_'+clist[j].songid].picture_big=clist[j].albumpic_big;
@@ -350,21 +417,47 @@
         }
 
         function showIframe(){
+            stopBackgroundMusic();
+            if($(this).hasClass('inited')){
+                return;
+            }
+            if(videoDom){
+                videoDom.html(videoHtml);
+            }
+            $(this).addClass('inited');
             hideDetails();
-            hideResults();
             hideOthers();
             var self=$(this);
-            $('#introduction-title').text(self.attr('data-title'));
-            $('#introduction-wrap').addClass('show');
-            $('#audio')[0].pause();
-            $('#introduction-content').html(template('template-youku',{youku_id:self.attr('data-id'),height:$('#introduction-content').height()-20,width:$('#introduction-content').width()-20}));
-            player = new YKU.Player('youkuplayer',{
+            videoDom=self;
+            videoHtml=self.html();
+            self.html(template('template-youku',{youku_id:self.attr('data-id'),height:self.height()-20,width:280}));
+            YKU.Player('youkuplayer'+self.attr('data-id'),{
             styleid: '0',
             client_id: '<%=youku_client_id%>',
             vid: self.attr('data-id')
             });
         }
 
+        var videoDom;
+        var videoHtml;
+
+        function stopBackgroundMusic(e){
+            if(e)e.stopPropagation();
+            if(audio&&audio.playing){
+                audio.playPause();
+            }
+        }
+
+        function stopAllMusic(){
+            stopBackgroundMusic();
+            for(var i in audios){
+                if(audios[i].playing){
+                    audios[i].playPause();
+                }
+            }
+        }
+
+        var audio=false;
         var contentScrolling=false;
         var maxfov=120,fov=120,minfov=120;
 
@@ -374,7 +467,7 @@
             fov=100;
             minfov=100;
 
-            $('#music-details').on('touchstart',hideDetails);
+            $('#music-details').on('touchend',hideDetails);
             $('#music-more').on('touchstart',moreInfo);
             $('#music-info').on('touchstart',nothing);
             $('#music-album').on('touchstart',nothing);
@@ -390,8 +483,15 @@
             $('#magnifier').on('touchstart',magnifierClick);
             $('.about').on('touchend',showAbout);
             $('.volunteer').on('touchend',showVolunteer);
+
+            $('.play-pauseZ').on('touchend',nothing);
+            $('.play-pauseZ').on('touchstart',nothing);
+            $('.scrubberZ').on('touchend',nothing);
+            $('.scrubberZ').on('touchstart',nothing);
+
             $('.help').on('touchend',showHelp);
             result_wrap.delegate('.result-video','click',showIframe);
+            result_wrap.delegate('.result-audio','click',stopBackgroundMusic);
         }else{
             $('#music-details').on('mouseup',hideDetails);
             $('#music-more').on('mouseup',moreInfo);
@@ -407,22 +507,51 @@
             $('.volunteer').on('mouseup',showVolunteer);
             $('.help').on('mouseup',showHelp);
             result_wrap.delegate('.result-video','click',showIframe);
+            result_wrap.delegate('.result-audio','click',stopBackgroundMusic);
         }
 
         function musicClick(content){
+            stopAllMusic();
             hideOthers();
             hideIntroduction();
             $('#search-wrap').removeClass('show');
-                setTimeout(function(){
-                    $('#music-album').css('background-image','url('+content.attr('picture_small')+')');
-                    $('#music-album-full').css('background-image','url('+content.attr('picture_big')+')');
-                    $('#music-songname').text(content.attr('songname'));
-                    $('#music-albumname').text(content.attr('albumname'));
-                    $('#music-singer').text(content.attr('singer'));
-                    $('#music-details').addClass('show');
-                },300);
-                $('#audio').attr('src',content.attr('audio_url'));
             $('#result-wrap').removeClass('show');
+            setTimeout(function(){
+                $('#music-album').css('background-image','url('+content.attr('picture_small')+')');
+                $('#music-album-full').css('background-image','url('+content.attr('picture_big')+')');
+                $('#music-songname').text(content.attr('songname'));
+                $('#music-albumname').text(content.attr('albumname'));
+                $('#music-singer').text(content.attr('singer'));
+                $('#music-details').addClass('show');
+            },300);
+            if(!audio){
+                audio=audiojs.create($('#audio')[0], {
+                    css: false,
+                    createPlayer: {
+                      markup: false,
+                      playPauseClass: 'play-pauseZ',
+                      scrubberClass: 'scrubberZ',
+                      progressClass: 'progressZ',
+                      loaderClass: 'loadedZ',
+                      timeClass: 'timeZ',
+                      durationClass: 'durationZ',
+                      playedClass: 'playedZ',
+                      errorMessageClass: 'error-messageZ',
+                      playingClass: 'playingZ',
+                      loadingClass: 'loadingZ',
+                      errorClass: 'errorZ'
+                    }
+                });
+                audio.load(content.attr('audio_url'));
+                audio.playPause();
+            }else{
+                audio.load(content.attr('audio_url'));
+                audio.playPause();
+                audio.playPause();
+                if(!audio.playing){
+                    audio.playPause();
+                }
+            }
         }
 
         pano.init({

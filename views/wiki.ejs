@@ -11,7 +11,43 @@
 <body style="overflow:scroll">
 <h1>古典音乐放大镜Wiki</h1>
 <h3>2015.08 Rating System</h3>
-...
+</br>
+</br>original_key
+</br>|  |  | 
+</br>k1 k2 k3
+</br>
+</br>[results]
+</br>    source       result
+</br>    k1           r1,r2,r4
+</br>                 (x,x ,v)
+</br>    k2           r2,r3
+</br>                 (x,v)
+</br>    k3           r3,r2
+</br>                 (v,x)
+</br>    original_key r4,r1
+</br>                 (v,x)
+</br>
+</br>right:r3,r4,r5
+</br>wrong:r1,r2,r6
+</br>
+</br>[pre_aliases]                                  [pre_blocks]
+</br>    key          aliases                            key             block
+</br>    k1           r4                                 k1              r1
+</br>    k1           r3                                 k1              r2
+</br>    k3           r3                                 k2              r2
+</br>    original_key r4                                 k3              r2
+</br>                                                    original_key    r1,r2
+</br>
+</br>[aliases]
+</br>    key          aliases
+</br>    k1           r4,r3,original_key
+</br>    r4           k1,r3,original_key
+</br>    r3           r4,k1,original_key
+</br>    original_key r4,r3,k1
+</br>
+</br>[blocks]
+</br>
+</br>[block_forever]
 <h3>2015.08 New Artists list</h3>
 'Anne-Sophie Mutter',
 </br>'Pinchas Zukerman',

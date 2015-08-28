@@ -16,7 +16,10 @@ module.exports = function(grunt) {
 				],
                                 'public/js/mclassical-pano.js':[
 					'public/js/mclassical-pano.suiyiwannong.js'
-				]
+				],
+                                'public/js/audio.min.js':[
+                    'public/js/audio.js'
+                            ]
                         }
             }
             //build: {

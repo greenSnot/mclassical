@@ -29,7 +29,6 @@ router.get('/',function(req,res){
              'Fritz Kreisler',
              'Niccolo Paganini',
              '吕思清',
-             'nin feng',
              '黄蒙拉',
              'akiko suwanai',
              'Midori Goto',

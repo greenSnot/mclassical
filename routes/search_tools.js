@@ -127,6 +127,12 @@ exports.QQMusic=function(keyword,page){
                 data=JSON.parse(data);
                 if(data.showapi_res_body&&data.showapi_res_body.pagebean&&data.showapi_res_body.pagebean.contentlist){
                     var t=data.showapi_res_body.pagebean.contentlist;
+                    for(var i in t){
+                        for(var j in t[i]){
+                            if(j!='songid')
+                            t[i][j]=utils.urldecode(t[i][j]);
+                        }
+                    }
                     resolve(t);
                 }else{
                     resolve([]);
@@ -146,7 +152,6 @@ exports.Youku=function(keyword,page){
             });
         });
     }else{
-        
         console.log('youku_api');
 	    var url=options.youku.search_url+'?client_id='+options.youku.client_id+'&keyword='+utils.urlencode(keyword);
 	    return getHtml(url).then(function(data){

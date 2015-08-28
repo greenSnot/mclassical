@@ -85,13 +85,15 @@ router.post('/', function(req,res) {
                     }
                 }
 			}
-            if(result.audios.length==0){
+
+            console.log(result.audios.length);
+            if(req.body.type!='audios'){
                 delete(result.audios);
             }
-            if(result.videos.length==0){
+            if(req.body.type!='videos'){
                 delete(result.videos);
             }
-            if(result.scores.length==0){
+            if(req.body.type!='scores'){
                 delete(result.scores);
             }
 
