@@ -132,6 +132,7 @@ exports.QQMusic=function(keyword,page){
                             if(j!='songid')
                             t[i][j]=utils.urldecode(t[i][j]);
                         }
+                        t[i].source='qqmusic';
                     }
                     resolve(t);
                 }else{
@@ -156,7 +157,18 @@ exports.Youku=function(keyword,page){
 	    var url=options.youku.search_url+'?client_id='+options.youku.client_id+'&keyword='+utils.urlencode(keyword);
 	    return getHtml(url).then(function(data){
 	    	data=utils.unicode2Chr(data);
-	    	return JSON.parse(data).videos;
+	    	var r=JSON.parse(data).videos;
+            var result=[];
+            for(var i in r){
+                var t={};
+                t.link=r[i].link;
+                t.id=r[i].id;
+                t.thumbnail=r[i].thumbnail;
+                t.title=r[i].title;
+                t.source='youku';
+                result.push(t);
+            }
+            return result;
 	    });
     }
 }
@@ -176,7 +188,8 @@ exports.google_imslp_api=function(keyword){
                         for(var i in data){
                                 result.push({
                                         title:data[i].title,
-                                        link:data[i].link});
+                                        link:data[i].link,
+                                        source:'imslp'});
                         }
                         resolve(result);
                 });

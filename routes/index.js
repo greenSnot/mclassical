@@ -72,7 +72,7 @@ router.get('/',function(req,res){
              '文薇','Rachel Barton Pine','Manuel Quiroga','Emanuel Vardi','Gidon Kremer','André Previn','Herbert Von Karajan',
              'Simone Dinnerstein','Angela Hewitt','Nigel Kennedy','Marcelle Meyer','Daniel Fuchs','Janine Johnson','Renaud','Leslie Howard','Julian Olevsky',
              'Bob Eberly','Geschwister buchberger','Rosa Ponselle','Vladimir Horowitz','Alfred Cortot','Gil Shaham','Göran Söllscher','Ivan Moravec','Marian Migdal','Levon Ambartsumian',
-             'Frida Bauer','Andres Segovia','Mauro Giuliani','Heinrich Schiff','John Williams','Seiji Ozawa','Samson François',
+             'Frida Bauer','Andres Segovia','Mauro Giuliani','John Williams','Seiji Ozawa','Samson François',
              'Barbara Bonney','Fritz Wunderlich','Martha Argerich','Andres Alen','St. Martin\'s Orchestra','Barry Wordsworth','Bernard Haitink','Paul Coker','Neville Marriner','John Lenehan',
 
              'Franz Liszt'

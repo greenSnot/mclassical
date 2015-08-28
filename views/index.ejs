@@ -110,13 +110,13 @@
         <%=language.noResult%>
     <#}#>
     <#for(var i in scores){#>
-        <a class="result-score" target="_Blank" href="<#=scores[i].link#>"><#=scores[i].title#></a>
+        <a class="result-score" target="_Blank" href="<#=scores[i].link#>" data-source="<#=scores[i].source#>"><#=scores[i].title#></a>
     <#}#>
     <#for(var i in videos){#>
-        <div class="result-video" data-id="<#=videos[i].id#>" target="_Blank" data-title="<#=videos[i].title#>" data-link="<#=videos[i].link#>"><img class="result-video-img" width="150"src="<#=videos[i].thumbnail#>"><div class="video-info"><#=videos[i].title#></div></div>
+        <div class="result-video" data-id="<#=videos[i].id#>" target="_Blank" data-title="<#=videos[i].title#>" data-source="<#=videos[i].source#>" data-link="<#=videos[i].link#>"><img class="result-video-img" width="150"src="<#=videos[i].thumbnail#>"><div class="video-info"><#=videos[i].title#></div></div>
     <#}#>
     <#for(var i in audios){#>
-        <a class="result-audio"  target="_Blank" data-id="<#=audios[i].songid#>">
+        <a class="result-audio"  target="_Blank" data-id="<#=audios[i].songid#>" data-source="<#=audios[i].source#>'>
             <div style="display:-webkit-box;-webkit-box-orient:horizontal;">
                 <img class="result-audio-img" width="150" height="150" src="<#=audios[i].albumpic_big#>">
                 <div class="audio-info">
@@ -334,6 +334,19 @@
         }
         $('#search').on('focus',function(){
             $('#search-wrap').addClass('showbtn');
+        });
+        $('#search').on('keypress',function(e){
+             var keyCode = null;
+             if(e.which)
+                 keyCode = e.which;
+             else if(e.keyCode) 
+                 keyCode = e.keyCode;
+                 
+             if(keyCode == 13) 
+             {
+                 search($(this).val());
+                 return false;
+             }
         });
 
         function switchTab(){
