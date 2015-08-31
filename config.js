@@ -38,8 +38,8 @@ exports.options={
 		search_url:'http://cn.bing.com/search?q='//site:imslp.org beethoven
 	},
 	google:{
-		translate_url:'http://198.11.178.157:3000/tools/google_translate?',
-		search_url:'http://198.11.178.157:3000/tools/google_search?',
+		translate_url:'http://118.193.172.214/tools/google_translate?',
+		search_url:'http://118.193.172.214/tools/google_search?',
 		api:{
                 	translate_url:'https://www.googleapis.com/language/translate/v2?',
                 	//q=%E5%BE%88%E7%BE%8E%E5%A5%BD&target=en&key='

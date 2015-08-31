@@ -132,6 +132,7 @@ exports.QQMusic=function(keyword,page){
                             if(j!='songid')
                             t[i][j]=utils.urldecode(t[i][j]);
                         }
+                        t[i].m4a="http://tsmusic24.tc.qq.com/"+t[i].songid+'.mp3';
                         t[i].source='qqmusic';
                     }
                     resolve(t);
@@ -186,8 +187,11 @@ exports.google_imslp_api=function(keyword){
                         }
                         data=data.items;
                         for(var i in data){
+                            var title=data[i].title;
+                            var index=title.indexOf(' - IMSLP');
+                            title=index>=0?title.substring(0,index):title;
                                 result.push({
-                                        title:data[i].title,
+                                        title:title,
                                         link:data[i].link,
                                         source:'imslp'});
                         }
