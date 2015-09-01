@@ -5,6 +5,9 @@
     <meta name="author" content="Calculon 0x00111111@gmail.com">
     <head>
         <link rel="stylesheet" type="text/css" href="css/mclassical.css">
+        <script>var log=console.log.bind(console);</script>
+        <script type="text/javascript" src="http://player.youku.com/jsapi">
+</script>
         <script src='js/mclassical-base.js'></script>
         <script src='js/mclassical-pano.js'></script>
         <title>古典音乐放大镜</title>
@@ -21,9 +24,9 @@
                     <div id="result-stick"></div>
                     <div id="result">
                         <div class="tabs">
-                            <div data-type="scores" class="tab selected"><%=language.scores%></div>
+                            <div data-type="scores" class="tab"><%=language.scores%></div>
                             <div data-type="videos" class="tab"><%=language.videos%></div>
-                            <div data-type="audios" class="tab"><%=language.audios%></div>
+                            <div data-type="audios" class="tab selected"><%=language.audios%></div>
                         </div>
                         <div id="result-content">
                         </div>
@@ -126,7 +129,7 @@
                 </div>
             </div>
                  <div class="audiojsZ">
-                    <audio data-url="<#=audios[i].m4a#>" src="<#=audios[i].m4a#>"></audio>
+                    <audio data-url="<#=audios[i].m4a#>" preload="false"></audio>
                     <div class="play-pauseZ">
                       <p class="playZ"></p>
                       <p class="pauseZ"></p>
@@ -144,8 +147,6 @@
                  </div>
         </a>
     <#}#>
-</script>
-<script type="text/javascript" src="http://player.youku.com/jsapi">
 </script>
 <script src="js/audio.min.js"></script>
 <script id="template-youku" type="text/html">
@@ -179,6 +180,10 @@
         ];
 
         function searchPost(){
+            for(var i in audios){
+                audios[i].pause();
+            }
+            audios=[];
             $('#result-content').html('<div id="result-loading-wrap"><div id="result-loading"></div></div>');
             $.ajax({
                 url:'/search',
@@ -196,7 +201,8 @@
                     $('#result-content').html(template('template-result',res));
                     if($('.tab.selected').attr('data-type')=='audios'){
                         $('#result-content').find('audio').each(function(){
-                            audios[$(this).attr('data-id')]=audiojs.create($(this)[0], {
+                            audios[$(this).attr('data-url')]=audiojs.create($(this)[0], {
+                                preload:false,
                                 css: false,
                                 createPlayer: {
                                   markup: false,
@@ -223,7 +229,6 @@
         }
 
         var audios={};
-
 
         function search(keyword){
             $('#search').blur();

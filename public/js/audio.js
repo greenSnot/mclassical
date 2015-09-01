@@ -298,7 +298,10 @@
 
       if(checkMobile()){
         container[audiojs].events.addListener(playPause, 'touchstart', function(e) {
-          audio.playPause.apply(audio);
+            var a=$(this).parent().find('audio');
+            if(!a.attr('src'))
+            a.attr('src', a.attr('data-url'));
+            audio.playPause.apply(audio);
         });
 
         container[audiojs].events.addListener(scrubber, 'touchstart', function(e) {
@@ -332,10 +335,10 @@
 
       container[audiojs].events.addListener(audio.source, 'error', function(e) {
         // on error, cancel any load timers that are running.
-        console.log("audiojs error");
-        clearInterval(audio.readyTimer);
-        clearInterval(audio.loadTimer);
-        audio.settings.loadError.apply(audio);
+        //console.log("audiojs error");
+        //clearInterval(audio.readyTimer);
+        //clearInterval(audio.loadTimer);
+        //audio.settings.loadError.apply(audio);
       });
 
     },
