@@ -515,8 +515,8 @@ td,tr,table{
       .audiojsZ .play-pauseZ { width: 25px; height: 25px;margin: 0 10px 0 10px; overflow: hidden;}
       .audiojsZ p { display: none; width: 25px; height: 25px; margin: 0px; cursor: pointer; }
       .audiojsZ .playZ { display: block; }
-      .audiojsZ .scrubberZ { position: relative;height: 100%;border-left: 0px; border-bottom: 0px; -webkit-box-flex:1;margin-right:10px;}
-      .audiojsZ .progressZ { position: relative; top: 11px; left: 0px; height:3px; width: 0px; background: #600; z-index: 1; -webkit-transition:all 0.2s ease-out;}
+      .audiojsZ .scrubberZ { position: relative;height: 100%;border-left: 0px; border-bottom: 0px; -webkit-box-flex:1;margin-right:18px;}
+      .audiojsZ .progressZ { position: relative; top: 11px; left: 0px; height:3px; width: 0px; background: #fff; z-index: 1; -webkit-transition:all 0.2s ease-out;}
       .audiojsZ .progressZ::after { position: absolute;content:'';display:block;width:15px;height:15px;right:-7px;top:-6px;background:#DADADA;border-radius:10px;box-shadow:0px 0px 3px #666;}
       .audiojsZ .loadedZ { position: absolute; top: 11px; left: 0px; height:3px; width: 0px; background: #c7c7c7; }
       .audiojsZ .timeZ { height: 36px; line-height: 36px; margin: 0px 0px 0px 6px; padding: 0px 6px 0px 12px; border-left: 1px solid #c00; color: #600; text-shadow: 1px 1px 0px rgba(125, 0, 0, 0.5); }

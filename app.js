@@ -3,6 +3,7 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var _ = require("underscore");
 var app = express();
 
 // connect mongodb
@@ -19,6 +20,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+var response = express.response,
+    _render = response.render;
+response.render = function (view, options, callback) {
+    options = options || {};
+    _.extend(options, {
+            version:require('./config').options.version,
+            serverDate:new Date().valueOf()
+    });
+    _render.call(this, view, options, callback);
+};
+
 
 app.use('/',require('./routes/index'));
 app.use('/search',require('./routes/search'));

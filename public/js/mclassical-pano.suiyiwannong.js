@@ -651,6 +651,7 @@
         setFov: _setFov,
         setRx: _setRx,
         setRy: _setRy,
+        setRxRy: _setRxRy,
         init: _init,
         loadSpots: _loadSpots,
         loadComments: _loadComments,

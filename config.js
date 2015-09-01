@@ -81,7 +81,8 @@ exports.options={
             help_content:'Help',
             about:'About us',
             about_content:'About us',
-            noResult:'No result'
+            noResult:'No result',
+            busy:'Server is too busy,please try later'
         },
         cn:{
             search:'搜索',
@@ -109,7 +110,8 @@ exports.options={
             about_content:
             '古典音乐放大镜(The magnifier of classical music)，免费的古典音乐搜索工具。</br>我们汇集了大部分的古典音乐乐谱，视频，音频的资源，给古典音乐爱好者们提供便捷的工具。同时为实现古典音乐的标准化做努力，使得古典音乐的任何信息更容易获取和分享。'
             ,
-            noResult:'未找到结果'
+            noResult:'未找到结果',
+            busy:'服务器现在有点忙,请稍后再试试看'
         }
     },
     servers:{
@@ -117,5 +119,6 @@ exports.options={
         SZ:'112.74.211.14',
         //USA:'198.11.178.157'
         JP:'52.68.201.23'
-    }
+    },
+    version:'1.0'
 }

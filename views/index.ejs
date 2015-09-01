@@ -8,8 +8,8 @@
         <script>var log=console.log.bind(console);</script>
         <script type="text/javascript" src="http://player.youku.com/jsapi">
 </script>
-        <script src='js/mclassical-base.js'></script>
-        <script src='js/mclassical-pano.js'></script>
+        <script src='js/mclassical-base.js?version=<%=version%>'></script>
+        <script src='js/mclassical-pano.js?version=<%=version%>'></script>
         <title>古典音乐放大镜</title>
     </head>
 <body>
@@ -223,7 +223,7 @@
                     }
                 },
                 error:function(){
-                    console.log("error");
+                    $('#result-content').html('<%=language.busy%>');
                 }
             });
         }
@@ -529,6 +529,16 @@
             result_wrap.delegate('.result-audio','click',stopBackgroundMusic);
         }
 
+        function randomPlay(){
+             hideDetails();
+             setTimeout(function(){
+                 var random=Math.random()*$('.music-content').size();
+                 var content=$('.music-content').eq(random);
+                 pano.setRxRy(content.attr('rx')*-1,content.attr('ry'),1);
+                 musicClick(content);
+             },300);
+        }
+
         function musicClick(content){
             stopAllMusic();
             hideOthers();
@@ -559,6 +569,9 @@
                       playingClass: 'playingZ',
                       loadingClass: 'loadingZ',
                       errorClass: 'errorZ'
+                    },
+                    trackEnded:function(){
+                        randomPlay();
                     }
                 });
                 audio.load(content.attr('audio_url'));
