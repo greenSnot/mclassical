@@ -1,3 +1,9 @@
+     var distance2D = function(a,b,c,d){
+
+         return Math.pow((a-c)*(a-c)+(b-d)*(b-d),0.5);
+
+     }
+
         function bindClick(ele,callback,father,children){
             var x,y;
             function ts(e){
@@ -13,7 +19,7 @@
                 }
                 var _x=e.changedTouches[0].pageX;
                 var _y=e.changedTouches[0].pageY;
-                if(_x==x&&_y==y){
+                if(distance2D(_x,_y,x,y)<6){
                     callback.call(this,e);
                 }
             }
@@ -94,11 +100,6 @@ var unicode2Chr=function(str) {
         }
         return parseFloat(b);
     }
-     var distance2D = function(a,b,c,d){
-
-         return Math.pow((a-c)*(a-c)+(b-d)*(b-d),0.5);
-
-     }
 
      var distance3D = function(a,b,c,d,e,f){
 

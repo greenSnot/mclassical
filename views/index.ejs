@@ -336,9 +336,11 @@
             stopSearchAnimation=true;
             $('#search').val($('#music-songname').text());
             search($('#music-songname').text());
+            $('#music-details').offsetWidth=$('#music-details').offsetWidth;
             $('#music-details').removeClass('show');
         }
         function hideDetails(){
+            $('#music-details').offsetWidth=$('#music-details').offsetWidth;
             $('#music-details').removeClass('show');
         }
         function clearSearch(){
@@ -571,6 +573,7 @@
                 $('#music-songname').text(content.attr('songname'));
                 $('#music-albumname').text(content.attr('albumname'));
                 $('#music-singer').text(content.attr('singer'));
+                $('#music-details').offsetWidth=$('#music-details').offsetWidth;
                 $('#music-details').addClass('show');
             },300);
             if(!audio){
