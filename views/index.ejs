@@ -16,50 +16,57 @@
         <span id="__getwidth"></span>
         <div id="head">
             <div id="logo">
-                <div id="search-wrap" class="start">
+            <div id="magnifier">
+                <div id="stick">
+                </div>
+            </div>
+            </div>
+            <div id="search-wrap" class="start">
+                <div class="input-wrap">
                     <input id="search">
-                    <button id="btn-search"><%=language.search%></button>
                 </div>
-                <div id="result-wrap">
-                    <div id="result-stick"></div>
-                    <div id="result">
-                        <div class="tabs">
-                            <div data-type="scores" class="tab"><%=language.scores%></div>
-                            <div data-type="videos" class="tab"><%=language.videos%></div>
-                            <div data-type="audios" class="tab selected"><%=language.audios%></div>
-                        </div>
-                        <div id="result-content">
-                        </div>
+                <button id="btn-search"><%=language.search%></button>
+            </div>
+            <div id="result-wrap">
+                <div id="result-stick"></div>
+                <div id="result">
+                    <div class="tabs">
+                        <div data-type="scores" class="tab"><%=language.scores%></div>
+                        <div data-type="videos" class="tab"><%=language.videos%></div>
+                        <div data-type="audios" class="tab selected"><%=language.audios%></div>
                     </div>
-                </div>
-                <div id="introduction-wrap">
-                    <div id="introduction-stick">
-                    </div>
-                    <div id="introduction">
-                        <div id="introduction-title">dsf</div>
-                        <div id="introduction-content">
-                            introduction
-                        </div>
+                    <div id="result-content">
                     </div>
                 </div>
-                <div class="other-wrap volunteer">
-                    <div class="other-stick">
-                        <%=language.volunteer%>
+            </div>
+            <div id="introduction-wrap">
+                <div id="introduction-stick">
+                </div>
+                <div id="introduction">
+                    <div id="introduction-title">dsf</div>
+                    <div id="introduction-content">
+                        introduction
                     </div>
                 </div>
-                <div class="other-wrap about">
-                    <div class="other-stick">
-                        <%=language.about%>
-                    </div>
+            </div>
+            <div class="nav-wrap volunteer">
+                <div class="nav-stick">
+                    <%=language.volunteer%>
                 </div>
-                <div class="other-wrap help">
-                    <div class="other-stick">
-                        <%=language.help%>
-                    </div>
+            </div>
+            <div class="nav-wrap about">
+                <div class="nav-stick">
+                    <%=language.about%>
                 </div>
-                <div id="magnifier">
-                    <div id="stick">
-                    </div>
+            </div>
+            <div class="nav-wrap musicwall">
+                <div class="nav-stick">
+                    <%=language.musicWall%>
+                </div>
+            </div>
+            <div class="nav-wrap help">
+                <div class="nav-stick">
+                    <%=language.help%>
                 </div>
             </div>
         </div>
@@ -116,7 +123,12 @@
         <a class="result-score" target="_Blank" href="<#=scores[i].link#>" data-source="<#=scores[i].source#>"><#=scores[i].title#></a>
     <#}#>
     <#for(var i in videos){#>
-        <div class="result-video" data-id="<#=videos[i].id#>" target="_Blank" data-title="<#=videos[i].title#>" data-source="<#=videos[i].source#>" data-link="<#=videos[i].link#>"><img class="result-video-img" width="150"src="<#=videos[i].thumbnail#>"><div class="video-info"><#=videos[i].title#></div></div>
+        <div class="result-video" data-id="<#=videos[i].id#>" target="_Blank" data-title="<#=videos[i].title#>" data-source="<#=videos[i].source#>" data-link="<#=videos[i].link#>" style="background-image:url(<#=videos[i].thumbnail#>);">
+            <div class="video-info">
+                <#=videos[i].title#>
+            </div>
+            <div class="options">● ● ●</div>
+        </div>
     <#}#>
     <#for(var i in audios){#>
         <a class="result-audio"  target="_Blank" data-id="<#=audios[i].songid#>" data-source="<#=audios[i].source#>'>
@@ -160,9 +172,8 @@
         var width=window.innerWidth;
         $('#result').width(width-30);
         $('#result').height(height-100);
-        $('#introduction').width(width-30);
+        $('#introduction').width(width-39);
         $('#introduction').height(height-100);
-        $('#search').width(width-53);
 
         $('#search-wrap').removeClass('start');
         $('#search-wrap').addClass('show');
@@ -232,6 +243,7 @@
 
         function search(keyword){
             $('#search').blur();
+            hideNavs();
             $('#search-wrap').addClass('show');
             if($('#result-wrap').hasClass('show')){
                 $('#result-wrap').removeClass('show');
@@ -364,37 +376,39 @@
         function hideResults(){
             $('#result-wrap').removeClass('show');
         }
-        function showOthers(){
+        function showNavs(){
             var delay=0;
-            $('.other-wrap').each(function(){
+            $('.nav-wrap').each(function(){
                 var self=$(this);
                 setTimeout(function(){
                     self.addClass('show');
                 },delay);
-                delay+=50;
             });
             $('#result-wrap').removeClass('show');
         }
-        function hideOthers(){
+        function hideNavs(){
              var delay=0;
-             $('.other-wrap').each(function(){
+             $('.nav-wrap').each(function(){
                  var self=$(this);
                  setTimeout(function(){
                      self.removeClass('show');
                  },delay);
-                 delay+=50;
              });
         }
+        $('#logo').addClass('click');
         function magnifierClick(){
+            $('#logo').removeClass();
+            $('#logo')[0].offsetWidth=$('#logo')[0].offsetWidth;
+            $('#logo').addClass('click');
             $('#search').blur();
             if($('#search-wrap').hasClass('show')){
                 $('#search-wrap').removeClass('show');
                 $('#result-wrap').removeClass('show');
                 $('#introduction-wrap').removeClass('show');
-                hideOthers();
+                hideNavs();
             }else{
                 $('#search-wrap').addClass('show');
-                showOthers();
+                showNavs();
             }
         }
 
@@ -405,14 +419,14 @@
 
         function showAbout(){
             hideDetails();
-            hideOthers();
+            hideNavs();
             $('#introduction-title').text('<%-language.about%>');
             $('#introduction-wrap').addClass('show');
             $('#introduction-content').html('<%-language.about_content%>');
         }
         function showVolunteer(){
             hideDetails();
-            hideOthers();
+            hideNavs();
             $('#introduction-title').text('<%-language.volunteer%>');
             $('#introduction-wrap').addClass('show');
             $('#introduction-content').html('<%-language.volunteer_content%>');
@@ -422,14 +436,14 @@
         }
         function showHelp(){
             hideDetails();
-            hideOthers();
+            hideNavs();
             $('#introduction-title').text('<%-language.help%>');
             $('#introduction-wrap').addClass('show');
             $('#introduction-content').html('<%-language.help_content%>');
         }
 
         function hideAll(){
-            hideOthers();
+            hideNavs();
             hideSearch();
             hideIntroduction();
             hideDetails();
@@ -437,15 +451,16 @@
 
         function showIframe(){
             stopBackgroundMusic();
-            if($(this).hasClass('inited')){
+            if($(this).hasClass('playing')){
                 return;
             }
             if(videoDom){
+                videoDom.removeClass('playing');
                 videoDom.html(videoHtml);
             }
-            $(this).addClass('inited');
+            $(this).addClass('playing');
             hideDetails();
-            hideOthers();
+            hideNavs();
             var self=$(this);
             videoDom=self;
             videoHtml=self.html();
@@ -475,6 +490,12 @@
                 }
             }
         }
+        function searchClick(){
+            hideDetails();
+            $('#introduction-wrap').removeClass('show');
+            hideNavs();
+            search($('#search').val());
+        }
 
         var audio=false;
         var contentScrolling=false;
@@ -486,31 +507,30 @@
             fov=100;
             minfov=100;
 
-            $('#music-details').on('touchend',hideDetails);
-            $('#music-more').on('touchstart',moreInfo);
-            $('#music-info').on('touchstart',nothing);
-            $('#music-album').on('touchstart',nothing);
+            bindClick($('#music-details'),hideDetails);
+            bindClick($('#music-more'),moreInfo);
+            bindClick($('#music-info'),nothing);
+            bindClick($('#music-album'),nothing);
 
-            $('#search').on('touchend',clearSearch);
-            $('#btn-search').on('touchend',function(){hideDetails();
-                $('#introduction-wrap').removeClass('show');
-                hideOthers();
-            search($('#search').val());});
-            $('.tab').on('touchstart',switchTab);
+            bindClick($('#search'),clearSearch);
+            bindClick($('#btn-search'),searchClick);
+            bindClick($('.tab'),switchTab);
+
+            bindClick($('#magnifier'),magnifierClick);
+            bindClick($('.about'),showAbout);
+            bindClick($('.volunteer'),showVolunteer);
+            bindClick($('.help'),showHelp);
+            bindClick($('.result-video'),showIframe,result_wrap,'.result-video');
+            bindClick($('.result-audio'),stopBackgroundMusic,result_wrap,'.result-audio');
+
             $('#result-content').on('touchstart',function(){contentScrolling=true;});
             $('#result-content').on('touchend',function(){contentScrolling=false;});
-            $('#magnifier').on('touchstart',magnifierClick);
-            $('.about').on('touchend',showAbout);
-            $('.volunteer').on('touchend',showVolunteer);
 
             $('.play-pauseZ').on('touchend',nothing);
             $('.play-pauseZ').on('touchstart',nothing);
             $('.scrubberZ').on('touchend',nothing);
             $('.scrubberZ').on('touchstart',nothing);
 
-            $('.help').on('touchend',showHelp);
-            result_wrap.delegate('.result-video','click',showIframe);
-            result_wrap.delegate('.result-audio','click',stopBackgroundMusic);
         }else{
             $('#music-details').on('mouseup',hideDetails);
             $('#music-more').on('mouseup',moreInfo);
@@ -518,7 +538,7 @@
             $('#search').on('mouseup',clearSearch);
             $('#btn-search').on('mouseup',function(){hideDetails();
                 $('#introduction-wrap').removeClass('show');
-                hideOthers();
+                hideNavs();
             search($('#search').val());});
             $('.tab').on('mouseup',switchTab);
             $('#magnifier').on('mouseup',magnifierClick);
@@ -541,7 +561,7 @@
 
         function musicClick(content){
             stopAllMusic();
-            hideOthers();
+            hideNavs();
             hideIntroduction();
             $('#search-wrap').removeClass('show');
             $('#result-wrap').removeClass('show');

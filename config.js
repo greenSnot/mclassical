@@ -82,6 +82,7 @@ exports.options={
             about:'About us',
             about_content:'About us',
             noResult:'No result',
+            musicWall:'Music Wall',
             busy:'Server is too busy,please try later'
         },
         cn:{
@@ -111,6 +112,7 @@ exports.options={
             '古典音乐放大镜(The magnifier of classical music)，免费的古典音乐搜索工具。</br>我们汇集了大部分的古典音乐乐谱，视频，音频的资源，给古典音乐爱好者们提供便捷的工具。同时为实现古典音乐的标准化做努力，使得古典音乐的任何信息更容易获取和分享。'
             ,
             noResult:'未找到结果',
+            musicWall:'音乐墙',
             busy:'服务器现在有点忙,请稍后再试试看'
         }
     },

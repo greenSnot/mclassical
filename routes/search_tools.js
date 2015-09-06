@@ -133,7 +133,7 @@ exports.QQMusic=function(keyword,page){
                             t[i][j]=utils.urldecode(t[i][j]);
                         }
                         t[i].m4a="http://tsmusic24.tc.qq.com/"+t[i].songid+'.mp3';
-                        t[i].source='qqmusic';
+                        t[i].source='QQmusic';
                     }
                     resolve(t);
                 }else{
@@ -166,7 +166,7 @@ exports.Youku=function(keyword,page){
                 t.id=r[i].id;
                 t.thumbnail=r[i].thumbnail;
                 t.title=r[i].title;
-                t.source='youku';
+                t.source='Youku';
                 result.push(t);
             }
             return result;
@@ -193,7 +193,7 @@ exports.google_imslp_api=function(keyword){
                                 result.push({
                                         title:title,
                                         link:data[i].link,
-                                        source:'imslp'});
+                                        source:'IMSLP'});
                         }
                         resolve(result);
                 });

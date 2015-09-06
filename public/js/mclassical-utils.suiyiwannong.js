@@ -1,3 +1,31 @@
+        function bindClick(ele,callback,father,children){
+            var x,y;
+            function ts(e){
+                if(e.originalEvent){
+                    e=e.originalEvent;
+                }
+                x=e.touches[0].pageX;
+                y=e.touches[0].pageY;
+            }
+            function te(e){
+                if(e.originalEvent){
+                    e=e.originalEvent;
+                }
+                var _x=e.changedTouches[0].pageX;
+                var _y=e.changedTouches[0].pageY;
+                if(_x==x&&_y==y){
+                    callback.call(this,e);
+                }
+            }
+            if(father){
+                father.delegate(children,'touchstart',ts);
+                father.delegate(children,'touchend',te);
+            }else{
+                ele.on('touchstart',ts);
+                ele.on('touchend',te);
+            }
+        }
+
 var urlencode =function(str) {  
     str = (str + '').toString();   
 
