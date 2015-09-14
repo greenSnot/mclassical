@@ -1,5 +1,5 @@
 export MCLASSICAL_SERVER_NAME="HK"
-export MCLASSICAL_PORT=80
+export MCLASSICAL_PORT=2999
 /root/zips/nvm/nvm.sh
 
 export NVM_DIR="/root/.nvm"
