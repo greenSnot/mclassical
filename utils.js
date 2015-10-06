@@ -461,11 +461,14 @@ exports.getPlatform=function(req){
     return r;
 };
 
-exports.timestamp=function() {
-	var date=new Date()
+exports.timestamp=function(offset) {
+	var date=new Date();
+	if(offset){
+		date=new Date(new Date().valueOf()+offset);
+	}
 		var datetime = date.getFullYear()
 		+ ""// "年"
-		+ ((date.getMonth() + 1) > 10 ? (date.getMonth() + 1) : "0"
+		+ ((date.getMonth() + 1) >= 10 ? (date.getMonth() + 1) : "0"
 				+ (date.getMonth() + 1))
 		+ ""// "月"
 		+ (date.getDate() < 10 ? "0" + date.getDate() : date

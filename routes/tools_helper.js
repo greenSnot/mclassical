@@ -99,7 +99,7 @@ exports.getQQMusicUrl=function(keyword,page){
 		keyword:utils.urlencode(keyword),
 		page:page?page:1,
 		showapi_appid:options.showapi.app_id,
-		showapi_timestamp:utils.timestamp()
+		showapi_timestamp:utils.timestamp(60000*5)
 	};
 	var sign=utils.hex_md5(utils.showapi_genstr(op)+options.showapi.app_secret);
 	var url=options.qqmusic.search_url+'showapi_sign='+sign;
