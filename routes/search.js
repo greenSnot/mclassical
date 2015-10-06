@@ -6,7 +6,7 @@ var iconv=require('iconv-lite');
 var when=require('when');
 
 var options=require('../config').options;
-var search=require('./search_tools');
+var search=require('./tools_helper');
 var utils=require('../utils');
 
 //Search
