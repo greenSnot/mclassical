@@ -39,10 +39,23 @@ router.get('/google_search',function(req,res){
         });
 });
 
+var google_translate=function(keyword,target){
+        target=target?target:'en';
+        var url=options.google.api.translate_url+'q='+utils.urlencode(keyword)+'&source=zh-CN&target='+target+'&key='+options.google.api.api_key;
+        return when.promise(function(resolve,reject){
+                utils.getHtml(url).then(function(data){
+                        data=JSON.parse(data);
+                        data=data.data.translations.length?data.data.translations[0].translatedText:'';
+                        data=utils.htmldecode(utils.unicode2Chr(utils.urldecode(data)));
+                        resolve(data);
+                });
+        });
+}
+
 router.get('/google_translate',function(req,res){
         var keyword=req.query.keyword;
         var result={code:0};
-        tools_helper.google_translate(keyword).then(function(data){
+        google_translate(keyword).then(function(data){
                 result.result=data;
                 res.json(result);
         });
