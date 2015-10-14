@@ -33,6 +33,9 @@ response.render = function (view, options, callback) {
 };
 
 
+app.use(require('./routes/wechat_token').checktoken);
+app.use(require('./routes/wechat_token').checkticket);
+
 app.use('/',require('./routes/index'));
 app.use('/search',require('./routes/search'));
 app.use('/rating',require('./routes/rating'));
