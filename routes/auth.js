@@ -29,9 +29,11 @@ exports.loginFilter = function(req, res, next){
         ////是否微信浏览器打开
         if(req.headers['user-agent']&&req.headers['user-agent'].indexOf('MicroMessenger')>=0&&req.query!=undefined){
             var url=config.domain+req.originalUrl;
+            console.log(url);
 
             //返回code
             if(req.query.state=='WECHAT_OAUTH_RESPONSE'&&req.query.code!=undefined){
+                console.log("CODE");
                 var code=req.query.code;
                 //获取code token
                 nodegrass.get("https://api.weixin.qq.com/sns/oauth2/access_token?appid="+config.wechat.app_id+"&secret="+config.wechat.app_secret+"&code="+code+"&grant_type=authorization_code",function(data,status,headers){
