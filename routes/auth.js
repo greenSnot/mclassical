@@ -82,24 +82,42 @@ exports.loginFilter = function(req, res, next){
 
                         console.log("WECHATINFO ");
                         db.Users.findOne({
-                            "wechat.openid":openid
+                            wechat:{
+                                openid:openid
+                            }
                         }).then(function(u){
-console.log("#");
                             if(u){
+                                console.log("found !!!");
                                 req.session.user=u._id;
                                 req.session.user_type='wechat';
                                 next();
                                 return;
                             }
-console.log("!");
-                            return db.Users.create({
-                                wechat:data,
-                                name:'jj',
+                            return new db.Users({
+                                password:"",
+                                name:data.openid,
+                                nickname:data.nickname,
+                                wechat:{
+                                    openid:data.openid,
+                                    nickname:data.nickname,
+                                   headimgurl:data.headimgurl,
+                                   region:data.region,
+                                   sex:data.sex,
+                                   language:data.language,
+                                   unionid:data.unionid,
+                                   city:data.city,
+                                   province:data.province,
+                                   country:data.country
+                                },
                                 aliasesTimes:0,
                                 blocksTimes:0
-                            }).then(function(r){
+                            }).save(function(r){
+                                if(r.errmsg){
+                                    console.log(r.errmsg);
+                                    return;
+                                }
                                 console.log("SAVE WECHAT");
-				next();
+                                next();
                             });
                         });
                     });

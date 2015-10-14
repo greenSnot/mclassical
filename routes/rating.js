@@ -4,6 +4,29 @@ var utils=require('../utils');
 var db=require('../db/mongo_schema');
 var when=require('when');
 
+//var test=new db.Users({
+//    name:'wechatUser',
+//    password:'none',
+//    wechat:{
+//        openid:'123asdf'
+//    },
+//    name:'sj3',
+//    aliasesTimes:0,
+//    blocksTimes:0
+//});
+//
+//test.save(function(err){
+//    if(err.errmsg)
+//    console.log(err.errmsg);
+//    console.log("save");
+//  db.Users.findOne({
+//      wechat:{
+//          openid:'123asdf'
+//      }
+//  }).then(function(r){
+//      console.log(r);
+//  });
+//});
 
 //db.Users.remove({name:'23'}).then(function(data){});
     //db.Users.update({_id:'55d698f9593ebb4f45843b3e'},{$set:{name:'23'}}).then(function(data){

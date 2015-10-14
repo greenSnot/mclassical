@@ -105,6 +105,9 @@ var usersSchema= mongoose.Schema({
         required: true,
         unique:true
     },
+    nickname:{
+        type:String
+    },
     password:{
         type:String,
         required: true
@@ -112,10 +115,11 @@ var usersSchema= mongoose.Schema({
     wechat:{
         openid: String,
         nickname: String,
-        headimg: String,
+        headimgurl: String,
         region: String,
         sex: Number,
         language: String,
+        unionid:String,
         city: String,
         province: String,
         country: String
