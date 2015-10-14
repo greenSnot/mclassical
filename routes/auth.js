@@ -28,7 +28,7 @@ exports.loginFilter = function(req, res, next){
 
         ////是否微信浏览器打开
         if(req.headers['user-agent']&&req.headers['user-agent'].indexOf('MicroMessenger')>=0&&req.query!=undefined){
-            var url=config.domain+req.originalUrl;
+            var url=config.domain+req.url;
             console.log(url);
 
             //返回code
@@ -84,20 +84,22 @@ exports.loginFilter = function(req, res, next){
                         db.Users.findOne({
                             "wechat.openid":openid
                         }).then(function(u){
+console.log("#");
                             if(u){
                                 req.session.user=u._id;
                                 req.session.user_type='wechat';
                                 next();
                                 return;
                             }
-                            db.Users.create({
+console.log("!");
+                            return db.Users.create({
                                 wechat:data,
                                 name:'jj',
                                 aliasesTimes:0,
                                 blocksTimes:0
                             }).then(function(r){
-
                                 console.log("SAVE WECHAT");
+				next();
                             });
                         });
                     });

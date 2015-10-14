@@ -126,6 +126,6 @@ exports.options={
         app_id:'wxea9602a7f740bffe',
         app_secret:'bde088b2dbb0e36e513524f75fba7a53'
     },
-    domain:'mclassical.org',
+    domain:'http://mclassical.org',
     version:'1.0'
 }
