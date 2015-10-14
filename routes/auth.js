@@ -10,10 +10,9 @@ var config = require('../config').options;
 var db=require('../db/mongo_schema');
 var nodegrass = require('nodegrass');
 var when=require('when');
-var wechattoken = require('./wechattoken');
 
 exports.loginFilter = function(req, res, next){
-    var user = req.session.user;
+    var user = req.session?req.session.user:undefined;
     if (user){
             //正常流程
             //检查是否关注公众号
