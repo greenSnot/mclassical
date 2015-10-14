@@ -10,7 +10,7 @@ var when=require('when');
 //    wechat:{
 //        openid:'123asdf'
 //    },
-//    name:'sj3',
+//    name:'sj5',
 //    aliasesTimes:0,
 //    blocksTimes:0
 //});
@@ -18,7 +18,8 @@ var when=require('when');
 //test.save(function(err){
 //    if(err.errmsg)
 //    console.log(err.errmsg);
-//    console.log("save");
+//    console.log(err);
+//
 //  db.Users.findOne({
 //      wechat:{
 //          openid:'123asdf'

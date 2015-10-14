@@ -5,6 +5,9 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var _ = require("underscore");
 var app = express();
+var session = require('express-session');
+var RedisStore = require('connect-redis')(session);
+var compression= require('compression');
 
 // connect mongodb
 require('./db/mongo.js');
@@ -15,7 +18,23 @@ app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(session({
+    resave: false,
+    saveUninitialized: true,
+    store: new RedisStore({
+        port: "6379",
+        host: "127.0.0.1",
+        pass:''
+    }),
+    rolling: true,
+    secret: 'mclassical_login',
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    }
+}));//session setup
+
 app.use(logger('dev'));
+app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());

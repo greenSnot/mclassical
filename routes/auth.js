@@ -2,8 +2,6 @@ var http = require('http');
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
-var session = require('express-session');
-var RedisStore = require('connect-redis')(session);
 //var db = require('./model');
 var utils = require('../utils');
 var config = require('../config').options;
@@ -12,7 +10,7 @@ var nodegrass = require('nodegrass');
 var when=require('when');
 
 exports.loginFilter = function(req, res, next){
-    var user = req.session?req.session.user:undefined;
+    var user = req.session.user;
     if (user){
             //正常流程
             //检查是否关注公众号
@@ -80,45 +78,52 @@ exports.loginFilter = function(req, res, next){
                             return;
                         }
 
-                        console.log("WECHATINFO ");
-                        db.Users.findOne({
+                        db.Users.find({
                             wechat:{
-                                openid:openid
+                                openid:data.openid
                             }
                         }).then(function(u){
                             if(u){
-                                console.log("found !!!");
-                                req.session.user=u._id;
+                                req.session.user=data.openid;
                                 req.session.user_type='wechat';
-                                next();
+console.log('found');
+next();
                                 return;
                             }
-                            return new db.Users({
-                                password:"",
+
+                            var model=new db.Users({
+                                password:"empty",
                                 name:data.openid,
                                 nickname:data.nickname,
                                 wechat:{
                                     openid:data.openid,
                                     nickname:data.nickname,
-                                   headimgurl:data.headimgurl,
-                                   region:data.region,
-                                   sex:data.sex,
-                                   language:data.language,
-                                   unionid:data.unionid,
-                                   city:data.city,
-                                   province:data.province,
-                                   country:data.country
+                                    headimgurl:data.headimgurl,
+                                    region:data.region,
+                                    sex:data.sex,
+                                    language:data.language,
+                                    unionid:data.unionid,
+                                    city:data.city,
+                                    province:data.province,
+                                    country:data.country
                                 },
                                 aliasesTimes:0,
                                 blocksTimes:0
-                            }).save(function(r){
-                                if(r.errmsg){
-                                    console.log(r.errmsg);
-                                    return;
-                                }
-                                console.log("SAVE WECHAT");
-                                next();
                             });
+				model.save(function(r){
+                        	        if(r.errmsg){
+                        	            console.log(r.errmsg);
+                        	            return;
+                        	        }
+					db.Users.find({
+}).then(function(r){
+console.log("save");
+						req.session.user=r.wechat.openid;
+						req.session.user_type='wechat';
+console.log('new wechat user');
+next();
+					});
+                        	 });
                         });
                     });
                 });
@@ -143,8 +148,8 @@ exports.loginFilter = function(req, res, next){
             //所有的ajax都要求有登录态
             if (req.headers["x-requested-with"] == "XMLHttpRequest") {
                 res.json({
-                    code: 10,
-                    message: "Please login"
+                    code: -10,
+                    message: "logined?"
                 });
                 return;
             }
