@@ -4,11 +4,11 @@ var utils=require('../utils');
 var db=require('../db/mongo_schema');
 var when=require('when');
 
-//db.Users.findOne({
-//	'wechat.openid':''
-//}).then(function(err,r){
-//console.log(r)
-//console.log(err)
+//db.Audios.find(
+//).then(function(r){
+//for(var i in r){
+//console.log(r[i].id);
+//}
 //});
 //db.Users.findOne({
 //    _id:'55d6cda3eb5c796867789d10'

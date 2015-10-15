@@ -106,7 +106,7 @@ var audiosSchema= mongoose.Schema({
         required: true,
         unique:true
     },
-    oid:{
+    song_id:{
         type:String,
         required: true
     },
@@ -116,7 +116,7 @@ var audiosSchema= mongoose.Schema({
     album_name:{
         type:String
     },
-    singer:{
+    player:{
         type:String
     },
     album_small:{

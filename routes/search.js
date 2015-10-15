@@ -32,8 +32,8 @@ router.post('/', function(req,res) {
         qlist_type=[];
 
         var audios_filter;
-        if(req.query.audios_filter){
-            audios_filter=audios_filter.split(',');
+        if(req.body.audios_filter){
+            audios_filter=req.body.audios_filter.split(',');
             var temp={};
             for(var i in audios_filter){
                 temp[audios_filter[i]]=true;
@@ -58,13 +58,16 @@ router.post('/', function(req,res) {
                         if(audios_filter['qqmusic']){
                             qlist.push(search.QQMusic(i));
                             qlist_type.push('audios');
-                        }else if(audios_filter['neteasemusic']){
+                        }
+			if(audios_filter['neteasemusic']){
                             qlist.push(search.NeteaseMusic(i));
                             qlist_type.push('audios');
                         }
                     }else{
+console.log('filter');
                         qlist.push(search.QQMusic(i));
-                        //qlist.push(search.NeteaseMusic(i));
+                        qlist.push(search.NeteaseMusic(i));
+                        qlist_type.push('audios');
                         qlist_type.push('audios');
                     }
                 }
@@ -83,6 +86,7 @@ router.post('/', function(req,res) {
             var scores_ids={};
             var videos_ids={};
             var audios_ids={};
+/////////////保证唯一性
 			for(var i in datas){
                 if(qlist_type[i]=='scores'){
                     for(var j in datas[i]){
@@ -99,9 +103,11 @@ router.post('/', function(req,res) {
                         }
                     }
                 }else if(qlist_type[i]=='audios'){
+console.log('au');
+console.log(datas[i].length);
                     for(var j in datas[i]){
-                        if(!audios_ids[datas[i][j].songid]){
-                            audios_ids[datas[i][j].songid]=true;
+                        if(!audios_ids[datas[i][j].id]){
+                            audios_ids[datas[i][j].id]=true;
                             result.audios.push(datas[i][j]);
                         }
                     }

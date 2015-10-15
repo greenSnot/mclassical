@@ -127,7 +127,7 @@ exports.options={
         app_secret:'bde088b2dbb0e36e513524f75fba7a53'
     },
     neteasemusic:{
-        search_url:'http://route.showapi.com/760-1'
+        search_url:'http://route.showapi.com/760-1?'
     },
     domain:'http://mclassical.org',
     version:'1.0'

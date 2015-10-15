@@ -1,6 +1,7 @@
 
 var when=require('when');
 var nodegrass=require('nodegrass');
+var db=require('../db/mongo_schema');
 var utils=require('../utils');
 var exec = require('child_process').exec;
 var options=require('../config').options;
@@ -96,6 +97,8 @@ exports.separate2words_scws=function(source){
 
 exports.getNeteaseMusicUrl=function(keyword,page){
 	var op={
+		key:'482dcc55534d629f559c4dd62f1d6a6e09bf61fc',
+		limit:10,
 		p:page?page:1,
 		s:utils.urlencode(keyword),
 		showapi_appid:options.showapi.app_id,
@@ -104,7 +107,7 @@ exports.getNeteaseMusicUrl=function(keyword,page){
 	var sign=utils.hex_md5(utils.showapi_genstr(op)+options.showapi.app_secret);
 	var url=options.neteasemusic.search_url+'showapi_sign='+sign;
 
-    op.keyword=utils.urlencode(op.keyword);
+    op.s=utils.urlencode(op.s);
 	for(var i in op){
 		url+='&'+i+'='+op[i];
 	}
@@ -138,16 +141,39 @@ exports.NeteaseMusic=function(keyword,page){
             });
         });
     }else{
+console.log('netease api');
         var url=exports.getNeteaseMusicUrl(keyword,page);
 	    return when.promise(function(resolve,reject){
             getHtml(url).then(function(data){
                 data=JSON.parse(data);
                 if(data.showapi_res_code==0&&data.showapi_res_body&&data.showapi_res_body.data&&data.showapi_res_body.data.data&&data.showapi_res_body.data.data.list){
                     var t=data.showapi_res_body.data.data.list;
+		    var r=[];
+		    var qlist=[];
                     for(var i in t){
-                        t[i].source='NeteaseMusic';
+r.push({});
+			r[i].song_id=t[i].songId;
+			r[i].id='neteasemusic_'+t[i].songId;
+			r[i].song_name=t[i].songName;
+			r[i].player=t[i].userName;
+			r[i].album_name=t[i].albumName;
+			r[i].url=t[i].songUrl;
+			r[i].album_small=t[i].albumPic;
+			r[i].album_big=t[i].albumPic;
+                        r[i].source='NeteaseMusic';
+			var model=new db.Audios(r[i]);
+			model.pre('save',function(next){
+				next();//忽略错误
+			});
+			qlist.push(
+				model.save()
+			);
                     }
-                    resolve(t);
+console.log(t.length);
+console.log('netease length');
+when.all(qlist).then(function(){
+                    resolve(r);
+});
                 }else{
                     resolve([]);
                 }
@@ -165,6 +191,7 @@ exports.QQMusic=function(keyword,page){
             });
         });
     }else{
+console.log('qqmusic api');
         var url=exports.getQQMusicUrl(keyword,page);
 	    return when.promise(function(resolve,reject){
             getHtml(url).then(function(data){
@@ -176,10 +203,35 @@ exports.QQMusic=function(keyword,page){
                             if(j!='songid')
                             t[i][j]=utils.urldecode(t[i][j]);
                         }
-                        t[i].m4a="http://tsmusic24.tc.qq.com/"+t[i].songid+'.mp3';
-                        t[i].source='QQMusic';
+                        //t[i].m4a="http://tsmusic24.tc.qq.com/"+t[i].songid+'.mp3';
                     }
-                    resolve(t);
+		    var r=[];
+		    var qlist=[];
+                    for(var i in t){
+r.push({});
+			r[i].song_id=t[i].songid;
+			r[i].id='qqmusic_'+t[i].songid;
+			r[i].song_name=t[i].songname;
+			r[i].player=t[i].singername;
+			r[i].album_name=t[i].albumname;
+			r[i].url=t[i].m4a;
+			r[i].album_small=t[i].albumpic_small;
+			r[i].album_big=t[i].albumpic_big;
+                        r[i].source='QQMusic';
+
+			var model=new db.Audios(r[i]);
+			model.pre('save',function(next){
+				next();//忽略错误
+			});
+			qlist.push(
+				model.save()
+			);
+                    }
+console.log(t.length);
+console.log('qqmusic length');
+			when.all(qlist).then(function(u){
+                    resolve(r);
+});
                 }else{
                     resolve([]);
                 }
