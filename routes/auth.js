@@ -13,16 +13,20 @@ exports.loginFilter = function(req, res, next){
     var user = req.session.user;
     if (user){
             //正常流程
+	    console.log("已经登录");
             if(req.session.user_type=='wechat'){
-                db.Users.findOne({
+		    console.log(user);
+                db.Users.find({
                     _id:user
-                }).then(function(u){
+                }).then(function(u,err){
+			console.log(err);
+		    console.log(u);
                     if(!u){
                         req.session.user=undefined;
                         req.session.user_type=undefined;
                         req.session.user_info=undefined;
-                        res.redirect(req.originUrl);
                         console.log("未找到用户");
+                        res.redirect(req.originUrl);
                         return;
                     }
                     console.log("已经登录 微信登录");
@@ -89,7 +93,7 @@ exports.loginFilter = function(req, res, next){
                             return;
                         }
 
-                        db.Users.findOne({
+                        db.Users.find({
                             wechat:{
                                 openid:data.openid
                             }
@@ -127,7 +131,7 @@ exports.loginFilter = function(req, res, next){
                                     console.log(r.errmsg);
                                     return;
                                 }
-                                db.Users.findOne({
+                                db.Users.find({
                                     wechat:{
                                         openid:data.openid
                                     }
