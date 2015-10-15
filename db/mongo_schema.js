@@ -98,6 +98,44 @@ var blocksSchema=mongoose.Schema({
     autoIndex:true
 });
 
+
+var audiosSchema= mongoose.Schema({
+    id:{
+        type:String,
+        index:true,
+        required: true,
+        unique:true
+    },
+    oid:{
+        type:String,
+        required: true
+    },
+    song_name:{
+        type:String
+    },
+    album_name:{
+        type:String
+    },
+    singer:{
+        type:String
+    },
+    album_small:{
+        type:String
+    },
+    album_big:{
+        type:String
+    },
+    album_id:{
+        type:String
+    },
+    url:{
+        type:String,
+        required: true
+    }
+},{
+    _id:true,
+    autoIndex:true
+})
 var usersSchema= mongoose.Schema({
     name:{
         type:String,
@@ -131,12 +169,15 @@ var usersSchema= mongoose.Schema({
     autoIndex:true
 })
 
+
+
 exports.Users = mongoose.model('Users', usersSchema);
 exports.Blocks = mongoose.model('Blocks', blocksSchema);
 exports.BlockForever = mongoose.model('BlockForever', blockforeverSchema);
 exports.PreBlocks = mongoose.model('PreBlocks', pre_blocksSchema);
 exports.Aliases = mongoose.model('Aliases', aliasesSchema);
 exports.PreAliases = mongoose.model('PreAliases', pre_aliasesSchema);
+exports.Audios= mongoose.model('Audios', audiosSchema);
 
 
 

@@ -30,6 +30,17 @@ router.post('/', function(req,res) {
 
         qlist=[];
         qlist_type=[];
+
+        var audios_filter;
+        if(req.query.audios_filter){
+            audios_filter=audios_filter.split(',');
+            var temp={};
+            for(var i in audios_filter){
+                temp[audios_filter[i]]=true;
+            }
+            audios_filter=temp;
+        }
+        
         if(req.body.type){
             if(req.body.type=='scores'){
                 for(var i in keywords){
@@ -43,8 +54,19 @@ router.post('/', function(req,res) {
                 }
             }else if(req.body.type=='audios'){
                 for(var i in keywords){
-                    qlist.push(search.QQMusic(i));
-                    qlist_type.push('audios');
+                    if(audios_filter){
+                        if(audios_filter['qqmusic']){
+                            qlist.push(search.QQMusic(i));
+                            qlist_type.push('audios');
+                        }else if(audios_filter['neteasemusic']){
+                            qlist.push(search.NeteaseMusic(i));
+                            qlist_type.push('audios');
+                        }
+                    }else{
+                        qlist.push(search.QQMusic(i));
+                        //qlist.push(search.NeteaseMusic(i));
+                        qlist_type.push('audios');
+                    }
                 }
             }else{
                 res.json({code:-2,msg:'type error'});

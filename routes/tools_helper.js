@@ -94,6 +94,23 @@ exports.separate2words_scws=function(source){
 	});
 }
 
+exports.getNeteaseMusicUrl=function(keyword,page){
+	var op={
+		p:page?page:1,
+		s:utils.urlencode(keyword),
+		showapi_appid:options.showapi.app_id,
+		showapi_timestamp:utils.timestamp(60000*5)
+	};
+	var sign=utils.hex_md5(utils.showapi_genstr(op)+options.showapi.app_secret);
+	var url=options.neteasemusic.search_url+'showapi_sign='+sign;
+
+    op.keyword=utils.urlencode(op.keyword);
+	for(var i in op){
+		url+='&'+i+'='+op[i];
+	}
+    return url;
+};
+
 exports.getQQMusicUrl=function(keyword,page){
 	var op={
 		keyword:utils.urlencode(keyword),
@@ -111,11 +128,38 @@ exports.getQQMusicUrl=function(keyword,page){
     return url;
 };
 
+exports.NeteaseMusic=function(keyword,page){
+    if(options.server=='HK'){
+        var url='http://'+options.servers.SZ+'/search';
+	    return when.promise(function(resolve,reject){
+            getHtml(url,{keyword:keyword,type:'audios',audios_filter:'neteasemusic'}).then(function(data){
+                data=JSON.parse(data);
+                resolve(data.audios);
+            });
+        });
+    }else{
+        var url=exports.getNeteaseMusicUrl(keyword,page);
+	    return when.promise(function(resolve,reject){
+            getHtml(url).then(function(data){
+                data=JSON.parse(data);
+                if(data.showapi_res_code==0&&data.showapi_res_body&&data.showapi_res_body.data&&data.showapi_res_body.data.data&&data.showapi_res_body.data.data.list){
+                    var t=data.showapi_res_body.data.data.list;
+                    for(var i in t){
+                        t[i].source='NeteaseMusic';
+                    }
+                    resolve(t);
+                }else{
+                    resolve([]);
+                }
+            });
+        });
+    }
+}
 exports.QQMusic=function(keyword,page){
     if(options.server=='HK'){
         var url='http://'+options.servers.SZ+'/search';
 	    return when.promise(function(resolve,reject){
-            getHtml(url,{keyword:keyword,type:'audios'}).then(function(data){
+            getHtml(url,{keyword:keyword,type:'audios',audios_filter:'qqmusic'}).then(function(data){
                 data=JSON.parse(data);
                 resolve(data.audios);
             });
@@ -133,7 +177,7 @@ exports.QQMusic=function(keyword,page){
                             t[i][j]=utils.urldecode(t[i][j]);
                         }
                         t[i].m4a="http://tsmusic24.tc.qq.com/"+t[i].songid+'.mp3';
-                        t[i].source='QQmusic';
+                        t[i].source='QQMusic';
                     }
                     resolve(t);
                 }else{
@@ -148,7 +192,7 @@ exports.Youku=function(keyword,page){
     if(options.server=='HK'){
         var url='http://'+options.servers.SZ+'/search';
 	    return when.promise(function(resolve,reject){
-            getHtml(url,{keyword:keyword,type:'videos'}).then(function(data){
+            getHtml(url,{keyword:keyword,type:'videos',videos_filter:'youku'}).then(function(data){
                 data=JSON.parse(data);
                 resolve(data.videos);
             });
