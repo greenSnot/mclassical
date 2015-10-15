@@ -154,7 +154,8 @@ console.log(req.session.user);
 
             //未登录可直接访问的页面
             if (
-                    req.path=='/'
+                    req.path=='/'||
+                    req.path=='/search'
                ){
                    next();
                    return;
@@ -164,7 +165,7 @@ console.log(req.session.user);
             if (req.headers["x-requested-with"] == "XMLHttpRequest") {
                 res.json({
                     code: -10,
-                    message: "logined?"
+                    msg: "logined?"
                 });
                 return;
             }
