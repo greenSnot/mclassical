@@ -5,6 +5,12 @@ var db=require('../db/mongo_schema');
 var when=require('when');
 
 //db.Users.findOne({
+//	'wechat.openid':''
+//}).then(function(err,r){
+//console.log(r)
+//console.log(err)
+//});
+//db.Users.findOne({
 //    _id:'55d6cda3eb5c796867789d10'
 //}).then(function(r){
 //    if(r)

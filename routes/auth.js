@@ -13,14 +13,11 @@ exports.loginFilter = function(req, res, next){
     var user = req.session.user;
     if (user){
             //正常流程
-	    console.log("已经登录");
             if(req.session.user_type=='wechat'){
 		    console.log(user);
-                db.Users.find({
+                db.Users.findOne({
                     _id:user
-                }).then(function(u,err){
-			console.log(err);
-		    console.log(u);
+                }).then(function(u){
                     if(!u){
                         req.session.user=undefined;
                         req.session.user_type=undefined;
@@ -93,13 +90,13 @@ exports.loginFilter = function(req, res, next){
                             return;
                         }
 
-                        db.Users.find({
-                            wechat:{
-                                openid:data.openid
-                            }
-                        }).then(function(u){
+                        db.Users.findOne({
+                            'wechat.openid':'ownWWwLnckQwkYhANVqHiEVt32PI'
+                        }).then(function(u,err){
+console.log(u);
                             if(u){
                                 req.session.user=u._id;
+console.log(req.session.user);
                                 req.session.user_type='wechat';
                                 req.session.user_info=u;
                                 console.log('found');
@@ -131,10 +128,8 @@ exports.loginFilter = function(req, res, next){
                                     console.log(r.errmsg);
                                     return;
                                 }
-                                db.Users.find({
-                                    wechat:{
-                                        openid:data.openid
-                                    }
+                                db.Users.findOne({
+					'wechat.openid':data.openid
                                 }).then(function(r){
                                     console.log("save");
                                     req.session.user=r._id;
