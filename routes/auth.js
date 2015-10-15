@@ -13,10 +13,21 @@ exports.loginFilter = function(req, res, next){
     var user = req.session.user;
     if (user){
             //正常流程
-            //检查是否关注公众号
             if(req.session.user_type=='wechat'){
-                console.log("已经登录 微信登录");
-                next();
+                db.Users.findOne({
+                    _id:user
+                }).then(function(u){
+                    if(!u){
+                        req.session.user=undefined;
+                        req.session.user_type=undefined;
+                        req.session.user_info=undefined;
+                        res.redirect(req.originUrl);
+                        console.log("未找到用户");
+                        return;
+                    }
+                    console.log("已经登录 微信登录");
+                    next();
+                });
             }else{
                 console.log("已经登录 未知");
                 next();
@@ -78,16 +89,17 @@ exports.loginFilter = function(req, res, next){
                             return;
                         }
 
-                        db.Users.find({
+                        db.Users.findOne({
                             wechat:{
                                 openid:data.openid
                             }
                         }).then(function(u){
                             if(u){
-                                req.session.user=data.openid;
+                                req.session.user=u._id;
                                 req.session.user_type='wechat';
-console.log('found');
-next();
+                                req.session.user_info=u;
+                                console.log('found');
+                                next();
                                 return;
                             }
 
@@ -110,20 +122,24 @@ next();
                                 aliasesTimes:0,
                                 blocksTimes:0
                             });
-				model.save(function(r){
-                        	        if(r.errmsg){
-                        	            console.log(r.errmsg);
-                        	            return;
-                        	        }
-					db.Users.find({
-}).then(function(r){
-console.log("save");
-						req.session.user=r.wechat.openid;
-						req.session.user_type='wechat';
-console.log('new wechat user');
-next();
-					});
-                        	 });
+                            model.save(function(r){
+                                if(r.errmsg){
+                                    console.log(r.errmsg);
+                                    return;
+                                }
+                                db.Users.findOne({
+                                    wechat:{
+                                        openid:data.openid
+                                    }
+                                }).then(function(r){
+                                    console.log("save");
+                                    req.session.user=r._id;
+                                    req.session.user_type='wechat';
+                                    req.session.user_info=r;
+                                    console.log('new wechat user');
+                                    next();
+                                });
+                            });
                         });
                     });
                 });

@@ -4,6 +4,16 @@ var utils=require('../utils');
 var db=require('../db/mongo_schema');
 var when=require('when');
 
+//db.Users.findOne({
+//    _id:'55d6cda3eb5c796867789d10'
+//}).then(function(r){
+//    if(r)
+//    console.log(r._id);
+//    else{
+//        console.log('nofound');
+//    }
+//});
+//
 //var test=new db.Users({
 //    name:'wechatUser',
 //    password:'none',
