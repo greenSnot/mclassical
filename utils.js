@@ -1,6 +1,6 @@
 var when=require('when');
 var nodegrass=require('nodegrass');
-var options=require('./config').options;
+var config=require('./config');
 
 exports.dbFilter=function(text){
     text=text.toLowerCase();
@@ -43,7 +43,7 @@ exports.getHtmls=function(urls){
 
 exports.getHtml=function(url,data){
 	return when.promise(function(resolve,reject){
-		var headers=url.indexOf(options.baidu.search_url)>=0?options.baidu.headers:{
+		var headers=url.indexOf(config.baidu.search_url)>=0?config.baidu.headers:{
 		'Content-Type': 'application/x-www-form-urlencoded'
 };
 		if(data!=undefined){

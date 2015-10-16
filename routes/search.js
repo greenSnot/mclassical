@@ -64,7 +64,6 @@ router.post('/', function(req,res) {
                             qlist_type.push('audios');
                         }
                     }else{
-console.log('filter');
                         qlist.push(search.QQMusic(i));
                         qlist.push(search.NeteaseMusic(i));
                         qlist_type.push('audios');
@@ -103,8 +102,7 @@ console.log('filter');
                         }
                     }
                 }else if(qlist_type[i]=='audios'){
-console.log('au');
-console.log(datas[i].length);
+                    console.log('audios '+datas[i].length);
                     for(var j in datas[i]){
                         if(!audios_ids[datas[i][j].id]){
                             audios_ids[datas[i][j].id]=true;
