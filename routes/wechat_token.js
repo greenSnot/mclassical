@@ -1,4 +1,4 @@
-var config = require('../config').options;
+var config = require('../config').config;
 var nodegrass = require('nodegrass');
 var deadline = 0;
 var access_token= 0;

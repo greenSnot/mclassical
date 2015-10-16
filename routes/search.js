@@ -5,7 +5,7 @@ var nodegrass=require('nodegrass');
 var iconv=require('iconv-lite');
 var when=require('when');
 
-var options=require('../config').options;
+var config=require('../config').config;
 var search=require('./tools_helper');
 var utils=require('../utils');
 
@@ -114,7 +114,6 @@ console.log(datas[i].length);
                 }
 			}
 
-            console.log(result.audios.length);
             if(req.body.type!='audios'){
                 delete(result.audios);
             }

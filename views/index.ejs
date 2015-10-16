@@ -131,8 +131,9 @@
         </div>
     <#}#>
     <#for(var i in audios){#>
-        <a class="result-audio"  target="_Blank" data-id="<#=audios[i].song_id#>" data-source="<#=audios[i].source#>'>
-            <div style="display:-webkit-box;-webkit-box-orient:horizontal;">
+        <a class="result-audio"  target="_Blank" data-id="<#=audios[i].song_id#>" data-source="<#=audios[i].source#>">
+            <div class="result-audio-title"><#=audios[i].source#> </div>
+            <div style="display:-webkit-box;-webkit-box-orient:horizontal;margin:10px;">
                 <img class="result-audio-img" width="150" height="150" src="<#=audios[i].album_big#>">
                 <div class="audio-info">
                     <div><#=audios[i].song_name#></div>

@@ -1,4 +1,4 @@
-exports.options={
+exports.config={
 	mongodb:{
 		db:{
 			native_parser:true

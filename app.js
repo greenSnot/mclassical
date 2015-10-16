@@ -8,6 +8,7 @@ var app = express();
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
 var compression= require('compression');
+var config=require('./config').config;
 
 // connect mongodb
 require('./db/mongo.js');
@@ -45,17 +46,18 @@ var response = express.response,
 response.render = function (view, options, callback) {
     options = options || {};
     _.extend(options, {
-            version:require('./config').options.version,
+            version:config.version,
             serverDate:new Date().valueOf()
     });
     _render.call(this, view, options, callback);
 };
 
+if(config.serverName=='SZ'){
+    app.use(require('./routes/wechat_token').checktoken);
+    app.use(require('./routes/wechat_token').checkticket);
 
-app.use(require('./routes/wechat_token').checktoken);
-app.use(require('./routes/wechat_token').checkticket);
-
-app.use(require('./routes/auth').loginFilter);
+    app.use(require('./routes/auth').loginFilter);
+}
 app.use('/',require('./routes/index'));
 app.use('/search',require('./routes/search'));
 app.use('/rating',require('./routes/rating'));
