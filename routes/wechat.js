@@ -1,4 +1,4 @@
-var config = require('../config').config;
+var config = require('../config');
 var express = require('express');
 var router = express.Router();
 var nodegrass = require('nodegrass');

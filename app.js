@@ -8,7 +8,7 @@ var app = express();
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
 var compression= require('compression');
-var config=require('./config').config;
+var config=require('./config');
 
 // connect mongodb
 require('./db/mongo.js');

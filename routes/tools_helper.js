@@ -4,7 +4,7 @@ var nodegrass=require('nodegrass');
 var db=require('../db/mongo_schema');
 var utils=require('../utils');
 var exec = require('child_process').exec;
-var config=require('../config').config;
+var config=require('../config');
 
 var getHtmls=utils.getHtmls;
 var getHtml=utils.getHtml;

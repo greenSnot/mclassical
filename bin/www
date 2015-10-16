@@ -7,16 +7,12 @@
 var app = require('../app');
 var debug = require('debug')('www:server');
 var http = require('http');
-var localConfig=require('../localConfig').config;
-var config=require('../config').config;
+var config=require('../config');
 
+console.log(config.serverName+'start');
 /**
  * Get port from environment and store in Express.
  */
-
-for(var i in localConfig){
-    config[i]=localConfig[i];
-}
 
 var port = normalizePort(config.port || '4000');
 app.set('port', port);

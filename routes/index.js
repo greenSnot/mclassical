@@ -5,7 +5,7 @@ var nodegrass=require('nodegrass');
 var iconv=require('iconv-lite');
 var when=require('when');
 
-var config=require('../config').config;
+var config=require('../config');
 var search=require('./tools_helper');
 var utils=require('../utils');
 

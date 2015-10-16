@@ -2,7 +2,7 @@ var express = require('express');
 var when=require('when');
 var router = express.Router();
 var utils=require('../utils');
-var config=require('../config').config;
+var config=require('../config');
 ///Only for router tools/google_search
 var google_search=function(keyword){
         var url=config.google.api.search_url+'q='+utils.urlencode(keyword)+'&cx='+config.google.api.search_engine_id+'&key='+config.google.api.api_key+'&fields=items(title,link)';
