@@ -11,6 +11,8 @@ var when=require('when');
 
 exports.loginFilter = function(req, res, next){
     var user = req.session.user;
+    var url=config.domain+req.originalUrl;
+    console.log(url);
     if (user){
             //正常流程
             if(req.session.user_type=='wechat'){
@@ -23,7 +25,7 @@ exports.loginFilter = function(req, res, next){
                         req.session.user_type=undefined;
                         req.session.user_info=undefined;
                         console.log("未找到用户");
-                        res.redirect(req.originUrl);
+                        res.redirect(req.originalUrl);
                         return;
                     }
                     console.log("已经登录 微信登录");
@@ -37,12 +39,9 @@ exports.loginFilter = function(req, res, next){
         console.log("未登录");
 
         ////是否微信浏览器打开
-        if(req.headers['user-agent']&&req.headers['user-agent'].indexOf('MicroMessenger')>=0&&req.query!=undefined){
-            var url=config.domain+req.url;
-            console.log(url);
-
+        if(req.headers['user-agent']&&req.headers['user-agent'].indexOf('MicroMessenger')>=0){
             //返回code
-            if(req.query.state=='WECHAT_OAUTH_RESPONSE'&&req.query.code!=undefined){
+            if(req.query.state=='WECHAT_OAUTH_RESPONSE'&&req.query&&req.query.code!=undefined){
                 console.log("CODE");
                 var code=req.query.code;
                 //获取code token
@@ -66,6 +65,7 @@ exports.loginFilter = function(req, res, next){
                         url=url.replace('&redirect_uri=','&m_=');
                         url=url.replace('&code=','&m_=');
                         url=url.replace('&state=','&m_=');
+console.log('sorry');
                         res.writeHead(301, {'Location':'https://open.weixin.qq.com/connect/oauth2/authorize?appid='+config.wechat.app_id+'&redirect_uri='+utils.urlencode(url)+'&response_type=code&scope=snsapi_userinfo&state=WECHAT_OAUTH_RESPONSE#wechat_redirect'});
                         res.end();
                         return;
@@ -91,23 +91,22 @@ exports.loginFilter = function(req, res, next){
                         }
 
                         db.Users.findOne({
-                            'wechat.openid':'ownWWwLnckQwkYhANVqHiEVt32PI'
+                            'wechat.openid':data.openid
                         }).then(function(u,err){
-console.log(u);
                             if(u){
+                                console.log('found');
                                 req.session.user=u._id;
-console.log(req.session.user);
                                 req.session.user_type='wechat';
                                 req.session.user_info=u;
-                                console.log('found');
-                                next();
+				next();
                                 return;
                             }
+			    console.log('not found');
 
                             var model=new db.Users({
-                                password:"empty",
                                 name:data.openid,
                                 nickname:data.nickname,
+                                password:"empty",
                                 wechat:{
                                     openid:data.openid,
                                     nickname:data.nickname,
@@ -115,7 +114,7 @@ console.log(req.session.user);
                                     region:data.region,
                                     sex:data.sex,
                                     language:data.language,
-                                    unionid:data.unionid,
+                                    unionid:data.unionid?data.unionid:'none',
                                     city:data.city,
                                     province:data.province,
                                     country:data.country
@@ -124,14 +123,10 @@ console.log(req.session.user);
                                 blocksTimes:0
                             });
                             model.save(function(r){
-                                if(r.errmsg){
-                                    console.log(r.errmsg);
-                                    return;
-                                }
-                                db.Users.findOne({
+				console.log("save ok");
+                                return db.Users.findOne({
 					'wechat.openid':data.openid
                                 }).then(function(r){
-                                    console.log("save");
                                     req.session.user=r._id;
                                     req.session.user_type='wechat';
                                     req.session.user_info=r;
