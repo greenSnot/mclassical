@@ -5,12 +5,12 @@ var nodegrass=require('nodegrass');
 var iconv=require('iconv-lite');
 var when=require('when');
 
-var options=require('../config').options;
+var config=require('../config');
 var search=require('./tools_helper');
 var utils=require('../utils');
 
 router.get('/',function(req,res){
-    if(utils.getPlatform(req).indexOf('pc')>=0){
+    if(config.serverName=='SZ'&&utils.getPlatform(req).indexOf('pc')>=0){
         res.render('wiki',{});
         return;
     }
@@ -87,7 +87,7 @@ router.get('/',function(req,res){
         return Math.random()>.5 ? -1 : 1;
     });
 
-	res.render('index',{QQMusicUrls:urls.splice(0,6),language:options.languages[req.query.language]?options.languages[req.query.language]:options.languages.cn,youku_client_id:options.youku.client_id});
+	res.render('index',{QQMusicUrls:urls.splice(0,6),language:config.languages[req.query.language]?config.languages[req.query.language]:config.languages.cn,youku_client_id:config.youku.client_id});
 });
 
 router.get('/get-source',function(req,res){

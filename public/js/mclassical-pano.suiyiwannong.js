@@ -247,15 +247,15 @@
          }else if(type.indexOf('music')==0){
              var e=document.createElement('div');
              e.className=type+'-content';
-             e.setAttribute('audio_url',extra.audio_url);
-             e.setAttribute('songname',extra.songname);
-             e.setAttribute('singer',extra.singer);
-             e.setAttribute('albumname',extra.albumname);
-             e.setAttribute('picture_big',extra.picture_big);
-             e.setAttribute('picture_small',extra.picture_small);
+             e.setAttribute('url',extra.url);
+             e.setAttribute('song_name',extra.song_name);
+             e.setAttribute('player',extra.player);
+             e.setAttribute('album_name',extra.album_name);
+             e.setAttribute('album_big',extra.album_big);
+             e.setAttribute('album_small',extra.album_small);
              e.setAttribute('rx',extra.rx);
              e.setAttribute('ry',extra.ry);
-             e.style['backgroundImage']='url('+extra.picture_small+')';
+             e.style['backgroundImage']='url('+extra.album_small+')';
              e.style['z-index']=extra.zindex;
              e.style['backgroundSize']='100%';
              element.appendChild(e);

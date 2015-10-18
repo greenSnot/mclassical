@@ -39,6 +39,9 @@ var urlencode =function(str) {
     replace(/\)/g, '%29').replace(/\*/g, '%2A').replace(/%20/g, '+');  
 } 
 var urldecode=function(zipStr){  
+    if(!zipStr){
+        return zipStr;
+    }
     var uzipStr="";  
     for(var i=0;i<zipStr.length;i++){  
         var chr = zipStr.charAt(i);  

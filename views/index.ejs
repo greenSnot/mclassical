@@ -131,17 +131,18 @@
         </div>
     <#}#>
     <#for(var i in audios){#>
-        <a class="result-audio"  target="_Blank" data-id="<#=audios[i].songid#>" data-source="<#=audios[i].source#>'>
-            <div style="display:-webkit-box;-webkit-box-orient:horizontal;">
-                <img class="result-audio-img" width="150" height="150" src="<#=audios[i].albumpic_big#>">
+        <a class="result-audio"  target="_Blank" data-id="<#=audios[i].song_id#>" data-source="<#=audios[i].source#>">
+            <div class="result-audio-title"><#=audios[i].source#> </div>
+            <div style="display:-webkit-box;-webkit-box-orient:horizontal;margin:10px;">
+                <img class="result-audio-img" width="150" height="150" src="<#=audios[i].album_big#>">
                 <div class="audio-info">
-                    <div><#=audios[i].songname#></div>
-                    <div><#=audios[i].albumname#></div>
-                    <div><#=audios[i].singername#></div>
+                    <div><#=audios[i].song_name#></div>
+                    <div><#=audios[i].album_name#></div>
+                    <div><#=audios[i].player#></div>
                 </div>
             </div>
                  <div class="audiojsZ">
-                    <audio data-url="<#=audios[i].m4a#>" preload="false"></audio>
+                    <audio data-url="<#=audios[i].url#>" preload="false"></audio>
                     <div class="play-pauseZ">
                       <p class="playZ"></p>
                       <p class="pauseZ"></p>
@@ -170,9 +171,9 @@
 
         var height=window.innerHeight;
         var width=window.innerWidth;
-        $('#result').width(width-30);
+        $('#result').width(width-12);
         $('#result').height(height-100);
-        $('#introduction').width(width-39);
+        $('#introduction').width(width-12);
         $('#introduction').height(height-100);
 
         $('#search-wrap').removeClass('start');
@@ -291,14 +292,14 @@
                     for(var j in clist){
                         if(j>14)break;
                         Musics['QQMusic_'+clist[j].songid]={};
-                        Musics['QQMusic_'+clist[j].songid].songid=urldecode(clist[j].songid);
-                        Musics['QQMusic_'+clist[j].songid].songname=urldecode(clist[j].songname);
-                        Musics['QQMusic_'+clist[j].songid].singer=urldecode(clist[j].singername);
-                        Musics['QQMusic_'+clist[j].songid].albumname=urldecode(clist[j].albumname);
-                        //Musics['QQMusic_'+clist[j].songid].audio_url=clist[j].m4a;
-                        Musics['QQMusic_'+clist[j].songid].audio_url="http://tsmusic24.tc.qq.com/"+clist[j].songid+".mp3";
-                        Musics['QQMusic_'+clist[j].songid].picture_small=clist[j].albumpic_small;
-                        Musics['QQMusic_'+clist[j].songid].picture_big=clist[j].albumpic_big;
+                        Musics['QQMusic_'+clist[j].songid].song_id=urldecode(clist[j].songid);
+                        Musics['QQMusic_'+clist[j].songid].song_name=urldecode(clist[j].songname);
+                        Musics['QQMusic_'+clist[j].songid].player=urldecode(clist[j].singername);
+                        Musics['QQMusic_'+clist[j].songid].albumn_ame=urldecode(clist[j].albumname);
+                        Musics['QQMusic_'+clist[j].songid].url=clist[j].m4a;
+                        //Musics['QQMusic_'+clist[j].songid].url="http://tsmusic24.tc.qq.com/"+clist[j].songid+".mp3";
+                        Musics['QQMusic_'+clist[j].songid].album_small=clist[j].albumpic_small;
+                        Musics['QQMusic_'+clist[j].songid].album_big=clist[j].albumpic_big;
 
                         Musics['QQMusic_'+clist[j].songid].rx=rj;
                         Musics['QQMusic_'+clist[j].songid].ry=(ri+rj/80*360)%360;
@@ -568,11 +569,11 @@
             $('#search-wrap').removeClass('show');
             $('#result-wrap').removeClass('show');
             setTimeout(function(){
-                $('#music-album').css('background-image','url('+content.attr('picture_small')+')');
-                $('#music-album-full').css('background-image','url('+content.attr('picture_big')+')');
-                $('#music-songname').text(content.attr('songname'));
-                $('#music-albumname').text(content.attr('albumname'));
-                $('#music-singer').text(content.attr('singer'));
+                $('#music-album').css('background-image','url('+content.attr('album_small')+')');
+                $('#music-album-full').css('background-image','url('+content.attr('album_big')+')');
+                $('#music-songname').text(content.attr('song_name'));
+                $('#music-albumname').text(content.attr('album_name'));
+                $('#music-singer').text(content.attr('player'));
                 $('#music-details').offsetWidth=$('#music-details').offsetWidth;
                 $('#music-details').addClass('show');
             },300);
@@ -597,10 +598,10 @@
                         randomPlay();
                     }
                 });
-                audio.load(content.attr('audio_url'));
+                audio.load(content.attr('url'));
                 audio.playPause();
             }else{
-                audio.load(content.attr('audio_url'));
+                audio.load(content.attr('url'));
                 audio.playPause();
                 audio.playPause();
                 if(!audio.playing){

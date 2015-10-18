@@ -5,7 +5,7 @@ var nodegrass=require('nodegrass');
 var iconv=require('iconv-lite');
 var when=require('when');
 
-var options=require('../config').options;
+var config=require('../config');
 var search=require('./tools_helper');
 var utils=require('../utils');
 
@@ -30,6 +30,17 @@ router.post('/', function(req,res) {
 
         qlist=[];
         qlist_type=[];
+
+        var audios_filter;
+        if(req.body.audios_filter){
+            audios_filter=req.body.audios_filter.split(',');
+            var temp={};
+            for(var i in audios_filter){
+                temp[audios_filter[i]]=true;
+            }
+            audios_filter=temp;
+        }
+        
         if(req.body.type){
             if(req.body.type=='scores'){
                 for(var i in keywords){
@@ -43,8 +54,21 @@ router.post('/', function(req,res) {
                 }
             }else if(req.body.type=='audios'){
                 for(var i in keywords){
-                    qlist.push(search.QQMusic(i));
-                    qlist_type.push('audios');
+                    if(audios_filter){
+                        if(audios_filter['qqmusic']){
+                            qlist.push(search.QQMusic(i));
+                            qlist_type.push('audios');
+                        }
+			if(audios_filter['neteasemusic']){
+                            qlist.push(search.NeteaseMusic(i));
+                            qlist_type.push('audios');
+                        }
+                    }else{
+                        qlist.push(search.QQMusic(i));
+                        qlist.push(search.NeteaseMusic(i));
+                        qlist_type.push('audios');
+                        qlist_type.push('audios');
+                    }
                 }
             }else{
                 res.json({code:-2,msg:'type error'});
@@ -61,6 +85,7 @@ router.post('/', function(req,res) {
             var scores_ids={};
             var videos_ids={};
             var audios_ids={};
+/////////////保证唯一性
 			for(var i in datas){
                 if(qlist_type[i]=='scores'){
                     for(var j in datas[i]){
@@ -77,16 +102,16 @@ router.post('/', function(req,res) {
                         }
                     }
                 }else if(qlist_type[i]=='audios'){
+                    console.log('audios '+datas[i].length);
                     for(var j in datas[i]){
-                        if(!audios_ids[datas[i][j].songid]){
-                            audios_ids[datas[i][j].songid]=true;
+                        if(!audios_ids[datas[i][j].id]){
+                            audios_ids[datas[i][j].id]=true;
                             result.audios.push(datas[i][j]);
                         }
                     }
                 }
 			}
 
-            console.log(result.audios.length);
             if(req.body.type!='audios'){
                 delete(result.audios);
             }
