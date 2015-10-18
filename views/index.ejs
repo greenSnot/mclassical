@@ -165,6 +165,55 @@
 <script id="template-youku" type="text/html">
     <div id="youkuplayer<#=youku_id#>" style="height:<#=height#>px;width:100%;display:block;"></div>
 </script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+$.post('/wechat/jsapi',{url:location.href.split('#')[0]},function(result){
+    wx.config({
+                    debug: false,
+                    appId: 'wxea9602a7f740bffe',
+                    timestamp:result.timestamp,
+                    nonceStr: result.noncestr,
+                    signature: result.signature,
+                    jsApiList: ['onMenuShareAppMessage','onMenuShareTimeline']
+                });
+    wx.ready(function(){
+        window.wechatShare=function(){
+            wx.checkJsApi({
+                jsApiList:['onMenuShareAppMessage'],
+                success:function(res){
+                    wx.onMenuShareTimeline({
+                        title: 'test', // 分享标题
+                        link:location.href.split('#')[0],
+                        imgUrl:'http://i.gtimg.cn/music/photo/mid_album_300/f/A/002stRua0aEvfA.jpg',
+                        success: function () {
+                            // 用户确认分享后执行的回调函数
+                        },
+                        cancel: function () {
+                            // 用户取消分享后执行的回调函数
+                        }
+                    });
+                    wx.onMenuShareAppMessage({
+                        title: 'xx', // 分享标题
+                        desc: '', // 分享描述
+                        link:location.href.split('#')[0],
+                        imgUrl:'',
+                        success: function () {
+                            // 用户确认分享后执行的回调函数
+                        },
+                        cancel: function () {
+                            // 用户取消分享后执行的回调函数
+                        }
+                    });
+                }
+            });
+        }
+    });
+    wx.error(function(res){
+        alert('error');
+        alert(JSON.stringify(res));
+    });
+});
+</script>
 <script>
         template.config('openTag','<#');
         template.config('closeTag','#>');
