@@ -340,21 +340,23 @@ $.post('/wechat/jsapi',{url:location.href.split('#')[0]},function(result){
                     var clist=res.showapi_res_body.pagebean.contentlist;
                     for(var j in clist){
                         if(j>14)break;
-                        Musics['QQMusic_'+clist[j].songid]={};
-                        Musics['QQMusic_'+clist[j].songid].song_id=urldecode(clist[j].songid);
-                        Musics['QQMusic_'+clist[j].songid].song_name=urldecode(clist[j].songname);
-                        Musics['QQMusic_'+clist[j].songid].player=urldecode(clist[j].singername);
-                        Musics['QQMusic_'+clist[j].songid].albumn_ame=urldecode(clist[j].albumname);
-                        Musics['QQMusic_'+clist[j].songid].url=clist[j].m4a;
-                        //Musics['QQMusic_'+clist[j].songid].url="http://tsmusic24.tc.qq.com/"+clist[j].songid+".mp3";
-                        Musics['QQMusic_'+clist[j].songid].album_small=clist[j].albumpic_small;
-                        Musics['QQMusic_'+clist[j].songid].album_big=clist[j].albumpic_big;
+                        var index='QQMusic_'+clist[j].songid;
+                        Musics[index]={};
+                        Musics[index].song_id=urldecode(clist[j].songid);
+                        Musics[index].song_name=urldecode(clist[j].songname);
+                        Musics[index].player=urldecode(clist[j].singername);
+                        Musics[index].albumn_ame=urldecode(clist[j].albumname);
+                        Musics[index].url=clist[j].m4a;
+                        //Musics[index].url="http://tsmusic24.tc.qq.com/"+clist[j].songid+".mp3";
+                        Musics[index].album_small=clist[j].albumpic_small?clist[j].albumpic_small:'/images/gray.jpg';
+                        Musics[index].album_big=clist[j].albumpic_big?clist[j].albumpic_big:'/images/gray.jpg';
 
-                        Musics['QQMusic_'+clist[j].songid].rx=rj;
-                        Musics['QQMusic_'+clist[j].songid].ry=(ri+rj/80*360)%360;
-                        Musics['QQMusic_'+clist[j].songid].zindex=++zindex;
 
-                        pano.loadMusic(Musics['QQMusic_'+clist[j].songid]);
+                        Musics[index].rx=rj;
+                        Musics[index].ry=(ri+rj/80*360)%360;
+                        Musics[index].zindex=++zindex;
+
+                        pano.loadMusic(Musics[index]);
                         if(rj>=70){
                             rj=-70;
                             ri+=60;
@@ -363,7 +365,7 @@ $.post('/wechat/jsapi',{url:location.href.split('#')[0]},function(result){
                         }
                     }
                 }else{
-                    console.log('error');
+                    log('error');
                 }
 
             });
