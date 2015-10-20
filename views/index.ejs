@@ -464,7 +464,6 @@
         }
 
         function showIframe(){
-            log('show');
             stopBackgroundMusic();
             if($(this).hasClass('playing')){
                 return;
@@ -538,8 +537,8 @@
             bindClick($('.help'),showHelp);
             bindClick($('.musicwall'),hideAll);
 
-            $('.video-source').on('touchstart',goSource);
-            bindClick($('.result-video'),showIframe,result_wrap,'.result-video');
+            bodyDom.on('touchstart','.video-source',goSource,true);
+            bodyDom.on('touchstart','.result-video',showIframe,true);
             bindClick($('.result-audio'),stopBackgroundMusic,result_wrap,'.result-audio');
 
             $('#result-content').on('touchstart',function(){contentScrolling=true;});
