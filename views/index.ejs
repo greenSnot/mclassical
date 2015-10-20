@@ -537,8 +537,8 @@
             bindClick($('.help'),showHelp);
             bindClick($('.musicwall'),hideAll);
 
-            bodyDom.on('touchstart','.video-source',goSource,true);
-            bodyDom.on('touchstart','.result-video',showIframe,true);
+            bodyDom.on('touchstart','.video-source',goSource);
+            bindClick($('.result-video'),showIframe,result_wrap,'.result-video');
             bindClick($('.result-audio'),stopBackgroundMusic,result_wrap,'.result-audio');
 
             $('#result-content').on('touchstart',function(){contentScrolling=true;});
