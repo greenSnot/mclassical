@@ -148,32 +148,35 @@ console.log('netease api');
                 data=JSON.parse(data);
                 if(data.showapi_res_code==0&&data.showapi_res_body&&data.showapi_res_body.data&&data.showapi_res_body.data.data&&data.showapi_res_body.data.data.list){
                     var t=data.showapi_res_body.data.data.list;
-		    var r=[];
-		    var qlist=[];
+                    var r=[];
+                    var qlist=[];
                     for(var i in t){
-r.push({});
-			r[i].song_id=t[i].songId;
-			r[i].id='neteasemusic_'+t[i].songId;
-			r[i].song_name=t[i].songName;
-			r[i].player=t[i].userName;
-			r[i].album_name=t[i].albumName;
-			r[i].url=t[i].songUrl;
-			r[i].album_small=t[i].albumPic;
-			r[i].album_big=t[i].albumPic;
+                        r.push({});
+                        r[i].song_id=t[i].songId;
+                        r[i].show=0;
+                        r[i].song_link='http://music.163.com/#/song?id='+r[i].song_id;
+                        //r[i].album_link='http://music.163.com/#/album?id='+r[i].album_id;
+                        r[i].id='neteasemusic_'+t[i].songId;
+                        r[i].song_name=t[i].songName;
+                        r[i].player=t[i].userName;
+                        r[i].album_name=t[i].albumName;
+                        r[i].url=t[i].songUrl;
+                        r[i].album_small=t[i].albumPic;
+                        r[i].album_big=t[i].albumPic;
                         r[i].source='NeteaseMusic';
-			var model=new db.Audios(r[i]);
-			model.pre('save',function(next){
-				next();//忽略错误
-			});
-			qlist.push(
-				model.save()
-			);
+                        var model=new db.Audios(r[i]);
+                        model.pre('save',function(next){
+                            next();//忽略错误
+                        });
+                        qlist.push(
+                                model.save()
+                                );
                     }
-console.log(t.length);
-console.log('netease length');
-when.all(qlist).then(function(){
-                    resolve(r);
-});
+                    console.log(t.length);
+                    console.log('netease length');
+                    when.all(qlist).then(function(){
+                        resolve(r);
+                    });
                 }else{
                     resolve([]);
                 }
@@ -205,33 +208,36 @@ console.log('qqmusic api');
                         }
                         //t[i].m4a="http://tsmusic24.tc.qq.com/"+t[i].songid+'.mp3';
                     }
-		    var r=[];
-		    var qlist=[];
+                    var r=[];
+                    var qlist=[];
                     for(var i in t){
-r.push({});
-			r[i].song_id=t[i].songid;
-			r[i].id='qqmusic_'+t[i].songid;
-			r[i].song_name=t[i].songname;
-			r[i].player=t[i].singername;
-			r[i].album_name=t[i].albumname;
-			r[i].url=t[i].m4a;
-			r[i].album_small=t[i].albumpic_small;
-			r[i].album_big=t[i].albumpic_big;
+                        r.push({});
+                        r[i].song_id=t[i].songid;
+                        r[i].id='qqmusic_'+t[i].songid;
+                        r[i].show=0;
+                        r[i].song_link="http://y.qq.com/#type=song&mid="+t[i].songmid;
+                        r[i].album_link="http://y.qq.com/#type=album&mid="+t[i].albummid;
+                        r[i].song_name=t[i].songname;
+                        r[i].player=t[i].singername;
+                        r[i].album_name=t[i].albumname;
+                        r[i].url=t[i].m4a;
+                        r[i].album_small=t[i].albumpic_small;
+                        r[i].album_big=t[i].albumpic_big;
                         r[i].source='QQMusic';
 
-			var model=new db.Audios(r[i]);
-			model.pre('save',function(next){
-				next();//忽略错误
-			});
-			qlist.push(
-				model.save()
-			);
+                        var model=new db.Audios(r[i]);
+                        model.pre('save',function(next){
+                            next();//忽略错误
+                        });
+                        qlist.push(
+                                model.save()
+                                );
                     }
-console.log(t.length);
-console.log('qqmusic length');
-			when.all(qlist).then(function(u){
-                    resolve(r);
-});
+                    console.log(t.length);
+                    console.log('qqmusic length');
+                    when.all(qlist).then(function(u){
+                        resolve(r);
+                    });
                 }else{
                     resolve([]);
                 }

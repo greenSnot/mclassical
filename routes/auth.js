@@ -39,7 +39,7 @@ exports.loginFilter = function(req, res, next){
         console.log("未登录");
 
         ////是否微信浏览器打开
-        if(req.headers['user-agent']&&req.headers['user-agent'].indexOf('MicroMessenger')>=0){
+        if(config.serverName=='SZ'&&req.headers['user-agent']&&req.headers['user-agent'].indexOf('MicroMessenger')>=0){
             //返回code
             if(req.query.state=='WECHAT_OAUTH_RESPONSE'&&req.query&&req.query.code!=undefined){
                 console.log("CODE");
@@ -84,9 +84,7 @@ console.log('sorry');
                         if(data.errcode){
                             console.log("https://api.weixin.qq.com/sns/userinfo?access_token="+access_token+"&openid="+openid+"&lang=zh_CN");
                             console.log("ERROR______________");
-                            url=url.replace('&redirect_uri=','&m_=');
-                            res.writeHead(301, {'Location':'https://open.weixin.qq.com/connect/oauth2/authorize?appid='+config.wechat.app_id+'&redirect_uri='+utils.urlencode(url)+'&response_type=code&scope=snsapi_userinfo&state=WECHAT_OAUTH_RESPONSE#wechat_redirect'});
-                            res.end();
+                            res.redirect('/');
                             return;
                         }
 

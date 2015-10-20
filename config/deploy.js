@@ -79,10 +79,10 @@ exports.config={
             volunteer_content:'Join volunteer',
             help:'Help',
             help_content:'Help',
-            about:'The magnifier of classical music，non-commercial and free search engine of classical music。'+
+            about_content:'The magnifier of classical music，non-commercial and free search engine of classical music。'+
 '</br>We collected most of scores,videos,audios about classical music, for providing convenient search tool to musican,classical music fans.'+
 '</br>At the same time ,we are working for classical music standardization. To make classical music easier to touch and share.',
-            about_content:'About us',
+            about:'About us',
             noResult:'No result',
             musicWall:'Music Wall',
             busy:'Server is too busy,please try later'

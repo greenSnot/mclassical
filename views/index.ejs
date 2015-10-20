@@ -23,7 +23,7 @@
             </div>
             <div id="search-wrap" class="start">
                 <div class="input-wrap">
-                    <input id="search">
+                    <input id="input-search">
                 </div>
                 <button id="btn-search"><%=language.search%></button>
             </div>
@@ -43,10 +43,14 @@
                 <div id="introduction-stick">
                 </div>
                 <div id="introduction">
-                    <div id="introduction-title">dsf</div>
+                    <div id="introduction-title"></div>
                     <div id="introduction-content">
-                        introduction
                     </div>
+                </div>
+            </div>
+            <div class="nav-wrap musicwall">
+                <div class="nav-stick">
+                    <%=language.musicWall%>
                 </div>
             </div>
             <div class="nav-wrap volunteer">
@@ -57,11 +61,6 @@
             <div class="nav-wrap about">
                 <div class="nav-stick">
                     <%=language.about%>
-                </div>
-            </div>
-            <div class="nav-wrap musicwall">
-                <div class="nav-stick">
-                    <%=language.musicWall%>
                 </div>
             </div>
             <div class="nav-wrap help">
@@ -77,6 +76,7 @@
                 </div>
             </div>
         </div>
+
         <div id="music-details">
              <div id="music-wrap">
                  <div id="music-album">
@@ -112,7 +112,7 @@
 
 </body>
 <script src="/js/template-native.js"></script>
-<script id="template-result" type="text/html">
+<script id="template-results" type="text/html">
     <#if(
     (scores==undefined||(scores&&scores.length==0))&&
     (videos==undefined||(videos&&videos.length==0))&&
@@ -124,15 +124,15 @@
     <#}#>
     <#for(var i in videos){#>
         <div class="result-video" data-id="<#=videos[i].id#>" target="_Blank" data-title="<#=videos[i].title#>" data-source="<#=videos[i].source#>" data-link="<#=videos[i].link#>" style="background-image:url(<#=videos[i].thumbnail#>);">
+            <div class="video-source" >From:<#=videos[i].source#></div>
             <div class="video-info">
                 <#=videos[i].title#>
             </div>
-            <div class="options">● ● ●</div>
         </div>
     <#}#>
     <#for(var i in audios){#>
         <a class="result-audio"  target="_Blank" data-id="<#=audios[i].song_id#>" data-source="<#=audios[i].source#>">
-            <div class="result-audio-title"><#=audios[i].source#> </div>
+            <div class="result-audio-title" onclick="window.open('<#=audios[i].song_link#>')"><#=audios[i].source#> </div>
             <div style="display:-webkit-box;-webkit-box-orient:horizontal;margin:10px;">
                 <img class="result-audio-img" width="150" height="150" src="<#=audios[i].album_big#>">
                 <div class="audio-info">
@@ -166,76 +166,24 @@
     <div id="youkuplayer<#=youku_id#>" style="height:<#=height#>px;width:100%;display:block;"></div>
 </script>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-<script>
-$.post('/wechat/jsapi',{url:location.href.split('#')[0]},function(result){
-    wx.config({
-                    debug: false,
-                    appId: 'wxea9602a7f740bffe',
-                    timestamp:result.timestamp,
-                    nonceStr: result.noncestr,
-                    signature: result.signature,
-                    jsApiList: ['onMenuShareAppMessage','onMenuShareTimeline']
-                });
-    wx.ready(function(){
-        window.wechatShare=function(){
-            wx.checkJsApi({
-                jsApiList:['onMenuShareAppMessage'],
-                success:function(res){
-                    wx.onMenuShareTimeline({
-                        title: 'test', // 分享标题
-                        link:location.href.split('#')[0],
-                        imgUrl:'http://i.gtimg.cn/music/photo/mid_album_300/f/A/002stRua0aEvfA.jpg',
-                        success: function () {
-                            // 用户确认分享后执行的回调函数
-                        },
-                        cancel: function () {
-                            // 用户取消分享后执行的回调函数
-                        }
-                    });
-                    wx.onMenuShareAppMessage({
-                        title: 'xx', // 分享标题
-                        desc: '', // 分享描述
-                        link:location.href.split('#')[0],
-                        imgUrl:'',
-                        success: function () {
-                            // 用户确认分享后执行的回调函数
-                        },
-                        cancel: function () {
-                            // 用户取消分享后执行的回调函数
-                        }
-                    });
-                }
-            });
-        }
-    });
-    wx.error(function(res){
-        alert('error');
-        alert(JSON.stringify(res));
-    });
-});
-</script>
+<script src="/js/wechatSharing.js"></script>
 <script>
         template.config('openTag','<#');
         template.config('closeTag','#>');
 
         var height=window.innerHeight;
         var width=window.innerWidth;
-        $('#result').width(width-12);
+        $('#result').width(width-11);
         $('#result').height(height-100);
-        $('#introduction').width(width-12);
+        $('#introduction').width(width-11);
         $('#introduction').height(height-100);
 
         $('#search-wrap').removeClass('start');
         $('#search-wrap').addClass('show');
 
-        var stopSearchAnimation=false;
-        function getTextWidth(str,fontsize) {
-            var d = document.getElementById('__getwidth');
-            d.style.fontSize=fontsize;
-            d.innerHTML = str;
-            return d.offsetWidth;
-        }
+        var inputSearch=$('#input-search');
 
+        var stopSearchAnimation=false;
         var autoTyping=[
             'The magnifier of classical music'
         ];
@@ -251,7 +199,7 @@ $.post('/wechat/jsapi',{url:location.href.split('#')[0]},function(result){
                 type:'post',
                 data:{
                     type:$('.tab.selected').attr('data-type'),
-                    keyword:$('#search').val()
+                    keyword:$('#input-search').val()
                 },
                 timeout:6000,
                 success:function(res){
@@ -259,7 +207,7 @@ $.post('/wechat/jsapi',{url:location.href.split('#')[0]},function(result){
                         alert(res.msg);
                         return;
                     }
-                    $('#result-content').html(template('template-result',res));
+                    $('#result-content').html(template('template-results',res));
                     if($('.tab.selected').attr('data-type')=='audios'){
                         $('#result-content').find('audio').each(function(){
                             audios[$(this).attr('data-url')]=audiojs.create($(this)[0], {
@@ -292,7 +240,7 @@ $.post('/wechat/jsapi',{url:location.href.split('#')[0]},function(result){
         var audios={};
 
         function search(keyword){
-            $('#search').blur();
+            $('#input-search').blur();
             hideNavs();
             $('#search-wrap').addClass('show');
             if($('#result-wrap').hasClass('show')){
@@ -310,14 +258,14 @@ $.post('/wechat/jsapi',{url:location.href.split('#')[0]},function(result){
         function changeInput(inputstr){
             return function(){
                 if(!stopSearchAnimation){
-                    $('#search').val(inputstr);
+                    $('#input-search').val(inputstr);
                 }
             }
         }
 
         var delay=0;
         for(var i in autoTyping){
-            $('#search').val('');
+            $('#input-search').val('');
             inputstr='';
             for(var j in autoTyping[i]){
                 inputstr+=autoTyping[i][j];
@@ -371,11 +319,11 @@ $.post('/wechat/jsapi',{url:location.href.split('#')[0]},function(result){
             });
         }
 
-        $('#search').focus(function(){
+        $('#input-search').focus(function(){
             $(this).addClass('focus');
         });
 
-        $('#search').blur(function(){
+        $('#input-search').blur(function(){
             $(this).removeClass('focus');
         });
 
@@ -386,7 +334,7 @@ $.post('/wechat/jsapi',{url:location.href.split('#')[0]},function(result){
             e.stopPropagation();
             e.preventDefault();
             stopSearchAnimation=true;
-            $('#search').val($('#music-songname').text());
+            $('#input-search').val($('#music-songname').text());
             search($('#music-songname').text());
             $('#music-details').offsetWidth=$('#music-details').offsetWidth;
             $('#music-details').removeClass('show');
@@ -397,17 +345,17 @@ $.post('/wechat/jsapi',{url:location.href.split('#')[0]},function(result){
         }
         function clearSearch(){
             if(stopSearchAnimation==false){
-                $('#search').val('');
+                $('#input-search').val('');
                 stopSearchAnimation=true;
             }
-            if($('#search').val()==autoTyping[0]){
-                $('#search').val('');
+            if($('#input-search').val()==autoTyping[0]){
+                $('#input-search').val('');
             }
         }
-        $('#search').on('focus',function(){
+        $('#input-search').on('focus',function(){
             $('#search-wrap').addClass('showbtn');
         });
-        $('#search').on('keypress',function(e){
+        $('#input-search').on('keypress',function(e){
              var keyCode = null;
              if(e.which)
                  keyCode = e.which;
@@ -438,7 +386,7 @@ $.post('/wechat/jsapi',{url:location.href.split('#')[0]},function(result){
                     self.addClass('show');
                 },delay);
             });
-            $('#result-wrap').removeClass('show');
+            //$('#result-wrap').removeClass('show');
         }
         function hideNavs(){
              var delay=0;
@@ -454,11 +402,8 @@ $.post('/wechat/jsapi',{url:location.href.split('#')[0]},function(result){
             $('#logo').removeClass();
             $('#logo')[0].offsetWidth=$('#logo')[0].offsetWidth;
             $('#logo').addClass('click');
-            $('#search').blur();
-            if($('#search-wrap').hasClass('show')){
-                $('#search-wrap').removeClass('show');
-                $('#result-wrap').removeClass('show');
-                $('#introduction-wrap').removeClass('show');
+            $('#input-search').blur();
+            if($('.nav-wrap').hasClass('show')){
                 hideNavs();
             }else{
                 $('#search-wrap').addClass('show');
@@ -474,16 +419,22 @@ $.post('/wechat/jsapi',{url:location.href.split('#')[0]},function(result){
         function showAbout(){
             hideDetails();
             hideNavs();
+            $('#introduction-wrap').removeClass('show');
+            setTimeout(function(){
             $('#introduction-title').text('<%-language.about%>');
             $('#introduction-wrap').addClass('show');
             $('#introduction-content').html('<%-language.about_content%>');
+            },400);
         }
         function showVolunteer(){
             hideDetails();
             hideNavs();
-            $('#introduction-title').text('<%-language.volunteer%>');
-            $('#introduction-wrap').addClass('show');
-            $('#introduction-content').html('<%-language.volunteer_content%>');
+            $('#introduction-wrap').removeClass('show');
+            setTimeout(function(){
+                    $('#introduction-title').text('<%-language.volunteer%>');
+                    $('#introduction-wrap').addClass('show');
+                    $('#introduction-content').html('<%-language.volunteer_content%>');
+            },400);
         }
         function hideIntroduction(){
             $('#introduction-wrap').removeClass('show');
@@ -491,9 +442,12 @@ $.post('/wechat/jsapi',{url:location.href.split('#')[0]},function(result){
         function showHelp(){
             hideDetails();
             hideNavs();
+            $('#introduction-wrap').removeClass('show');
+            setTimeout(function(){
             $('#introduction-title').text('<%-language.help%>');
             $('#introduction-wrap').addClass('show');
             $('#introduction-content').html('<%-language.help_content%>');
+            },400);
         }
 
         function hideAll(){
@@ -501,9 +455,16 @@ $.post('/wechat/jsapi',{url:location.href.split('#')[0]},function(result){
             hideSearch();
             hideIntroduction();
             hideDetails();
+            $('#result-wrap').removeClass('show');
+        }
+
+        function goSource(e){
+            e.stopPropagation();
+            window.open($(this).closest('.result-video').attr('data-link'));
         }
 
         function showIframe(){
+            log('show');
             stopBackgroundMusic();
             if($(this).hasClass('playing')){
                 return;
@@ -548,13 +509,14 @@ $.post('/wechat/jsapi',{url:location.href.split('#')[0]},function(result){
             hideDetails();
             $('#introduction-wrap').removeClass('show');
             hideNavs();
-            search($('#search').val());
+            search($('#input-search').val());
         }
 
         var audio=false;
         var contentScrolling=false;
         var maxfov=120,fov=120,minfov=120;
 
+        var bodyDom=$('body');
         var result_wrap=$('#result-wrap');
         if(checkMobile()){
             maxfov=100;
@@ -566,7 +528,7 @@ $.post('/wechat/jsapi',{url:location.href.split('#')[0]},function(result){
             bindClick($('#music-info'),nothing);
             bindClick($('#music-album'),nothing);
 
-            bindClick($('#search'),clearSearch);
+            bindClick($('#input-search'),clearSearch);
             bindClick($('#btn-search'),searchClick);
             bindClick($('.tab'),switchTab);
 
@@ -574,6 +536,9 @@ $.post('/wechat/jsapi',{url:location.href.split('#')[0]},function(result){
             bindClick($('.about'),showAbout);
             bindClick($('.volunteer'),showVolunteer);
             bindClick($('.help'),showHelp);
+            bindClick($('.musicwall'),hideAll);
+
+            $('.video-source').on('touchstart',goSource);
             bindClick($('.result-video'),showIframe,result_wrap,'.result-video');
             bindClick($('.result-audio'),stopBackgroundMusic,result_wrap,'.result-audio');
 
@@ -589,17 +554,19 @@ $.post('/wechat/jsapi',{url:location.href.split('#')[0]},function(result){
             $('#music-details').on('mouseup',hideDetails);
             $('#music-more').on('mouseup',moreInfo);
             $('#music-album').on('mouseup',nothing);
-            $('#search').on('mouseup',clearSearch);
+            $('#input-search').on('mouseup',clearSearch);
             $('#btn-search').on('mouseup',function(){hideDetails();
                 $('#introduction-wrap').removeClass('show');
                 hideNavs();
-            search($('#search').val());});
+            search($('#input-search').val());});
             $('.tab').on('mouseup',switchTab);
             $('#magnifier').on('mouseup',magnifierClick);
             $('.about').on('mouseup',showAbout);
+            $('.musicwall').on('mouseup',hideAll);
             $('.volunteer').on('mouseup',showVolunteer);
             $('.help').on('mouseup',showHelp);
-            result_wrap.delegate('.result-video','click',showIframe);
+            bodyDom.on('click','.video-source',goSource,true);
+            bodyDom.on('click','.result-video',showIframe,true);
             result_wrap.delegate('.result-audio','click',stopBackgroundMusic);
         }
 

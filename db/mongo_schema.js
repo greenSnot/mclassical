@@ -128,6 +128,12 @@ var audiosSchema= mongoose.Schema({
     album_id:{
         type:String
     },
+    show:{
+        type:String
+    },
+    link:{
+        type:String
+    },
     url:{
         type:String,
         required: true
@@ -162,6 +168,21 @@ var usersSchema= mongoose.Schema({
         province: String,
         country: String
     },
+    favorite_scores:[
+        {
+            media_id:String
+        }
+    ],
+    favorite_videos:[
+        {
+            media_id:String
+        }
+    ],
+    favorite_audios:[
+        {
+            media_id:String
+        }
+    ],
     aliasesTimes:Number,
     blocksTimes:Number
 },{

@@ -4,6 +4,46 @@ var utils=require('../utils');
 var db=require('../db/mongo_schema');
 var when=require('when');
 
+//数组添加
+/*
+db.Users.update({
+            name:'32'
+        },{
+            '$addToSet':{
+                favorite_audios:{
+                    '$each':[{
+                        media_id:'123'
+                    },{
+                        media_id:'234'
+                    },{
+                        media_id:'24'
+                    },{
+                        media_id:'34'
+                    }
+                    ]
+                }
+            }
+        }).then(function(r){
+    console.log(r);
+});
+*/
+
+//数组删除
+/*
+db.Users.update({
+    name:'32'
+},{
+    '$pull':{
+        favorite_audios:{
+            media_id:'123'
+        }
+    }
+}).then(function(r){
+    console.log(r);
+});
+*/
+
+
 //db.Audios.find(
 //).then(function(r){
 //for(var i in r){
