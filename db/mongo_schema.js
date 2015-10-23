@@ -142,6 +142,34 @@ var audiosSchema= mongoose.Schema({
     _id:true,
     autoIndex:true
 })
+var composersSchema= mongoose.Schema({
+    name:{
+        type:String,
+        index:true,
+        required: true,
+        unique:true
+    },
+    introduction:{
+        type:String
+    },
+    url:{
+        type:String
+    }
+    works:[
+        {
+            name:{
+                type:String,
+                unique:true
+            },
+            sheet_url:String,
+            instrument:String,
+            form:String
+        }
+    ]
+},{
+    _id:true,
+    autoIndex:true
+})
 var usersSchema= mongoose.Schema({
     name:{
         type:String,
@@ -199,6 +227,7 @@ exports.PreBlocks = mongoose.model('PreBlocks', pre_blocksSchema);
 exports.Aliases = mongoose.model('Aliases', aliasesSchema);
 exports.PreAliases = mongoose.model('PreAliases', pre_aliasesSchema);
 exports.Audios= mongoose.model('Audios', audiosSchema);
+exports.Composers= mongoose.model('Composers', composersSchema);
 
 
 
