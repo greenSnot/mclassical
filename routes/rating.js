@@ -44,12 +44,14 @@ db.Users.update({
 */
 
 
-//db.Audios.find(
-//).then(function(r){
-//for(var i in r){
-//console.log(r[i].id);
-//}
-//});
+/*
+db.Audios.find(
+).then(function(r){
+for(var i in r){
+console.log(r[i].id);
+}
+});
+*/
 //db.Users.findOne({
 //    _id:'55d6cda3eb5c796867789d10'
 //}).then(function(r){

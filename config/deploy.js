@@ -1,5 +1,5 @@
 exports.config={
-    mongodb_url:'mongodb://localhost/mclassical',
+    mongodb_url:'mongodb://127.0.0.1/mclassical',
 	mongodb:{
 		db:{
 			native_parser:true
