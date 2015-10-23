@@ -9,8 +9,10 @@ exports.config={
 			keepAlive:1
 		},
 		replset:{rs_name:'myReplicaSetName'},
-		user:'',
-		pass:''
+        //貌似没用
+        user:'',
+        pass:''
+        ////////
 	},
 	youku:{
 		client_id:'a1a9e7a8905e91fb',
