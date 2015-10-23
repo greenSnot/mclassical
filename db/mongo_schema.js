@@ -142,6 +142,7 @@ var audiosSchema= mongoose.Schema({
     _id:true,
     autoIndex:true
 })
+/*
 var composersSchema= mongoose.Schema({
     name:{
         type:String,
@@ -170,6 +171,7 @@ var composersSchema= mongoose.Schema({
     _id:true,
     autoIndex:true
 })
+*/
 var usersSchema= mongoose.Schema({
     name:{
         type:String,
@@ -227,7 +229,7 @@ exports.PreBlocks = mongoose.model('PreBlocks', pre_blocksSchema);
 exports.Aliases = mongoose.model('Aliases', aliasesSchema);
 exports.PreAliases = mongoose.model('PreAliases', pre_aliasesSchema);
 exports.Audios= mongoose.model('Audios', audiosSchema);
-exports.Composers= mongoose.model('Composers', composersSchema);
+//exports.Composers= mongoose.model('Composers', composersSchema);
 
 
 
