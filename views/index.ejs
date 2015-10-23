@@ -23,7 +23,7 @@
             </div>
             <div id="search-wrap" class="start">
                 <div class="input-wrap">
-                    <input id="search">
+                    <input id="input-search">
                 </div>
                 <button id="btn-search"><%=language.search%></button>
             </div>
@@ -43,10 +43,14 @@
                 <div id="introduction-stick">
                 </div>
                 <div id="introduction">
-                    <div id="introduction-title">dsf</div>
+                    <div id="introduction-title"></div>
                     <div id="introduction-content">
-                        introduction
                     </div>
+                </div>
+            </div>
+            <div class="nav-wrap musicwall">
+                <div class="nav-stick">
+                    <%=language.musicWall%>
                 </div>
             </div>
             <div class="nav-wrap volunteer">
@@ -57,11 +61,6 @@
             <div class="nav-wrap about">
                 <div class="nav-stick">
                     <%=language.about%>
-                </div>
-            </div>
-            <div class="nav-wrap musicwall">
-                <div class="nav-stick">
-                    <%=language.musicWall%>
                 </div>
             </div>
             <div class="nav-wrap help">
@@ -77,6 +76,7 @@
                 </div>
             </div>
         </div>
+
         <div id="music-details">
              <div id="music-wrap">
                  <div id="music-album">
@@ -112,7 +112,7 @@
 
 </body>
 <script src="/js/template-native.js"></script>
-<script id="template-result" type="text/html">
+<script id="template-results" type="text/html">
     <#if(
     (scores==undefined||(scores&&scores.length==0))&&
     (videos==undefined||(videos&&videos.length==0))&&
@@ -124,15 +124,15 @@
     <#}#>
     <#for(var i in videos){#>
         <div class="result-video" data-id="<#=videos[i].id#>" target="_Blank" data-title="<#=videos[i].title#>" data-source="<#=videos[i].source#>" data-link="<#=videos[i].link#>" style="background-image:url(<#=videos[i].thumbnail#>);">
+            <div class="video-source" >From:<#=videos[i].source#></div>
             <div class="video-info">
                 <#=videos[i].title#>
             </div>
-            <div class="options">● ● ●</div>
         </div>
     <#}#>
     <#for(var i in audios){#>
         <a class="result-audio"  target="_Blank" data-id="<#=audios[i].song_id#>" data-source="<#=audios[i].source#>">
-            <div class="result-audio-title"><#=audios[i].source#> </div>
+            <div class="result-audio-title" onclick="window.open('<#=audios[i].song_link#>')"><#=audios[i].source#> </div>
             <div style="display:-webkit-box;-webkit-box-orient:horizontal;margin:10px;">
                 <img class="result-audio-img" width="150" height="150" src="<#=audios[i].album_big#>">
                 <div class="audio-info">
@@ -165,28 +165,25 @@
 <script id="template-youku" type="text/html">
     <div id="youkuplayer<#=youku_id#>" style="height:<#=height#>px;width:100%;display:block;"></div>
 </script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script src="/js/wechatSharing.js"></script>
 <script>
         template.config('openTag','<#');
         template.config('closeTag','#>');
 
         var height=window.innerHeight;
         var width=window.innerWidth;
-        $('#result').width(width-12);
+        $('#result').width(width-11);
         $('#result').height(height-100);
-        $('#introduction').width(width-12);
+        $('#introduction').width(width-11);
         $('#introduction').height(height-100);
 
         $('#search-wrap').removeClass('start');
         $('#search-wrap').addClass('show');
 
-        var stopSearchAnimation=false;
-        function getTextWidth(str,fontsize) {
-            var d = document.getElementById('__getwidth');
-            d.style.fontSize=fontsize;
-            d.innerHTML = str;
-            return d.offsetWidth;
-        }
+        var inputSearch=$('#input-search');
 
+        var stopSearchAnimation=false;
         var autoTyping=[
             'The magnifier of classical music'
         ];
@@ -202,7 +199,7 @@
                 type:'post',
                 data:{
                     type:$('.tab.selected').attr('data-type'),
-                    keyword:$('#search').val()
+                    keyword:$('#input-search').val()
                 },
                 timeout:6000,
                 success:function(res){
@@ -210,7 +207,7 @@
                         alert(res.msg);
                         return;
                     }
-                    $('#result-content').html(template('template-result',res));
+                    $('#result-content').html(template('template-results',res));
                     if($('.tab.selected').attr('data-type')=='audios'){
                         $('#result-content').find('audio').each(function(){
                             audios[$(this).attr('data-url')]=audiojs.create($(this)[0], {
@@ -243,7 +240,7 @@
         var audios={};
 
         function search(keyword){
-            $('#search').blur();
+            $('#input-search').blur();
             hideNavs();
             $('#search-wrap').addClass('show');
             if($('#result-wrap').hasClass('show')){
@@ -261,14 +258,14 @@
         function changeInput(inputstr){
             return function(){
                 if(!stopSearchAnimation){
-                    $('#search').val(inputstr);
+                    $('#input-search').val(inputstr);
                 }
             }
         }
 
         var delay=0;
         for(var i in autoTyping){
-            $('#search').val('');
+            $('#input-search').val('');
             inputstr='';
             for(var j in autoTyping[i]){
                 inputstr+=autoTyping[i][j];
@@ -291,21 +288,23 @@
                     var clist=res.showapi_res_body.pagebean.contentlist;
                     for(var j in clist){
                         if(j>14)break;
-                        Musics['QQMusic_'+clist[j].songid]={};
-                        Musics['QQMusic_'+clist[j].songid].song_id=urldecode(clist[j].songid);
-                        Musics['QQMusic_'+clist[j].songid].song_name=urldecode(clist[j].songname);
-                        Musics['QQMusic_'+clist[j].songid].player=urldecode(clist[j].singername);
-                        Musics['QQMusic_'+clist[j].songid].albumn_ame=urldecode(clist[j].albumname);
-                        Musics['QQMusic_'+clist[j].songid].url=clist[j].m4a;
-                        //Musics['QQMusic_'+clist[j].songid].url="http://tsmusic24.tc.qq.com/"+clist[j].songid+".mp3";
-                        Musics['QQMusic_'+clist[j].songid].album_small=clist[j].albumpic_small;
-                        Musics['QQMusic_'+clist[j].songid].album_big=clist[j].albumpic_big;
+                        var index='QQMusic_'+clist[j].songid;
+                        Musics[index]={};
+                        Musics[index].song_id=urldecode(clist[j].songid);
+                        Musics[index].song_name=urldecode(clist[j].songname);
+                        Musics[index].player=urldecode(clist[j].singername);
+                        Musics[index].albumn_ame=urldecode(clist[j].albumname);
+                        Musics[index].url=clist[j].m4a;
+                        //Musics[index].url="http://tsmusic24.tc.qq.com/"+clist[j].songid+".mp3";
+                        Musics[index].album_small=clist[j].albumpic_small?clist[j].albumpic_small:'/images/gray.jpg';
+                        Musics[index].album_big=clist[j].albumpic_big?clist[j].albumpic_big:'/images/gray.jpg';
 
-                        Musics['QQMusic_'+clist[j].songid].rx=rj;
-                        Musics['QQMusic_'+clist[j].songid].ry=(ri+rj/80*360)%360;
-                        Musics['QQMusic_'+clist[j].songid].zindex=++zindex;
 
-                        pano.loadMusic(Musics['QQMusic_'+clist[j].songid]);
+                        Musics[index].rx=rj;
+                        Musics[index].ry=(ri+rj/80*360)%360;
+                        Musics[index].zindex=++zindex;
+
+                        pano.loadMusic(Musics[index]);
                         if(rj>=70){
                             rj=-70;
                             ri+=60;
@@ -314,17 +313,17 @@
                         }
                     }
                 }else{
-                    console.log('error');
+                    log('error');
                 }
 
             });
         }
 
-        $('#search').focus(function(){
+        $('#input-search').focus(function(){
             $(this).addClass('focus');
         });
 
-        $('#search').blur(function(){
+        $('#input-search').blur(function(){
             $(this).removeClass('focus');
         });
 
@@ -335,7 +334,7 @@
             e.stopPropagation();
             e.preventDefault();
             stopSearchAnimation=true;
-            $('#search').val($('#music-songname').text());
+            $('#input-search').val($('#music-songname').text());
             search($('#music-songname').text());
             $('#music-details').offsetWidth=$('#music-details').offsetWidth;
             $('#music-details').removeClass('show');
@@ -346,17 +345,17 @@
         }
         function clearSearch(){
             if(stopSearchAnimation==false){
-                $('#search').val('');
+                $('#input-search').val('');
                 stopSearchAnimation=true;
             }
-            if($('#search').val()==autoTyping[0]){
-                $('#search').val('');
+            if($('#input-search').val()==autoTyping[0]){
+                $('#input-search').val('');
             }
         }
-        $('#search').on('focus',function(){
+        $('#input-search').on('focus',function(){
             $('#search-wrap').addClass('showbtn');
         });
-        $('#search').on('keypress',function(e){
+        $('#input-search').on('keypress',function(e){
              var keyCode = null;
              if(e.which)
                  keyCode = e.which;
@@ -387,7 +386,7 @@
                     self.addClass('show');
                 },delay);
             });
-            $('#result-wrap').removeClass('show');
+            //$('#result-wrap').removeClass('show');
         }
         function hideNavs(){
              var delay=0;
@@ -403,11 +402,8 @@
             $('#logo').removeClass();
             $('#logo')[0].offsetWidth=$('#logo')[0].offsetWidth;
             $('#logo').addClass('click');
-            $('#search').blur();
-            if($('#search-wrap').hasClass('show')){
-                $('#search-wrap').removeClass('show');
-                $('#result-wrap').removeClass('show');
-                $('#introduction-wrap').removeClass('show');
+            $('#input-search').blur();
+            if($('.nav-wrap').hasClass('show')){
                 hideNavs();
             }else{
                 $('#search-wrap').addClass('show');
@@ -423,16 +419,22 @@
         function showAbout(){
             hideDetails();
             hideNavs();
+            $('#introduction-wrap').removeClass('show');
+            setTimeout(function(){
             $('#introduction-title').text('<%-language.about%>');
             $('#introduction-wrap').addClass('show');
             $('#introduction-content').html('<%-language.about_content%>');
+            },400);
         }
         function showVolunteer(){
             hideDetails();
             hideNavs();
-            $('#introduction-title').text('<%-language.volunteer%>');
-            $('#introduction-wrap').addClass('show');
-            $('#introduction-content').html('<%-language.volunteer_content%>');
+            $('#introduction-wrap').removeClass('show');
+            setTimeout(function(){
+                    $('#introduction-title').text('<%-language.volunteer%>');
+                    $('#introduction-wrap').addClass('show');
+                    $('#introduction-content').html('<%-language.volunteer_content%>');
+            },400);
         }
         function hideIntroduction(){
             $('#introduction-wrap').removeClass('show');
@@ -440,9 +442,12 @@
         function showHelp(){
             hideDetails();
             hideNavs();
+            $('#introduction-wrap').removeClass('show');
+            setTimeout(function(){
             $('#introduction-title').text('<%-language.help%>');
             $('#introduction-wrap').addClass('show');
             $('#introduction-content').html('<%-language.help_content%>');
+            },400);
         }
 
         function hideAll(){
@@ -450,6 +455,12 @@
             hideSearch();
             hideIntroduction();
             hideDetails();
+            $('#result-wrap').removeClass('show');
+        }
+
+        function goSource(e){
+            e.stopPropagation();
+            window.open($(this).closest('.result-video').attr('data-link'));
         }
 
         function showIframe(){
@@ -497,13 +508,14 @@
             hideDetails();
             $('#introduction-wrap').removeClass('show');
             hideNavs();
-            search($('#search').val());
+            search($('#input-search').val());
         }
 
         var audio=false;
         var contentScrolling=false;
         var maxfov=120,fov=120,minfov=120;
 
+        var bodyDom=$('body');
         var result_wrap=$('#result-wrap');
         if(checkMobile()){
             maxfov=100;
@@ -515,7 +527,7 @@
             bindClick($('#music-info'),nothing);
             bindClick($('#music-album'),nothing);
 
-            bindClick($('#search'),clearSearch);
+            bindClick($('#input-search'),clearSearch);
             bindClick($('#btn-search'),searchClick);
             bindClick($('.tab'),switchTab);
 
@@ -523,6 +535,9 @@
             bindClick($('.about'),showAbout);
             bindClick($('.volunteer'),showVolunteer);
             bindClick($('.help'),showHelp);
+            bindClick($('.musicwall'),hideAll);
+
+            bodyDom.on('touchstart','.video-source',goSource);
             bindClick($('.result-video'),showIframe,result_wrap,'.result-video');
             bindClick($('.result-audio'),stopBackgroundMusic,result_wrap,'.result-audio');
 
@@ -538,17 +553,19 @@
             $('#music-details').on('mouseup',hideDetails);
             $('#music-more').on('mouseup',moreInfo);
             $('#music-album').on('mouseup',nothing);
-            $('#search').on('mouseup',clearSearch);
+            $('#input-search').on('mouseup',clearSearch);
             $('#btn-search').on('mouseup',function(){hideDetails();
                 $('#introduction-wrap').removeClass('show');
                 hideNavs();
-            search($('#search').val());});
+            search($('#input-search').val());});
             $('.tab').on('mouseup',switchTab);
             $('#magnifier').on('mouseup',magnifierClick);
             $('.about').on('mouseup',showAbout);
+            $('.musicwall').on('mouseup',hideAll);
             $('.volunteer').on('mouseup',showVolunteer);
             $('.help').on('mouseup',showHelp);
-            result_wrap.delegate('.result-video','click',showIframe);
+            bodyDom.on('click','.video-source',goSource,true);
+            bodyDom.on('click','.result-video',showIframe,true);
             result_wrap.delegate('.result-audio','click',stopBackgroundMusic);
         }
 

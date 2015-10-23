@@ -1,4 +1,5 @@
 exports.config={
+    mongodb_url:'mongodb://127.0.0.1/mclassical',
 	mongodb:{
 		db:{
 			native_parser:true
@@ -79,8 +80,10 @@ exports.config={
             volunteer_content:'Join volunteer',
             help:'Help',
             help_content:'Help',
+            about_content:'The magnifier of classical music，non-commercial and free search engine of classical music。'+
+'</br>We collected most of scores,videos,audios about classical music, for providing convenient search tool to musican,classical music fans.'+
+'</br>At the same time ,we are working for classical music standardization. To make classical music easier to touch and share.',
             about:'About us',
-            about_content:'About us',
             noResult:'No result',
             musicWall:'Music Wall',
             busy:'Server is too busy,please try later'
