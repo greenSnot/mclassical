@@ -380,9 +380,10 @@ td,tr,table{
                 background-color:rgba(150,150,150,1);
                 border-radius:3px;
             }
-            .result-audio-title{
+            .result-audio-title,.result-video-title{
                 background-color:#dedede;
-                box-shadow:0px 3px 2px #666;
+                box-shadow:0px 3px 2px rgba(105,105,105,0.6);
+                cursor:pointer;
                 border:3px 3px 0 0;
                 width:100%;
                 height:30px;
@@ -395,33 +396,20 @@ td,tr,table{
                 -webkit-overflow-scrolling:touch;
             }
             .result-video{
-                box-sizing:border-box;
-                -webkit-box-align:center;
-                min-height:46px;
-                display:-webkit-box;
-                margin:3px 0 7px 0;
-                min-height:150px;
-                -webkit-orient:horizontal;
+                background-color:rgba(150,150,150,1);
                 font-size:14px;
                 color:#fdfdfd;
-                text-shadow:0px 0px 3px #666;
-                background-color:rgba(150,150,150,1);
-                position:relative;
-                padding:6px;
                 border-radius:3px;
+                margin:3px 0 7px 0;
+            }
+            .video-wrap{
+                box-sizing:border-box;
+                -webkit-box-align:center;
+                display:-webkit-box;
+                -webkit-orient:horizontal;
+                text-shadow:0px 0px 3px #666;
+                position:relative;
                 background-size:100%;
-            }
-            .video-source{
-                position:absolute;
-                z-index:10;
-                top:10px;
-                left:10px;
-                text-decoration:underline;
-            }
-            @media only screen and (min-width: 400px) {
-                .result-video{
-                    height:300px;
-                }
             }
             .result-video.playing{
                 background-image:none!important;
@@ -430,9 +418,14 @@ td,tr,table{
                 background-color:#DEDEDE;
             }
             .video-info{
-                word-break:break-all;
-                text-shadow:0px 0px 5px #000;
-                -webkit-box-flex:1;
+                word-break: break-all;
+                text-shadow: 0px 0px 5px #000;
+                -webkit-box-flex: 1;
+                line-height: 100%;
+                width: 100%;
+                left: 0;
+                top: calc(50% - 14px);
+                position: absolute;
             }
             #search-wrap{
                 -webkit-transition:all 0.4s ease-out;

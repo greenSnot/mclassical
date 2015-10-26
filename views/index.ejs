@@ -32,8 +32,8 @@
                 <div id="result">
                     <div class="tabs">
                         <div data-type="scores" class="tab"><%=language.scores%></div>
-                        <div data-type="videos" class="tab"><%=language.videos%></div>
-                        <div data-type="audios" class="tab selected"><%=language.audios%></div>
+                        <div data-type="videos" class="tab selected"><%=language.videos%></div>
+                        <div data-type="audios" class="tab"><%=language.audios%></div>
                     </div>
                     <div id="result-content">
                     </div>
@@ -123,17 +123,20 @@
         <a class="result-score" target="_Blank" href="<#=scores[i].link#>" data-source="<#=scores[i].source#>"><#=scores[i].title#></a>
     <#}#>
     <#for(var i in videos){#>
-        <div class="result-video" data-id="<#=videos[i].id#>" target="_Blank" data-title="<#=videos[i].title#>" data-source="<#=videos[i].source#>" data-link="<#=videos[i].link#>" style="background-image:url(<#=videos[i].thumbnail#>);">
-            <div class="video-source" >From:<#=videos[i].source#></div>
-            <div class="video-info">
-                <#=videos[i].title#>
+        <div class="result-video" data-id="<#=videos[i].id#>" target="_Blank" data-title="<#=videos[i].title#>" data-source="<#=videos[i].source#>" data-link="<#=videos[i].link#>" >
+            <div class="result-video-title" onclick="window.open('<#=videos[i].link#>')"><#=videos[i].source#> </div>
+            <div class="video-wrap">
+                <img width="<#=ratio#>%" src="<#=videos[i].thumbnail#>">
+                <div class="video-info">
+                    <#=videos[i].title#>
+                </div>
             </div>
         </div>
     <#}#>
     <#for(var i in audios){#>
         <a class="result-audio"  target="_Blank" data-id="<#=audios[i].song_id#>" data-source="<#=audios[i].source#>">
             <div class="result-audio-title" onclick="window.open('<#=audios[i].song_link#>')"><#=audios[i].source#> </div>
-            <div style="display:-webkit-box;-webkit-box-orient:horizontal;margin:10px;">
+            <div style="display:-webkit-box;-webkit-box-orient:horizontal;padding:10px;width:100%;border-box:box-sizing;">
                 <img class="result-audio-img" width="150" height="150" src="<#=audios[i].album_big#>">
                 <div class="audio-info">
                     <div><#=audios[i].song_name#></div>
@@ -207,6 +210,7 @@
                         alert(res.msg);
                         return;
                     }
+                    res.ratio=(width-11-10)/200*100;
                     $('#result-content').html(template('template-results',res));
                     if($('.tab.selected').attr('data-type')=='audios'){
                         $('#result-content').find('audio').each(function(){
@@ -419,6 +423,7 @@
         function showAbout(){
             hideDetails();
             hideNavs();
+            $('#result-wrap').removeClass('show');
             $('#introduction-wrap').removeClass('show');
             setTimeout(function(){
             $('#introduction-title').text('<%-language.about%>');
@@ -429,6 +434,7 @@
         function showVolunteer(){
             hideDetails();
             hideNavs();
+            $('#result-wrap').removeClass('show');
             $('#introduction-wrap').removeClass('show');
             setTimeout(function(){
                     $('#introduction-title').text('<%-language.volunteer%>');
@@ -443,6 +449,7 @@
             hideDetails();
             hideNavs();
             $('#introduction-wrap').removeClass('show');
+            $('#result-wrap').removeClass('show');
             setTimeout(function(){
             $('#introduction-title').text('<%-language.help%>');
             $('#introduction-wrap').addClass('show');
@@ -456,11 +463,6 @@
             hideIntroduction();
             hideDetails();
             $('#result-wrap').removeClass('show');
-        }
-
-        function goSource(e){
-            e.stopPropagation();
-            window.open($(this).closest('.result-video').attr('data-link'));
         }
 
         function showIframe(){
@@ -478,11 +480,14 @@
             var self=$(this);
             videoDom=self;
             videoHtml=self.html();
-            self.html(template('template-youku',{youku_id:self.attr('data-id'),height:self.height()-20,width:280}));
-            YKU.Player('youkuplayer'+self.attr('data-id'),{
+
+            parent=$(this).closest('.result-video');
+            id=parent.attr('data-id');
+            self.html(template('template-youku',{youku_id:id,height:self.height()-20,width:280}));
+            YKU.Player('youkuplayer'+id,{
             styleid: '0',
             client_id: '<%=youku_client_id%>',
-            vid: self.attr('data-id')
+            vid: id
             });
         }
 
@@ -537,8 +542,7 @@
             bindClick($('.help'),showHelp);
             bindClick($('.musicwall'),hideAll);
 
-            bodyDom.on('touchstart','.video-source',goSource);
-            bindClick($('.result-video'),showIframe,result_wrap,'.result-video');
+            bindClick($('.video-wrap'),showIframe,result_wrap,'.result-video');
             bindClick($('.result-audio'),stopBackgroundMusic,result_wrap,'.result-audio');
 
             $('#result-content').on('touchstart',function(){contentScrolling=true;});
@@ -564,8 +568,7 @@
             $('.musicwall').on('mouseup',hideAll);
             $('.volunteer').on('mouseup',showVolunteer);
             $('.help').on('mouseup',showHelp);
-            bodyDom.on('click','.video-source',goSource,true);
-            bodyDom.on('click','.result-video',showIframe,true);
+            bodyDom.on('click','.video-wrap',showIframe,true);
             result_wrap.delegate('.result-audio','click',stopBackgroundMusic);
         }
 
