@@ -91,8 +91,20 @@ router.get('/',function(req,res){
     var json={
         QQMusicUrls:urls.splice(0,6),
         language:config.languages[req.query.language]?(config.languages[req.query.language]?config.languages[req.query.language]:config.languages.cn):(config.serverName=='SZ'?config.languages.cn:config.languages.en),
+        user_level:undefined,
+        wechat_info:undefined,
         youku_client_id:config.youku.client_id};
-	res.render('index',json);
+    if(req.session.user&&req.session.user_type=='wechat'){
+        db.Users.findOne({
+            _id:req.session.user
+        }).then(function(r){
+            json.user_level=r.level;
+            json.wechat_info=r.wechat;
+            res.render('index',json);
+        });
+    }else{
+        res.render('index',json);
+    }
 });
 
 router.get('/get-source',function(req,res){

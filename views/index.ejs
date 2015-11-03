@@ -53,11 +53,19 @@
                     <%=language.musicWall%>
                 </div>
             </div>
+            <%if(user_level>0){%>
+            <div class="nav-wrap user">
+                <div class="nav-stick">
+                    志愿者:<%=wechat_info.nickname%>
+                </div>
+            </div>
+            <%}else{%>
             <div class="nav-wrap volunteer">
                 <div class="nav-stick">
                     <%=language.volunteer%>
                 </div>
             </div>
+            <%}%>
             <div class="nav-wrap about">
                 <div class="nav-stick">
                     <%=language.about%>
@@ -136,7 +144,7 @@
     <#for(var i in audios){#>
         <a class="result-audio"  target="_Blank" data-id="<#=audios[i].song_id#>" data-source="<#=audios[i].source#>">
             <div class="result-audio-title" onclick="window.open('<#=audios[i].song_link#>')"><#=audios[i].source#> </div>
-            <div style="display:-webkit-box;-webkit-box-orient:horizontal;padding:10px;width:100%;border-box:box-sizing;">
+            <div style="display:-webkit-box;-webkit-box-orient:horizontal;padding:10px;width:100%;box-sizing:border-box;">
                 <img class="result-audio-img" width="150" height="150" src="<#=audios[i].album_big#>">
                 <div class="audio-info">
                     <div><#=audios[i].song_name#></div>
@@ -297,7 +305,7 @@
                         Musics[index].song_id=urldecode(clist[j].songid);
                         Musics[index].song_name=urldecode(clist[j].songname);
                         Musics[index].player=urldecode(clist[j].singername);
-                        Musics[index].albumn_ame=urldecode(clist[j].albumname);
+                        Musics[index].albumn_name=urldecode(clist[j].albumname);
                         Musics[index].url=clist[j].m4a;
                         //Musics[index].url="http://tsmusic24.tc.qq.com/"+clist[j].songid+".mp3";
                         Musics[index].album_small=clist[j].albumpic_small?clist[j].albumpic_small:'/images/gray.jpg';
@@ -552,8 +560,14 @@
             $('.play-pauseZ').on('touchstart',nothing);
             $('.scrubberZ').on('touchend',nothing);
             $('.scrubberZ').on('touchstart',nothing);
+            $('.user').on('touchstart',function(){
+                location.href='/rating';
+            });
 
         }else{
+            $('.user').on('mouseup',function(){
+                location.href='/rating';
+            });
             $('#music-details').on('mouseup',hideDetails);
             $('#music-more').on('mouseup',moreInfo);
             $('#music-album').on('mouseup',nothing);
