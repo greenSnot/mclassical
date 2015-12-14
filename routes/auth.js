@@ -32,6 +32,7 @@ exports.loginFilter = function(req, res, next){
             }
     } else {//登录校验失败
 
+        //debug
         if(config.serverName=='LOCAL'){
             req.session.user='5638574ef7fad38164340e12';
             req.session.user_type='wechat';

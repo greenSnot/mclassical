@@ -1,0 +1,60 @@
+index #大写字幕
+singer_mid1
+pub_time #yyyy-mm-dd
+name
+language #数字
+area #数字
+singer_id1 #数字
+singer_area #数字
+mid
+singer_name
+singer_type #数字 #0未知
+singer_other_name
+song_num #数字 #歌曲数量
+genre #数字
+id #数字
+details:[{
+    sizeape
+    sizeflac
+    alertid #数字
+    extra:{
+        Flisten_count1
+        Fis_only
+    },
+    isonly # #独占？
+    albummid
+    songtype
+    stream
+    msgid
+    vid
+    albumid
+    sizeogg
+    preview
+        tryend
+        trybegin
+        trysize
+    type
+    songid
+    size128
+    size320
+    albumname
+    strMediaMid
+    songname
+    singer:[{
+        id
+        name
+        mid
+    }],
+    interval
+    songmid
+    switch
+    pay
+        payplay
+        paydownload
+        payalbumprice
+        paytrackmouth
+        timefree
+        payalbum
+        paytrackprice
+        payinfo
+}]
