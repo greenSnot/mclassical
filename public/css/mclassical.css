@@ -6,13 +6,10 @@ td,tr,table{
     margin:0;padding:0;box-sizing:border-box;
 }
 
-#pano   {position:absolute;top:0;left:0;width:100%;height:100%;margin:0;padding:0;overflow:hidden;z-index:1}
+#snot-pano{position:absolute;top:0;left:0;width:100%;height:100%;margin:0;padding:0;overflow:hidden;z-index:1}
 
 #container  {width:100%;height:100%;-webkit-transform:scale(1);}
 #camera     {width:100%;height:100%;-webkit-transform-style: preserve-3d;}
-.cube       {position:absolute;background-size:100%;z-index:1;}
-
-#logger     {position:absolute;top:0;width:100%;z-index:100;color:#fff;font-size:20px;text-shadow:1px 1px #000;word-break:break-all;}
 
 .loader {
     position:absolute;
@@ -23,6 +20,9 @@ td,tr,table{
     z-index:100;
     display:none;
     background-color:rgba(0,0,0,0.8);
+}
+.qrcode{
+    width:100%;
 }
 .loader td{
     width:100%;
@@ -70,9 +70,9 @@ td,tr,table{
 .iselector.checked:before{content:'';display:block;background-image:url('/images/tools/check1.png');background-size:100%;width:20px;height:20px;background-repeat:no-repeat;position:absolute;top:-5px;right:-5px;
 }
 
-.music-content{position:absolute;width:90px;height:90px;top:-45px;left:-45px;background:#eee;border-radius:4px;}
+.sprite-music{position:absolute;width:90px;height:90px;top:-45px;left:-45px;background:#eee;border-radius:4px;}
 
-#music-details{
+#sprite-music-content{
     position:absolute;
     top:0;
     left:0;
@@ -90,7 +90,7 @@ td,tr,table{
     -webkit-orient:vertical;
 }
 
-#music-wrap{
+#sprite-music-content #music-wrap{
     text-align:center;
     width:100%;
     display:-webkit-box;
@@ -103,17 +103,17 @@ td,tr,table{
     -webkit-transition:all 0.3s ease-out;
     -webkit-transform:scale(0.3);
 }
-#music-details.show{
+#sprite-music-content.show{
     visibility:visible;
     //-webkit-animation:jellyAnimation 700ms linear;
     //-webkit-animation-fill-mode: forwards;
 }
-#music-details.show #music-wrap{
+#sprite-music-content.show #music-wrap{
     opacity:1;
     //-webkit-transform:scale(1.5) translateY(-30px);
     -webkit-transform:scale(1.0) translateY(-30px);
 }
-#music-album{
+#sprite-music-content #music-album{
     display:inline-block;
     height:300px;
     background-size:100%;
@@ -121,13 +121,13 @@ td,tr,table{
     border-radius:4px;
     width:300px;
 }
-#music-info-wrap{
+#sprite-music-content #music-info-wrap{
     left:0;
     position:absolute;
     width:100%;
     top:100%;
 }
-#music-album-full{
+#sprite-music-content  #music-album-full{
     position:absolute;
     top:0;
     left:0;
@@ -140,17 +140,17 @@ td,tr,table{
     width:100%;
 }
 
-#music-songname,#music-singer,#music-albumname{
+#sprite-music-content  #music-songname,#sprite-music-content  #music-singer,#sprite-music-content  #music-albumname{
     width:100%;
     font-size:15px;
     color:#fff;
     margin:3px;
     text-shadow:1px 1px 1px #000;
 }
-#music-info{
+#sprite-music-content  #music-info{
      max-height:70px;overflow-y:scroll;-webkit-overflow-scrolling:touch;
 }
-#music-more{
+#sprite-music-content #music-more{
     display:inline-block;
     width:120px;
     height:35px;
@@ -383,6 +383,8 @@ td,tr,table{
             .result-audio-title,.result-video-title{
                 background-color:#dedede;
                 box-shadow:0px 3px 2px rgba(105,105,105,0.6);
+                position:relative;
+                z-index:1;
                 cursor:pointer;
                 border:3px 3px 0 0;
                 width:100%;
@@ -453,7 +455,7 @@ td,tr,table{
                 -webkit-transform:perspective(100px) rotateZ(0deg) rotateY(0deg);
                 opacity:0.2;
             }
-            #input-search{
+            #input-search,.rating-title{
                 width:100%;
                 height:34px;
                 border:0;
@@ -467,6 +469,11 @@ td,tr,table{
                 font-size:15px;
                 text-shadow:0px 0px 3px #404040;
                 color:#fff;
+            }
+            .rating-title{
+                background-color:rgba(0,0,0,0.5);
+                text-shadow: 0px 1px 2px #000;
+                text-align:start;
             }
             #search-wrap.showbtn #input-search{
                 padding:0 50px 0 33px;

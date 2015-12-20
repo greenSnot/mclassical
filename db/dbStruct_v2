@@ -1,0 +1,209 @@
+//For scores searching
+// by composer + name
+composers:[{
+   name:{
+       en:['Bach','js bach'],
+       cn:['巴赫','巴哈']
+   },
+   description:{
+       en:'niwnefiun',
+       cn:'巴哈也叫做巴赫'
+   },
+   works:[
+       name:{
+           en:'bwv 1004',
+           cn:'bwv 1004 无伴奏组曲'
+       }
+       form:['Minuet','Waltz','Suite'],
+       genre:['jazz','pop'],
+       description:{
+           en:'123'
+       },
+       instruments:['violin'],
+       sheets:[
+            {
+                 type:'complete', //complete or part
+                 name:{
+                     en:['Chaconne']
+                 },
+                 instruments:['violin'],
+                 composers:['bach'],
+                 description:{
+                     en:'123'
+                 },
+                 resource:'xxx.pdf',
+                 source:[{
+                     name:'musopen'
+                     url:'http://3r23r'
+                 }],
+                 work_id:'123123'
+            }
+       ]
+       audios_id:[2323,4,3,2],
+       videos_id:[2323,4,3,2]
+    ]
+}]
+
+//For albums and audios searching
+albums:[{
+    name:{
+        en:'mozart collection'
+    },
+    album_thumbnail:"flawmef.jpg",///
+    album_image:"sdfwef.jpg",////
+    instruments:['violin','piano'],
+    genre:['jazz','pop'],
+    introduction:{
+        en:'haha',
+        cn:'haha'
+    },
+    other_id:{
+        "qqmusic_id":"123123213",
+        "qqmusic_mid":"123123213",
+        "netease_id":"1232131",
+        "netease_mid":"1232131",
+        "isbn":"1231231ff23",
+        "iswc":"123232ss3"
+    },
+    audios_id:[123,323,4,53],
+    players_id:[123,343],
+   *publication_time:'2015-01-01',
+   *company:'DG'
+]}
+
+//For audios searching
+audios:[{
+    players:[
+         {
+             name:{
+                 en:['sarasate'],
+                 cn:['萨拉萨蒂']
+             },
+             id:'123',
+             instrument:'violin'
+         },{
+             name:{
+                 en:['sarasate'],
+                 cn:['萨拉萨蒂']
+             },
+             id:'2323',
+             instrument:'piano'
+         }
+    ],
+    description:{
+        cn:'123232',
+        en:'t4ggg'
+    },
+    name:'mozart k250',
+    album_name:'mozart collections',
+    album_thumbnail:"flawmef.jpg",
+    album_image:"sdfwef.jpg",
+    album_id:'2323232',
+    source:[{
+        name:'QQMusic'
+        url:'http://3r23r'
+    },{
+        name:'Spotify',
+        url:'http://f'
+    }],
+    other_id:{
+        "qqmusic_id":"123123213",
+        "qqmusic_mid":"123123213",
+        "netease_id":"1232131",
+        "netease_mid":"1232131",
+        "isbn":"123123123",
+        "iswc":"1232323"
+    },
+    resources:[
+         {
+             url:'mowaefm.mp3',
+         }
+    ],
+    composers:[{
+        name:{
+            en:['sarasate'],
+            cn:['萨拉萨蒂']
+        },
+        id:'12323'
+    },{
+        name:{
+            en:['sarasate'],
+            cn:['萨拉萨蒂']
+        },
+        id:'3223'
+    }],
+    work_id:123
+}]
+
+players:[{
+    name:{
+        en:['sarasate'],
+        cn:['萨拉萨蒂']
+    },
+    type:'soloist',      //soloist/orchestra/quartet......
+   *members_id:[123,1233], //only in [orchestra/quartet...]
+   *groups_id:[332,445],//blongs to [orchestra/quartet...]
+    description:{
+        en:'123123'
+    },
+    instruments:['violin','piano'],
+    albums_id:[3,4,5],
+    audios_id:[3,4,5],
+    videos_id:[3,4,5]
+}]
+
+videos:[{
+    players:[
+         {
+             name:{
+                 en:['sarasate'],
+                 cn:['萨拉萨蒂']
+             },
+             id:'123',
+             instrument:'violin'
+         },{
+             name:{
+                 en:['sarasate'],
+                 cn:['萨拉萨蒂']
+             },
+             id:'2323',
+             instrument:'piano'
+         }
+    ],
+    source:[{
+        name:'musopen'
+        url:'http://3r23r'
+    }],
+    description:{
+        cn:'123232',
+        en:'t4ggg'
+    },
+    resources:[
+         {
+             url:'mowaefm.mp4'
+         }
+    ],
+    preview_img:'32232.jpg',
+    other_id:{
+        "youku_id":"1232131",
+        "youtube_id":"1232131",
+        "isbn":"123123123",
+        "iswc":"1232323"
+    },
+    composers:[{
+        name:{
+            en:['sarasate'],
+            cn:['萨拉萨蒂']
+        },
+        id:'12323'
+    },{
+        name:{
+            en:['sarasate'],
+            cn:['萨拉萨蒂']
+        },
+        id:'3223'
+    }],
+    name:'mozart k250',
+    work_id:['123123',2323]
+}]
+

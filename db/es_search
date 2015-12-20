@@ -1,0 +1,33 @@
+curl -XGET "localhost:9200/test/_search" -d '
+{
+    "fields":["name"],
+    "query":{
+        "bool":{
+            "should":[
+                {
+                    "match":{
+                        "name":{
+                            "query":"legende wieniawski",
+                            "minimum_should_match": "75%"
+                        }
+                    }
+                },
+                {
+                    "match":{
+                        "works.name":{
+                            "query":"legende wieniawski",
+                            "minimum_should_match": "75%"
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "highlight":{
+        "fields":{
+            "name":{},
+            "works.name":{}
+        }
+    }
+}
+'

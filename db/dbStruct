@@ -1,0 +1,56 @@
+composers                                   作曲家表:{其中每位作曲家包含以下信息
+   name                                         姓名
+   description                                  简介
+   works                                        作品列表:{其中每个作品包含以下信息
+       name                                         作品名 这里使用相对规范的使用率最高的名称来命名(可能为任何语言之一) 其他同义词及其他语言暂不考虑
+       form                                         曲式
+       description                                  简介
+       instruments_id                               乐器id
+       sheets                                       乐谱列表:{其中每个乐谱包含以下信息
+           type complete/parts/variations               类型    总谱/部分(表示组曲的部分,或者是总谱的某个乐器分谱)/变奏或其他改编
+           name                                         名字
+          *composer                                    *作曲家  类型为变奏或改编时包含此信息
+          *instruments_id                              *乐器id  类型为变奏或改编时包含此信息
+           description                                  描述
+           resource                                     pdf(或者是其他格式)的下载地址
+           link                                         链接到来源地址
+           source                                       来源网站的名称
+           work_id                                      关联的数据库中作品的id
+                                                    }
+       audios                                       音频列表{
+           players                                      演奏家
+           players_id                                   关联的数据库中演奏家的id
+           description                                  描述
+           name                                         音频名字
+           album_name                                   专辑名
+           instruments_id                               乐器id
+           album_thumbnail                              专辑缩略图
+           album_image                                  专辑大图
+           link                                         链接到来源地址
+           source                                       来源网站的名称
+           resource                                     音频地址
+           work_id                                      关联的数据库中作品的id
+                                                    }
+       videos                                       视频列表{
+           players                                      演奏家
+           players_id                                   关联的数据库中演奏家的id
+           source                                       视频地址
+           description                                  描述
+           instruments_id                               乐器id
+           resource                                     来源网站
+           link                                         链接到来源网站
+           name                                         名称
+           work_id                                      关联的数据库中作品的id
+                                                    }
+                                                }
+                                            }
+                                            
+players       演奏家/乐团/重奏 表
+    name            名字
+    type            soloist/orchestra/quartet......
+    members_id      成员id(独奏家id)
+    description     描述
+    instruments_id  乐器id
+    audios_id       数据库中音频的id
+    videos_id       数据库中视频的id
+

@@ -12,31 +12,33 @@ var when=require('when');
 exports.loginFilter = function(req, res, next){
     var user = req.session.user;
     var url=config.domain+req.originalUrl;
-    console.log(url);
     if (user){
             //正常流程
             if(req.session.user_type=='wechat'){
-		    console.log(user);
                 db.Users.findOne({
                     _id:user
                 }).then(function(u){
                     if(!u){
                         req.session.user=undefined;
                         req.session.user_type=undefined;
-                        req.session.user_info=undefined;
                         console.log("未找到用户");
                         res.redirect(req.originalUrl);
                         return;
                     }
-                    console.log("已经登录 微信登录");
                     next();
                 });
             }else{
-                console.log("已经登录 未知");
                 next();
             }
     } else {//登录校验失败
-        console.log("未登录");
+
+        //debug
+        if(config.serverName=='LOCAL'){
+            req.session.user='5638574ef7fad38164340e12';
+            req.session.user_type='wechat';
+            next();
+            return;
+        }
 
         ////是否微信浏览器打开
         if(config.serverName=='SZ'&&req.headers['user-agent']&&req.headers['user-agent'].indexOf('MicroMessenger')>=0){
@@ -95,7 +97,6 @@ console.log('sorry');
                                 console.log('found');
                                 req.session.user=u._id;
                                 req.session.user_type='wechat';
-                                req.session.user_info=u;
 				next();
                                 return;
                             }
@@ -127,7 +128,6 @@ console.log('sorry');
                                 }).then(function(r){
                                     req.session.user=r._id;
                                     req.session.user_type='wechat';
-                                    req.session.user_info=r;
                                     console.log('new wechat user');
                                     next();
                                 });

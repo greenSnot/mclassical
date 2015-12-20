@@ -1,155 +1,26 @@
+<!DOCTYPE html>
 <html>
-    <meta charset="utf-8">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="viewport" content=" user-scalable=no, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0">
-    <meta name="author" content="Calculon 0x00111111@gmail.com">
     <head>
-        <link rel="stylesheet" type="text/css" href="css/mclassical.css">
-        <script src='js/mclassical-base.js'></script>
-        <title>古典音乐放大镜Wiki</title>
+    <style>
+    p{
+        background:#eee;
+    }
+    </style>
     </head>
-<body style="overflow:scroll">
-<h1>古典音乐放大镜Wiki</h1>
-<h3>2015.08 Rating System</h3>
-</br>
-</br>original_key
-</br>|  |  | 
-</br>k1 k2 k3
-</br>
-</br>[results]
-</br>    source       result
-</br>    k1           r1,r2,r4
-</br>                 (x,x ,v)
-</br>    k2           r2,r3
-</br>                 (x,v)
-</br>    k3           r3,r2
-</br>                 (v,x)
-</br>    original_key r4,r1
-</br>                 (v,x)
-</br>
-</br>right:r3,r4,r5
-</br>wrong:r1,r2,r6
-</br>
-</br>[pre_aliases]                                  [pre_blocks]
-</br>    key          aliases                            key             block
-</br>    k1           r4                                 k1              r1
-</br>    k1           r3                                 k1              r2
-</br>    k3           r3                                 k2              r2
-</br>    original_key r4                                 k3              r2
-</br>                                                    original_key    r1,r2
-</br>
-</br>[aliases]
-</br>    key          aliases
-</br>    k1           r4,r3,original_key
-</br>    r4           k1,r3,original_key
-</br>    r3           r4,k1,original_key
-</br>    original_key r4,r3,k1
-</br>
-</br>[blocks]
-</br>
-</br>[block_forever]
-<h3>2015.08 New Artists list</h3>
-'Anne-Sophie Mutter',
-</br>'Pinchas Zukerman',
-</br>'Itzak Perlman',
-</br>'Salvatore Accardo',
-</br>'Leonid Kogan',
-</br>'Arthur Grumiaux',
-</br>'Yehudi Menuhin',
-</br>'David Oistrakh',
-</br>'Nathan Milstein',
-</br>'Jascha Heifetz',
-</br>'Fritz Kreisler',
-</br>'Niccolo Paganini',
-</br>'吕思清',
-</br>'nin feng',
-</br>'黄蒙拉',
-</br>'akiko suwanai',
-</br>'Midori Goto',
-</br>'Henryk Wieniawski',
-</br>'Julia Fischer',
-</br>'Hilary Hahn',
-</br>'Joseph Szigeti',
-</br>'Ingolf Turban',
-</br>'Denes Zsigmondy',
-</br>'Volker Reinhold',
-</br>'Vasko Vassilev',
-</br>'Vadim Repin',
-</br>'Sergei Rachmaninoff',
-</br>'Josef Hoffman',
-</br>'Vladimir Horowitz',
-</br>'Ludwig Van Beethoven',
-</br>'Wolfgang Mozart',
-</br>'Fredric Chopin',
-</br>'Arturo Benedetti Michelangeli',
-</br>'Emil Gilels',
-</br>'Anton Rubinstein',
-</br>'Hans von Bulow',
-</br>'Georges Cziffra',
-</br>'Ignaz Friedman',
-</br>'David Nadien',
-</br>'Glenn Gould',
-</br>'Julius Katchen',
-</br>'Sviatoslav Richte',
-</br>'Maurizio Pollini',
-</br>'Alfred Cortot',
-</br>'Hollywood Orchestra',
-</br>'杨雪霏',
-</br>'Juliette Kang',
-</br>'Henry Doktorski',
-</br>'Chen Xingfu',
-</br>'Bruno Walter',
-</br>'Elmar Oliveira',
-</br>'Peter Serkin',
-</br>'I Salonisti',
-</br>'Vladimir Ashkenazy',
-</br>'Dubravka Tomsic',
-</br>'Joseph Cooper',
-</br>'Vladimir Ashkenazy',
-</br>'Shura Cherkassky',
-</br>'Daniela Ruso',
-</br>'Sviatoslav Richte',
-</br>'Benjamin Schmid',
-</br>'Cyprien Katsaris',
-</br>'Kantorow',
-</br>'Kyung Wha Chung',
-</br>'Johannes Brahms',
-</br>'Tal & Groethuysen',
-</br>'Alexis Weissenberg',
-</br>'András Schiff',
-</br>'The Palm Court Orchestra',
-</br>'Clara Haskil',
-'Eric Hammerstein',
-'Maria Barrientos',
-'Ray Chen',
-'Annette-Barbara Vogel',
-'Natalia Walewska',
-'Radu Lupu',
-</br>'文薇',
-</br>'Rachel Barton Pine',
-</br>'Manuel Quiroga',
-</br>'Emanuel Vardi',
-</br>'Gidon Kremer',
-</br>'André Previn',
-</br>'Herbert Von Karajan',
-</br>'Simone Dinnerstein',
-'Angela Hewitt',
-'Nigel Kennedy',
-'Marcelle Meyer','Daniel Fuchs','Janine Johnson','Renaud','Leslie Howard','Julian Olevsky',
-</br>'Bob Eberly','Geschwister buchberger','Rosa Ponselle','Vladimir Horowitz','Alfred Cortot','Gil Shaham','Göran Söllscher','Ivan Moravec','Marian Migdal','Levon Ambartsumian',
-</br>'Frida Bauer','Andres Segovia','Mauro Giuliani','Heinrich Schiff','John Williams','Seiji Ozawa','Samson François',
-</br>'Barbara Bonney','Fritz Wunderlich','Martha Argerich','Andres Alen','St. Martin\'s Orchestra','Barry Wordsworth','Bernard Haitink','Paul Coker','Neville Marriner','John Lenehan',
-</br>
-</br>'Franz Liszt'
-<h3>2015.07 How it works?</h3>
-1) Optain keyword
-</br>2) Filter keyword by beforeTranslateFilter
-</br>3) Translate keyword to English
-</br>4) Filter keyword by afterTranslateFilter
-</br>5) Find aliases as array keywords
-</br>6) Search every assets in IMSLP,YOUKU,QQMUSIC ...
-</br>7) Mix results and filter results
-
-</body>
-<script src="/js/template-native.js"></script>
+  <body>
+    <textarea id="text-input" oninput="this.editor.update()" style="display:none"><%include ../README.md%></textarea>
+    <div id="preview"> </div>
+    <script src="js/markdown.js"></script>
+    <script>
+      function Editor(input, preview) {
+        this.update = function () {
+          preview.innerHTML = markdown.toHTML(input.value);
+        };
+        input.editor = this;
+        this.update();
+      }
+      var $ = function (id) { return document.getElementById(id); };
+      new Editor($("text-input"), $("preview"));
+    </script>
+  </body>
 </html>

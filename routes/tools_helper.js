@@ -150,6 +150,7 @@ console.log('netease api');
                     var t=data.showapi_res_body.data.data.list;
                     var r=[];
                     var qlist=[];
+                    var ids=[];
                     for(var i in t){
                         r.push({});
                         r[i].song_id=t[i].songId;
@@ -157,12 +158,13 @@ console.log('netease api');
                         r[i].song_link='http://music.163.com/#/song?id='+r[i].song_id;
                         //r[i].album_link='http://music.163.com/#/album?id='+r[i].album_id;
                         r[i].id='neteasemusic_'+t[i].songId;
+                        ids.push(r[i].id);
                         r[i].song_name=t[i].songName;
-                        r[i].player=t[i].userName;
-                        r[i].album_name=t[i].albumName;
+                        r[i].player=t[i].userName?t[i].userName:'N/A';
+                        r[i].album_name=t[i].albumName?t[i].albumName:'N/A';
                         r[i].url=t[i].songUrl;
-                        r[i].album_small=t[i].albumPic;
-                        r[i].album_big=t[i].albumPic;
+                        r[i].album_small=t[i].albumPic?t[i].albumPic:'N/A';
+                        r[i].album_big=t[i].albumPic?t[i].albumPic:'N/A';
                         r[i].source='NeteaseMusic';
                         var model=new db.Audios(r[i]);
                         model.pre('save',function(next){
@@ -175,7 +177,16 @@ console.log('netease api');
                     console.log(t.length);
                     console.log('netease length');
                     when.all(qlist).then(function(){
-                        resolve(r);
+                        db.Audios.find({
+                            id:{
+                                '$in':ids
+                            },
+                            show:{
+                                '$gte':0
+                            }
+                        }).then(function(audios){
+                            resolve(audios);
+                        });
                     });
                 }else{
                     resolve([]);
@@ -210,19 +221,21 @@ console.log('qqmusic api');
                     }
                     var r=[];
                     var qlist=[];
+                    var ids=[];
                     for(var i in t){
                         r.push({});
                         r[i].song_id=t[i].songid;
                         r[i].id='qqmusic_'+t[i].songid;
+                        ids.push(r[i].id);
                         r[i].show=0;
                         r[i].song_link="http://y.qq.com/#type=song&mid="+t[i].songmid;
                         r[i].album_link="http://y.qq.com/#type=album&mid="+t[i].albummid;
                         r[i].song_name=t[i].songname;
-                        r[i].player=t[i].singername;
-                        r[i].album_name=t[i].albumname;
+                        r[i].player=t[i].singername?t[i].singername:'N/A';
+                        r[i].album_name=t[i].albumname?t[i].albumname:'N/A';
                         r[i].url=t[i].m4a;
-                        r[i].album_small=t[i].albumpic_small;
-                        r[i].album_big=t[i].albumpic_big;
+                        r[i].album_small=t[i].albumpic_small?t[i].albumpic_small:'N/A';
+                        r[i].album_big=t[i].albumpic_big?t[i].albumpic_big:'N/A';
                         r[i].source='QQMusic';
 
                         var model=new db.Audios(r[i]);
@@ -236,7 +249,16 @@ console.log('qqmusic api');
                     console.log(t.length);
                     console.log('qqmusic length');
                     when.all(qlist).then(function(u){
-                        resolve(r);
+                        db.Audios.find({
+                            id:{
+                                '$in':ids
+                            },
+                            show:{
+                                '$gte':0
+                            }
+                        }).then(function(audios){
+                            resolve(audios);
+                        });
                     });
                 }else{
                     resolve([]);

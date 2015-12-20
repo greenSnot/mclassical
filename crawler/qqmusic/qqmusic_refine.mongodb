@@ -1,0 +1,3 @@
+db.qqmusic_albums.remove({genre:{'$nin':['0','2','9']})
+// 0 unknown 2 classical 9 pure music
+db.qqmusic_albums.remove({singer_name:{'$in':['Jorge Cafrune Y Marito ','Hermanos Abalos ','Los Hermanos Cuestas ','Trío Los Panchos ']}})
