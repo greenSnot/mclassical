@@ -94,7 +94,7 @@ router.get('/',function(req,res){
         user_level:undefined,
         wechat_info:undefined,
         youku_client_id:config.youku.client_id};
-    if(req.session.user&&req.session.user_type=='wechat'){
+    if(req.session&&req.session.user&&req.session.user_type=='wechat'){
         db.Users.findOne({
             _id:req.session.user
         }).then(function(r){

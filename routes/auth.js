@@ -10,7 +10,7 @@ var nodegrass = require('nodegrass');
 var when=require('when');
 
 exports.loginFilter = function(req, res, next){
-    var user = req.session.user;
+    var user = req.session?req.session.user:undefined;
     var url=config.domain+req.originalUrl;
     if (user){
             //正常流程
