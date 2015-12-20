@@ -1,4 +1,5 @@
 //For scores searching
+// by composer + name
 composers:[{
    name:{
        en:['Bach','js bach'],
@@ -56,7 +57,7 @@ albums:[{
         en:'haha',
         cn:'haha'
     },
-    standard_codes:{
+    other_id:{
         "qqmusic_id":"123123213",
         "qqmusic_mid":"123123213",
         "netease_id":"1232131",
@@ -141,7 +142,7 @@ players:[{
     },
     type:'soloist',      //soloist/orchestra/quartet......
    *members_id:[123,1233], //only in [orchestra/quartet...]
-   *groups_id:[332,445],
+   *groups_id:[332,445],//blongs to [orchestra/quartet...]
     description:{
         en:'123123'
     },
@@ -189,6 +190,19 @@ videos:[{
         "isbn":"123123123",
         "iswc":"1232323"
     },
+    composers:[{
+        name:{
+            en:['sarasate'],
+            cn:['萨拉萨蒂']
+        },
+        id:'12323'
+    },{
+        name:{
+            en:['sarasate'],
+            cn:['萨拉萨蒂']
+        },
+        id:'3223'
+    }],
     name:'mozart k250',
     work_id:['123123',2323]
 }]

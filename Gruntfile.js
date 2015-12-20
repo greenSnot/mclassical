@@ -4,28 +4,27 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('grunt_package.json'),
         uglify: {
             options: {
-                         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */    \n'
+                banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n/*author:greenSnot@github */    \n'
                      },
             build:{
                       files:{
                                 'public/js/mclassical-base.js':[
-        				'public/js/zepto.min.js',
+                    'public/js/zepto.min.js',
 					'public/js/tween.min.js',
 					'public/js/xss.min.js',
-					'public/js/mclassical-utils.suiyiwannong.js'
+					'front_source/js/mclassical-utils.js'
 				],
-                                'public/js/mclassical-pano.js':[
-					'public/js/mclassical-pano.suiyiwannong.js'
+                                'public/js/snot-utils.min.js':[
+					'front_source/js/snot-utils.js'
+                ],
+                                'public/js/snot-pano.min.js':[
+					'front_source/js/snot-pano-css.js'
 				],
                                 'public/js/audio.min.js':[
-                    'public/js/audio.js'
+                    'front_source/js/audio.js'
                             ]
                         }
             }
-            //build: {
-            //           src: 'src/<%= pkg.name %>.js',
-            //            dest: 'build/<%= pkg.name %>.min.js'
-            //       }
         }
     });
 
