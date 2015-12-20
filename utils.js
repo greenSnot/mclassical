@@ -68,6 +68,7 @@ exports.before_translate_filter=function(text){
 }
 
 exports.after_translate_filter=function(text){
+    if(!text)return '';
     text=text.toLowerCase();
 	text=text.replace(/first/g, ' no 1 ')
 		 .replace(/second/g, ' no 2 ')
