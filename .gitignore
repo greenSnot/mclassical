@@ -2,8 +2,11 @@ config/local.js
 crawler/htmls
 crawler/qqmusic/qqmusic_albums
 crawler/qqmusic/m4a
-crawler/musopen/htmls
 crawler/musopen/htmls_old
+crawler/musopen/htmls
+crawler/qqmusic/htmls
+crawler/naxos_com/htmls
+crawler/naxos_music_library/htmls
 *.swp
 *.swo
 *.swm

@@ -49,16 +49,15 @@ def getAllComposers():
 #######################################
 def getWorks(startIndex,endIndex):
     for cursor in range(startIndex,endIndex,1):
-        if cursor==1637 or cursor==1790:
-            continue
+        #if cursor==1637 or cursor==1790:
+        #    continue
         composer=dbComposers.find().sort('name')[cursor]
         print 'index:'+str(cursor)+'/'+str(composers_len)
         print(composer['name']+'=================')
         cur_page=1
         pages=1
         while cur_page<=pages:
-            soup=bs(getHtml('https://musopen.org/'+composer['url']))
-    
+            soup=bs(getHtml('https://musopen.org'+composer['url']+'?page='+str(cur_page)))
             composer_name=composer['name']
             introduction=soup.select('.description p')
             if len(introduction)>0:
@@ -70,6 +69,7 @@ def getWorks(startIndex,endIndex):
                     'name':composer_name
                 },{
                     '$set':{
+                        'works':[],
                         'introduction':introduction
                     }
                 }
@@ -128,7 +128,7 @@ def getWorks(startIndex,endIndex):
                 pages=1
         
             print str(cur_page)+'/'+str(pages)
-            cur_page+=1
+            cur_page=cur_page+1
 ########################
 
 #########################
@@ -138,7 +138,6 @@ def getWorksDetails(startIndex,endIndex):
     for cursor in range(startIndex,endIndex,1):
         cur_works=works[cursor]
         composer_name=cur_works['name']
-        print composer_name
         print 'details:'+str(cursor)+'/'+str(composers_len)
         if not ('works' in cur_works.keys()):
             print 'no works'
@@ -161,39 +160,19 @@ def getWorksDetails(startIndex,endIndex):
                 else:
                     print "DOWNLOAD-DISABLED#######################"
                     continue
-                foundComplete=False
-                try :
-                    temp=title.index('Complete')
-                    if temp>=0:
-                        foundComplete=True
-                except Exception as err:
-                    foundComplete=False
-                continue
-                if foundComplete:
-                    dbComposers.update({
-                        'name':composer_name,
-                        'works.sheet_url':work_url
-                    },{
-                        '$addToSet':{
-                            'works.'+str(j)+'.completes':{
-                                'name':title,
-                                'pdf':pdf
-                            }
+                dbComposers.update({
+                    'name':composer_name,
+                    'works.sheet_url':work_url
+                },{
+                    '$addToSet':{
+                        'works.'+str(j)+'.resources':{
+                            'name':title,
+                            'type':'pdf',
+                            'url':pdf
                         }
-                    })
+                    }
+                })
     
-                else:
-                    dbComposers.update({
-                        'name':composer_name,
-                        'works.sheet_url':work_url
-                    },{
-                        '$addToSet':{
-                            'works.'+str(j)+'.parts':{
-                                'name':title,
-                                'pdf':pdf
-                            }
-                        }
-                    })
 #96488
 #######################
 

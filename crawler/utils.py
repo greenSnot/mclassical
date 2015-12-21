@@ -4,6 +4,8 @@ import cookielib
 import os
 from threading import Lock, Thread
 import threadpool
+import StringIO
+import gzip
 import requests
 import thread
 import random
@@ -25,7 +27,7 @@ socket.setdefaulttimeout( 25 )
 from Queue import Queue
 from time import sleep
 
-reload(sys) 
+reload(sys)
 sys.setdefaultencoding('utf8') 
 
 cookie= cookielib.CookieJar()
@@ -79,15 +81,19 @@ def sha1(a):
     return m2.hexdigest()
 
 def bs(content):
+    if content==False:
+        content=''
     return BeautifulSoup(content)
 
 def html2text(content):
     return html_parser.unescape(content)
 
-def getHtml(url,data=False,forever=True,cache=True,cachePath='./htmls/'):
+def getHtml(url,data=False,forever=True,cache=True,cachePath='./htmls/',ua={},reCache=False):
     req=urllib2.Request(url)
     hash=sha1(url)
     content=''
+    for i in ua.keys():
+        req.add_header(i,ua[i])
     if data!=False:
         postData = urllib.urlencode(data)
         req=urllib2.Request(url,postData)
@@ -99,14 +105,29 @@ def getHtml(url,data=False,forever=True,cache=True,cachePath='./htmls/'):
     fetch=False
     while not fetch:
         try:
-            content=opener.open(req).read()
+            content=opener.open(req)
+            if 'gzip'==content.headers.get('Content-Encoding'):
+                compressedstream = StringIO.StringIO(content.read())
+                gzipper = gzip.GzipFile(fileobj=compressedstream)
+                content = gzipper.read()
+            else:
+                content=content.read()
             fetch=True
         except Exception as err:
-            print 'Fail to fetch '+url
+            print err
+            print 'Fail to fetch '+url+' '+hash
+            if hasattr(err,'code') and err.code==404:
+                return False
             if not forever:
                 return False
             time.sleep(1)
-    if cache:
+    if cache or reCache:
         write(cachePath+hash,content)
     return content
 
+def text2json(text):
+    try:
+        text=json.loads(text)
+    except Exception as err:
+        print err
+    return text
