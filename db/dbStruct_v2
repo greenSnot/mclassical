@@ -53,7 +53,7 @@ albums:[{
     album_image:"sdfwef.jpg",////
     instruments:['violin','piano'],
     genre:['jazz','pop'],
-    introduction:{
+    description:{
         en:'haha',
         cn:'haha'
     },
@@ -66,10 +66,26 @@ albums:[{
         "iswc":"123232ss3"
     },
     audios_id:[123,323,4,53],
-    players_id:[123,343],
+    players:[
+         {
+             name:{
+                 en:['sarasate'],
+                 cn:['萨拉萨蒂']
+             },
+             id:'123',
+             instrument:'violin'
+         },{
+             name:{
+                 en:['sarasate'],
+                 cn:['萨拉萨蒂']
+             },
+             id:'2323',
+             instrument:'piano'
+         }
+    ],
    *publication_time:'2015-01-01',
    *company:'DG'
-]}
+}]
 
 //For audios searching
 audios:[{
@@ -117,6 +133,9 @@ audios:[{
     resources:[
          {
              url:'mowaefm.mp3',
+             description:{
+                 en:''
+             }
          }
     ],
     composers:[{
@@ -180,7 +199,8 @@ videos:[{
     },
     resources:[
          {
-             url:'mowaefm.mp4'
+             url:'mowaefm.mp4',
+             description:{}
          }
     ],
     preview_img:'32232.jpg',
@@ -204,6 +224,6 @@ videos:[{
         id:'3223'
     }],
     name:'mozart k250',
-    work_id:['123123',2323]
+    works_id:['123123',2323]
 }]
 

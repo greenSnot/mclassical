@@ -15,8 +15,8 @@ exports.config={
         ////////
 	},
 	youku:{
-		client_id:'a1a9e7a8905e91fb',
-		client_secret:'0b798e851a23be5c315f0bc5fa7d9a61',
+		client_id:'',
+		client_secret:'',
 		search_url:'https://openapi.youku.com/v2/searches/video/by_keyword.json',// client_id,keyword
 		videos_basic_url:'https://openapi.youku.com/v2/videos/show_basic.json',// client_id,(video_id OR video_url)
 		videos_basic_multiply_url:'https://openapi.youku.com/v2/videos/show_basic_batch.json'// client_id,video_ids(STRING LIKE '2,3,4')
@@ -41,14 +41,14 @@ exports.config={
 		search_url:'http://cn.bing.com/search?q='//site:imslp.org beethoven
 	},
 	google:{
-		translate_url:'http://118.193.172.214/tools/google_translate?',
-		search_url:'http://118.193.172.214/tools/google_search?',
+		translate_url:'',
+		search_url:'',
 		api:{
                 	translate_url:'https://www.googleapis.com/language/translate/v2?',
                 	//q=%E5%BE%88%E7%BE%8E%E5%A5%BD&target=en&key='
                 	search_url:'https://www.googleapis.com/customsearch/v1?',
-                	api_key:'AIzaSyCOu26eZ6fObnqNgmOJ1LyUqx4xGrf618M',
-                	search_engine_id:'001951362915465840896:gpf1yjhkjoa'
+                	api_key:'',
+                	search_engine_id:''
         	}
 	},
 	imslp:{
@@ -57,8 +57,8 @@ exports.config={
 		search_url:'https://route.showapi.com/213-1?'
 	},
 	showapi:{
-		app_secret:'053e38f060f34d36ae4db411ad005dcd',
-		app_id:'4872'
+		app_secret:'',
+		app_id:''
 	},
 	separate2words:{
 		//pullword_url:'http://api.pullword.com/get.php?param1=0.7&param2=0&source=',
@@ -68,8 +68,8 @@ exports.config={
 		scws_url:'http://www.xunsearch.com/scws/api.php'
 	},
 	sina_api:{
-		access_key:'10xk15j1nj',
-		secret_key:'zi1iy0m2hxml2i21kwll4wx3iw5j0h153lw1m4w5'
+		access_key:'',
+		secret_key:''
 	},
     languages:{
         en:{
@@ -129,7 +129,6 @@ exports.config={
     servers:{
         HK:'118.193.172.214',
         SZ:'112.74.211.14',
-        //USA:'198.11.178.157'
         JP:'52.68.201.23'
     },
     wechat:{

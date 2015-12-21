@@ -148,7 +148,8 @@ console.log('sorry');
             //未登录可直接访问的页面
             if (
                     req.path=='/'||
-                    req.path=='/search'
+                    req.path=='/search',
+                    req.path=='/wiki'
                ){
                    next();
                    return;
