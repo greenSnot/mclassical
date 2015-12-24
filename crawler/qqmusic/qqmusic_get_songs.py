@@ -1,6 +1,4 @@
 import sys
-import socket
-socket.setdefaulttimeout( 30 ) 
 sys.path.append('..')
 from utils import *
 
@@ -25,7 +23,6 @@ def getDetails(index):
     try:
         content=content[content.find('	songList :')+12:content.find('cdNum : ')-5]
         content=json.loads(content)
-        fetch=True
     except Exception as err:
         #copyright issues
         print 'copyright issues '+album['mid']
@@ -33,13 +30,15 @@ def getDetails(index):
         return
     content=jsonHtmlDecode(content)
     dbQQMusic.update({'id':id},{'$set':{'details':content}})
-    print 'Finish: '+str(album['mid'])
+    print 'Done: '+str(album['mid'])
 
 def worker(pid,startIndex,endIndex):
     global total
     total=dbQQMusic.find({'details':{'$exists':False}},{'id':1,'mid':1}).count()
     while total>0:
-        getDetails((pid/shards)*total)
+        total=dbQQMusic.find({'details':{'$exists':False}},{'id':1,'mid':1}).count()
+        print 'Left: '+str(total)
+        getDetails(int(float(pid)/float(shards)*total))
 
 def clear():
     dbQQMusic.update({'details':{'$exists':True}},{'$unset':{'details':{'$exists':True}}},False,True)

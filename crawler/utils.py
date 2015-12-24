@@ -141,16 +141,26 @@ def jsonHtmlDecode(s):
         for i in range(0,len(s)):
             if isinstance(s[i],list) or isinstance(s[i],dict):
                 s[i]=jsonHtmlDecode(s[i])
-            elif isinstance(s[i],int):
-                s[i]=str(s[i])
             elif isinstance(s[i],str):
                 s[i]=html2text(s[i])
     else:
         for i in s.keys():
             if isinstance(s[i],list) or isinstance(s[i],dict):
                 s[i]=jsonHtmlDecode(s[i])
-            elif isinstance(s[i],int):
-                s[i]=str(s[i])
             elif isinstance(s[i],str):
                 s[i]=html2text(s[i])
     return s
+
+def isChinese(uchar):
+    if uchar >= u'\u4e00' and uchar<=u'\u9fa5':
+        return True
+    else:
+        return False
+
+def hasChinese(s):
+    if not isinstance(s, unicode):
+        s=unicode(s,'utf-8')
+    for i in s:
+        if isChinese(i):
+            return True
+    return False

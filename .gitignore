@@ -5,7 +5,7 @@ crawler/qqmusic/m4a
 crawler/musopen/htmls_old
 crawler/musopen/htmls
 crawler/qqmusic/htmls
-crawler/qqmusic/htmls_albums
+crawler/qqmusic/htmls_details
 crawler/naxos_com/htmls
 crawler/naxos_music_library/htmls
 *.swp
