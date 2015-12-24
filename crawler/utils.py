@@ -88,7 +88,7 @@ def bs(content):
 def html2text(content):
     return html_parser.unescape(content)
 
-def getHtml(url,data=False,forever=True,cache=True,cachePath='./htmls/',ua={},reCache=False):
+def getHtml(url,data=False,forever=True,cache=True,cachePath='./htmls/',ua={},reCache=False,log=True):
     req=urllib2.Request(url)
     hash=sha1(url)
     content=''
@@ -99,7 +99,8 @@ def getHtml(url,data=False,forever=True,cache=True,cachePath='./htmls/',ua={},re
         req=urllib2.Request(url,postData)
         hash=hash+sha1(postData)
     if cache and exist(cachePath+hash):
-        print 'EXIST '+url+' '+hash
+        if log:
+            print 'EXIST '+url+' '+hash
         content=open(cachePath+hash).read()
         return content
     fetch=False
@@ -114,12 +115,15 @@ def getHtml(url,data=False,forever=True,cache=True,cachePath='./htmls/',ua={},re
                 content=content.read()
             fetch=True
         except Exception as err:
-            print err
-            print 'Fail to fetch '+url+' '+hash
+            if log:
+                print err
+                print 'Fail to fetch '+url+' '+hash
             if hasattr(err,'code') and err.code==404:
                 return False
             if not forever:
                 return False
+            if log:
+                print 'Reloading'
             time.sleep(1)
     if cache or reCache:
         write(cachePath+hash,content)
@@ -131,3 +135,22 @@ def text2json(text):
     except Exception as err:
         print err
     return text
+
+def jsonHtmlDecode(s):
+    if isinstance(s,list):
+        for i in range(0,len(s)):
+            if isinstance(s[i],list) or isinstance(s[i],dict):
+                s[i]=jsonHtmlDecode(s[i])
+            elif isinstance(s[i],int):
+                s[i]=str(s[i])
+            elif isinstance(s[i],str):
+                s[i]=html2text(s[i])
+    else:
+        for i in s.keys():
+            if isinstance(s[i],list) or isinstance(s[i],dict):
+                s[i]=jsonHtmlDecode(s[i])
+            elif isinstance(s[i],int):
+                s[i]=str(s[i])
+            elif isinstance(s[i],str):
+                s[i]=html2text(s[i])
+    return s

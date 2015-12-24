@@ -56,6 +56,15 @@ def getWorks(startIndex,endIndex):
         print(composer['name']+'=================')
         cur_page=1
         pages=1
+        dbComposers.update(
+            {
+                'name':composer['name']
+            },{
+                '$set':{
+                    'works':[]
+                }
+            }
+        );
         while cur_page<=pages:
             soup=bs(getHtml('https://musopen.org'+composer['url']+'?page='+str(cur_page)))
             composer_name=composer['name']
@@ -69,7 +78,6 @@ def getWorks(startIndex,endIndex):
                     'name':composer_name
                 },{
                     '$set':{
-                        'works':[],
                         'introduction':introduction
                     }
                 }

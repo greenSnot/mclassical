@@ -1,68 +1,51 @@
-import os
-from threading import Lock, Thread
-import threadpool
-import time
 import sys
-import urllib2
-from pymongo import MongoClient
-import json
-import re
-import demjson
 import socket
 socket.setdefaulttimeout( 30 ) 
+sys.path.append('..')
+from utils import *
 
-from Queue import Queue
-from time import sleep
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 con=MongoClient()
 db=con.mclassical
 
-q = Queue()
-NUM =48
+shards=16
 
-albums=db.qqmusic_albums.find({'details':{'$exists':False}},{'id':1,'mid':1})
-totle=db.qqmusic_albums.find({'details':{'$exists':False}},{'id':1,'mid':1}).count()
-def getDetails(cursor):
-    album=albums[cursor]
+dbQQMusic=db.qqmusic_test
+
+albums=dbQQMusic.find({'details':{'$exists':False}},{'id':1,'mid':1})
+total=dbQQMusic.find({'details':{'$exists':False}},{'id':1,'mid':1}).count()
+def getDetails(index):
+    album=albums[index]
     mid=album['mid']
     id=album['id']
     url='http://i.y.qq.com/v8/fcg-bin/fcg_v8_album_detail_cp.fcg?tpl=20&albummid='+mid+'&play=0'
-    fetch=False
-    while not fetch:
-        try:
-            content= urllib2.urlopen(url)
-            content=content.read()
-            fetch=True
-        except Exception as err:
-            print 'TIMEOUT RETRYING...'+str(cursor)
-            fetch=False
-    
+    content=getHtml(url,cachePath='./htmls_details/')
     try:
         content=content[content.find('	songList :')+12:content.find('cdNum : ')-5]
         content=json.loads(content)
         fetch=True
     except Exception as err:
         #copyright issues
-        print "db.getCollection('qqmusic_albums').remove({mid:'"+album['mid']+"'});"
-        fetch=False
-    if fetch==False:
+        print 'copyright issues '+album['mid']
+        dbQQMusic.remove({'mid':album['mid']})
         return
-    db.qqmusic_albums.update({'id':id},{'$set':{'details':content}})
-    print 'FINISH:'+album['id']+' '+str(cursor)+'/'+str(totle)
+    content=jsonHtmlDecode(content)
+    dbQQMusic.update({'id':id},{'$set':{'details':content}})
+    print 'Finish: '+str(album['mid'])
 
-def do_somthing_using(i):
-    getDetails(i)
-def working():
-    while True:
-        arguments = q.get()
-        do_somthing_using(arguments)
-        q.task_done()
-for i in range(NUM):
-    t = Thread(target=working)
-    t.setDaemon(True)
-    t.start()
-for cursor in range(0,totle,1):
-    q.put(cursor)
-q.join()
+def worker(pid,startIndex,endIndex):
+    global total
+    total=dbQQMusic.find({'details':{'$exists':False}},{'id':1,'mid':1}).count()
+    while total>0:
+        getDetails((pid/shards)*total)
 
-sys.exit(0)
+def clear():
+    dbQQMusic.update({'details':{'$exists':True}},{'$unset':{'details':{'$exists':True}}},False,True)
+
+if __name__ == "__main__":
+    clear()
+    for i in range(0,shards):
+        p=multiprocessing.Process(target = worker, args = (i,int(float(i)/float(shards)*total),int(float(i+1)/float(shards)*total)))
+        p.start()
