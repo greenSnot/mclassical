@@ -107,15 +107,4 @@ router.get('/',function(req,res){
     }
 });
 
-router.get('/get-source',function(req,res){
-	var url=req.query.url;
-	var format=req.query.format?req.query.format:'mp4';
-	format=format=='mp4'||format=='flv'?format:'mp4';
-	
-	search.getVideoSource(format,url).then(function(result){
-		res.json(result);
-	});
-});
-
-/* GET home page. */
 module.exports = router;

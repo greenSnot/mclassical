@@ -24,7 +24,10 @@ exports.google_translate_api=function(keyword,target){
 }
 
 exports.google_translate=function(source){
-    if(config.serverName!='HK'){
+    if(config.serverDuties.google_translate){
+        // api
+        return exports.google_translate_api(source);
+    }else{
 	    return when.promise(function(resolve,reject){
             var url=config.google.translate_url+'keyword='+utils.urlencode(source);
 	    	getHtml(url).then(function(data){
@@ -32,9 +35,6 @@ exports.google_translate=function(source){
 	    		resolve(data);
 	    	});
 	    });
-    }else{
-        // api
-        return exports.google_translate_api(source);
     }
 }
 
@@ -132,7 +132,7 @@ exports.getQQMusicUrl=function(keyword,page){
 };
 
 exports.NeteaseMusic=function(keyword,page){
-    if(config.serverName=='HK'){
+    if(config.serverDuties.showapi){
         var url='http://'+config.servers.SZ+'/search';
 	    return when.promise(function(resolve,reject){
             getHtml(url,{keyword:keyword,type:'audios',audios_filter:'neteasemusic'}).then(function(data){
@@ -196,7 +196,7 @@ console.log('netease api');
     }
 }
 exports.QQMusic=function(keyword,page){
-    if(config.serverName=='HK'){
+    if(config.serverDuties.showapi){
         var url='http://'+config.servers.SZ+'/search';
 	    return when.promise(function(resolve,reject){
             getHtml(url,{keyword:keyword,type:'audios',audios_filter:'qqmusic'}).then(function(data){
@@ -269,7 +269,7 @@ console.log('qqmusic api');
 }
 
 exports.Youku=function(keyword,page){
-    if(config.serverName=='HK'){
+    if(config.serverDuties.youku_search){
         var url='http://'+config.servers.SZ+'/search';
 	    return when.promise(function(resolve,reject){
             getHtml(url,{keyword:keyword,type:'videos',videos_filter:'youku'}).then(function(data){
@@ -325,7 +325,7 @@ exports.google_imslp_api=function(keyword){
 }
 
 exports.google_imslp=function(keyword){
-    if(config.serverName=='HK'){
+    if(config.serverDuties.imslp_search){
         return exports.google_imslp_api(keyword);
     }else{
 		return when.promise(function(resolve,reject){
@@ -369,29 +369,3 @@ exports.Engine=function(keyword,engine){
 		return engine_result;
 	});
 }
-
-exports.getVideoSource=function(format,url){
-	var result={code:0,msg:'ok'};
-	return when.promise(function(resolve,reject){
-		var cmdStr='python3 '+process.env.YOU_GET_PATH+"/you-get -u --format "+format+" '"+url+"'";
-		exec(cmdStr,function(err,stdout,stderr){
-			if(err){
-				result.code=-1;
-				if(stderr.indexOf('Invalid video format')>=0){
-				result.msg='No such format for this video.';
-				}else if(stderr.indexOf('Video not found')>=0){
-					result.msg='Video not found';
-				}else{
-				 result.msg='Unknown error';
-				}
-				resolve(result);
-				return;
-			}
-			var data=stdout.substr(0,stdout.length-1);
-			var urls=data.split('URLs:\n');
-			urls=urls[urls.length-1].split('\n');
-			result.urls=urls;
-			resolve(result);
-		});
-	});
-};

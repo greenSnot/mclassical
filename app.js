@@ -22,11 +22,7 @@ app.set('view engine', 'ejs');
 app.use(session({
     resave: false,
     saveUninitialized: true,
-    store: new RedisStore({
-        port: "6379",
-        host: "127.0.0.1",
-        pass:''
-    }),
+    store: new RedisStore(config.redis),
     rolling: true,
     secret: 'mclassical_login',
     cookie: {
@@ -52,7 +48,7 @@ response.render = function (view, options, callback) {
     _render.call(this, view, options, callback);
 };
 
-if(config.serverName=='SZ'){
+if(config.serverDuties.wechat){
     app.use(require('./routes/wechat_token').checktoken);
     app.use(require('./routes/wechat_token').checkticket);
 }

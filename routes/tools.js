@@ -26,18 +26,20 @@ var google_search=function(keyword){
         });
 }
 
-router.get('/google_search',function(req,res){
-        var keyword=req.query.keyword;
-        var result={code:0};
-        google_search(keyword).then(function(data){
-                if(data.code!=0){
-                        result.code=data.code;
-                        result.msg=data.msg;
-                }
-                result.result=data.result;
-                res.json(result);
-        });
-});
+if(config.serverDuties.imslp_search){
+    router.get('/imslp_search',function(req,res){
+            var keyword=req.query.keyword;
+            var result={code:0};
+            google_search(keyword).then(function(data){
+                    if(data.code!=0){
+                            result.code=data.code;
+                            result.msg=data.msg;
+                    }
+                    result.result=data.result;
+                    res.json(result);
+            });
+    });
+}
 
 var google_translate=function(keyword,target){
         target=target?target:'en';
@@ -52,13 +54,15 @@ var google_translate=function(keyword,target){
         });
 }
 
-router.get('/google_translate',function(req,res){
-        var keyword=req.query.keyword;
-        var result={code:0};
-        google_translate(keyword).then(function(data){
-                result.result=data;
-                res.json(result);
-        });
-});
+if(config.serverDuties.google_translate){
+    router.get('/google_translate',function(req,res){
+            var keyword=req.query.keyword;
+            var result={code:0};
+            google_translate(keyword).then(function(data){
+                    result.result=data;
+                    res.json(result);
+            });
+    });
+}
 
 module.exports=router;

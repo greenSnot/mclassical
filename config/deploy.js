@@ -34,8 +34,8 @@ exports.config={
 			'User-Agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X; en-us) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53'
 		},
 		translate_url:'http://openapi.baidu.com/public/2.0/bmt/translate?from=auto&to=auto&q=',
-		api_key:'VW1I57TuLTZkswNnGaGR0MIS',
-		secret_key:'GAowav3OME2MTvw6oQLSpfnT0vIrnCw6'
+		api_key:'',
+		secret_key:''
 	},
 	bing:{
 		search_url:'http://cn.bing.com/search?q='//site:imslp.org beethoven
@@ -127,13 +127,12 @@ exports.config={
         }
     },
     servers:{
-        HK:'118.193.172.214',
         SZ:'112.74.211.14',
         JP:'52.68.201.23'
     },
     wechat:{
-        app_id:'wxea9602a7f740bffe',
-        app_secret:'bde088b2dbb0e36e513524f75fba7a53'
+        app_id:'',
+        app_secret:''
     },
     neteasemusic:{
         search_url:'http://route.showapi.com/760-1?'

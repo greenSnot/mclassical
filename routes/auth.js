@@ -41,7 +41,7 @@ exports.loginFilter = function(req, res, next){
         }
 
         ////是否微信浏览器打开
-        if(config.serverName=='SZ'&&req.headers['user-agent']&&req.headers['user-agent'].indexOf('MicroMessenger')>=0){
+        if(config.serverDuties.wechat&&req.headers['user-agent']&&req.headers['user-agent'].indexOf('MicroMessenger')>=0){
             //返回code
             if(req.query.state=='WECHAT_OAUTH_RESPONSE'&&req.query&&req.query.code!=undefined){
                 console.log("CODE");
@@ -168,5 +168,3 @@ console.log('sorry');
         }
     }
 };
-
-

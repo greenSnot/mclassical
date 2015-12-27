@@ -6,6 +6,7 @@ db=con.mclassical
 
 #####################################
 #remember to modifer
+#qqmusic_v2 -> qqmusic_albums
 dbQQMusic=db.qqmusic_v2
 #####################################
 dbNaxos=db.naxos_music_library
@@ -111,10 +112,12 @@ def mergeFromQQMusic(index):
         album['audios_id'].append(k['_id'])
     album['players']=allPlayers
     dbAlbums.update({'other_id.qqmusic_album_id':albumid},{'$setOnInsert':album},True)
+####################
+    album_uid=dbAlbums.find_one({'other_id.qqmusic_album_id':albumid})['_id']
     for j in allPlayers:
         dbPlayers.update({'_id':j['id']},{
             '$addToSet':{
-                'albums_id':albumid,
+                'albums_id':album_uid,
                 'audios_id':{
                     '$each':album['audios_id']
                 }
