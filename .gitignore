@@ -1,3 +1,4 @@
+node_modules/
 config/local.js
 crawler/htmls
 crawler/qqmusic/qqmusic_albums
