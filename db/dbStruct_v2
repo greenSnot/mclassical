@@ -83,6 +83,10 @@ albums:[{
              instrument:'piano'
          }
     ],
+    source:{[
+        name:'musopen'
+        url:'http://3r23r'
+    ]},
    *publication_time:'2015-01-01',
    *company:'DG'
 }]
@@ -164,6 +168,10 @@ players:[{
    *groups_id:[332,445],//blongs to [orchestra/quartet...]
     description:{
         en:'123123'
+    },
+    other_id:{
+        qqmusic_player_id:'123',
+        qqmusic_player_mid:'123'
     },
     instruments:['violin','piano'],
     albums_id:[3,4,5],

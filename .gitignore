@@ -2,6 +2,7 @@ config/local.js
 crawler/htmls
 crawler/qqmusic/qqmusic_albums
 crawler/qqmusic/m4a
+crawler/qqmusic/olds
 crawler/musopen/htmls_old
 crawler/musopen/htmls
 crawler/qqmusic/htmls

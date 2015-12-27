@@ -31,3 +31,15 @@ curl -XGET "localhost:9200/test/_search" -d '
     }
 }
 '
+
+ curl -XPUT 'http://localhost:9200/_river/mongodb/_meta' -d '{ 
+    "type": "mongodb", 
+    "mongodb": { 
+      "db": "mclassical", 
+      "collection": "SCMD_audios"
+    }, 
+    "index": {
+      "name": "scmd_audios", 
+      "type": "audios" 
+    }
+  }'

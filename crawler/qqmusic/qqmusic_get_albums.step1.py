@@ -9,7 +9,7 @@ sys.setdefaultencoding('utf-8')
 
 con=MongoClient()
 db=con.mclassical
-dbQQMusic=db.qqmusic_test
+dbQQMusic=db.qqmusic_albums
 
 def getAlbums(startIndex,endIndex):
     if startIndex==0:

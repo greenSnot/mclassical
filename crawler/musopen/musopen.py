@@ -19,7 +19,7 @@ con=MongoClient()
 db=con.mclassical
 
 #find works,introduction and work details of each composer by composers.works_url
-dbComposers=db.composers_test;
+dbComposers=db.musopen_composers;
 composers_len=int(db.composers_test.count())
 #len=4315
 

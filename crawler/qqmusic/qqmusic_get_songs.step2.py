@@ -10,7 +10,7 @@ db=con.mclassical
 
 shards=16
 
-dbQQMusic=db.qqmusic_test
+dbQQMusic=db.qqmusic_albums
 
 albums=dbQQMusic.find({'details':{'$exists':False}},{'id':1,'mid':1})
 total=dbQQMusic.find({'details':{'$exists':False}},{'id':1,'mid':1}).count()
