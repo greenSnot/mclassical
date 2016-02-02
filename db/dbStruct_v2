@@ -33,7 +33,7 @@ composers:[{
                  },
                  resource:'xxx.pdf',
                  source:[{
-                     name:'musopen'
+                     name:'musopen',
                      url:'http://3r23r'
                  }],
                  work_id:'123123'

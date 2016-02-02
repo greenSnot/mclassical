@@ -8,6 +8,7 @@ import StringIO
 import gzip
 import requests
 import thread
+import commands
 import random
 import time
 import sys
@@ -22,7 +23,7 @@ import multiprocessing
 import HTMLParser
 html_parser = HTMLParser.HTMLParser()
 from bs4 import BeautifulSoup
-socket.setdefaulttimeout( 25 ) 
+socket.setdefaulttimeout( 125 ) 
 
 from Queue import Queue
 from time import sleep
@@ -41,6 +42,10 @@ def remove(filename):
     if exist(filename):
         os.remove(filename)
 
+def createDir(d):
+    if not os.path.exists(d):
+        os.makedirs(d)
+
 def write(filename,content,append=False):
     type='w'
     if append:
@@ -48,22 +53,6 @@ def write(filename,content,append=False):
     fileObj=open(filename,type,-1)
     fileObj.write(content)
     fileObj.close()
-
-def download(url,filename,forever=True):
-    fetch=False
-    data=''
-    while not fetch:
-        try:
-            data=urllib2.urlopen(url).read()
-            fetch=True
-            with open(filename,'wb') as code:
-                code.write(data)
-            return True
-        except Exception as err:
-            print 'Fail to fetch '+url
-            if not forever:
-                return False
-            time.sleep(1)
 
 def split(t,pattern):
     s=t[:]
@@ -87,6 +76,34 @@ def bs(content):
 
 def html2text(content):
     return html_parser.unescape(content)
+
+def download(url,filename,forever=True,proxy_url=False):
+    fetch=False
+    while not fetch:
+        content=''
+        if proxy_url!=False:
+            try:
+                content=requests.get(url, proxies={"http":proxy_url,"https":proxy_url},timeout=600)
+            except Exception as err:
+                print err
+                print 'Fail to fetch '+url
+                if not forever:
+                    return False
+                time.sleep(1)
+                continue
+        else:
+            content=requests.get(url)
+        if content.status_code==200:
+            content=content.content
+            fetch=True
+            with open(filename,'wb') as code:
+                code.write(content)
+            return True
+        else:
+            print 'Fail to fetch '+url
+            if not forever:
+                return False
+            time.sleep(1)
 
 def getHtml(url,data=False,forever=True,cache=True,cachePath='./htmls/',ua={},reCache=False,log=True):
     req=urllib2.Request(url)
