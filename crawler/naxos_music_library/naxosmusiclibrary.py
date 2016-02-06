@@ -28,12 +28,16 @@ con=MongoClient()
 db=con.mclassical
 
 jobPool=[]
-threadNum=3
+threadNum=1
 
 cookie= cookielib.CookieJar()
-opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie))
+cookie_handler =urllib2.HTTPCookieProcessor(cookie)
+proxy_handler = urllib2.ProxyHandler({'http': 'http://127.0.0.1:8787'})
+
+opener = urllib2.build_opener(cookie_handler,proxy_handler)
 urllib2.install_opener(opener)
 
+dbNaxos=db.__temp_naxos_music_library
 def write(filename,content,a=False):
     type='w'
     if a:
@@ -63,22 +67,35 @@ def sha1(a):
     m2.update(a)
     return m2.hexdigest()
 
+headers={
+        'Host':'www.naxosmusiclibrary.com',
+        'Proxy-Connection':'keep-alive',
+        'Pragma':'no-cache',
+        'Cache-Control':'no-cache',
+        'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        'Accept-Language':'zh-CN,zh;q=0.8,zh-TW;q=0.6',
+        'Accept-Encoding':'gzip, deflate',
+        'Upgrade-Insecure-Requests':'1',
+        'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36'
+}
 def setBasicHeader(req):
-    req.add_header('Accept','text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8')
-    req.add_header('Accept-Encoding','gzip, deflate')
-    req.add_header('Accept-Language','zh-CN,zh;q=0.8,zh-TW;q=0.6')
-    #req.add_header('Cache-Control','no-cache')
     #req.add_header('Connection','keep-alive')
     #req.add_header('Content-Length','119')
-    req.add_header('Content-Type','application/x-www-form-urlencoded')
-    #req.add_header('Host','www.naxosmusiclibrary.com')
+    #req.add_header('Content-Type','application/x-www-form-urlencoded')
     #req.add_header('Origin','http://www.naxosmusiclibrary.com')
-    #req.add_header('Pragma','no-cache')
-    #req.add_header('Referer','http://www.naxosmusiclibrary.com/home.asp')
-    #req.add_header('Upgrade-Insecure-Requests','1')
-    req.add_header('User-Agent','Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86'+str(random.random())+' Safari/537.36')
+    req.add_header('Host','www.naxosmusiclibrary.com')
+    req.add_header('Proxy-Connection','keep-alive')
+    req.add_header('Pragma','no-cache')
+    req.add_header('Cache-Control','no-cache')
+    req.add_header('Accept','text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8')
+    req.add_header('Accept-Language','zh-CN,zh;q=0.8,zh-TW;q=0.6')
+    req.add_header('Accept-Encoding','gzip, deflate')
+    #req.add_header('Referer','http://www.naxosmusiclibrary.com/recentadditions.asp')
+    req.add_header('Upgrade-Insecure-Requests','1')
+    req.add_header('User-Agent','Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36')
+    return req
 
-lastLoginTime=time.time()#second
+lastLoginTime=0
 loginLock=False
 def login():
     global cookie 
@@ -115,7 +132,7 @@ def login():
     postData = urllib.urlencode(loginData)
     
     req = urllib2.Request(loginUrl, postData)
-    #setBasicHeader(req)
+    setBasicHeader(req)
 
     content=''
     fetch=True
@@ -168,6 +185,12 @@ def login():
 
 #http://www.naxosmusiclibrary.com/browsesearch.asp?genreid=426&CategoryID=36
 
+def getAllAttrs(obj):
+    strAttrs = ''
+    for o in dir(obj): 
+        strAttrs =strAttrs + o + ' := ' + str(getattr(obj,o)) + '\n'
+    return strAttrs;
+
 def soup(url,data=False,cover=False):
     global lastLoginTime
     global loginLock
@@ -177,7 +200,7 @@ def soup(url,data=False,cover=False):
         postData = urllib.urlencode(data)
         req=urllib2.Request(url,postData)
         hash=sha1(postData)
-    #setBasicHeader(req)
+    req=setBasicHeader(req)
     content=''
     filename='../htmls/'+hash
     if (not cover) and os.path.isfile(filename):
@@ -186,31 +209,37 @@ def soup(url,data=False,cover=False):
         else:
             print 'EXIST '+url+' HASH: '+hash
         content=open(filename)
-    #else:
-    #    htmlfetch=False
-    #    while not htmlfetch:
-    #        try:
-    #            #login expired?
-    #            if time.time()-lastLoginTime>10*60:
-    #                if loginLock:
-    #                    print 'LoginLocking'
-    #                    while loginLock:
-    #                        time.sleep(1)
-    #                else:
-    #                    print 'ReLogin'
-    #                    while not login():
-    #                        print 'Fail ReLogin'
-    #            content=opener.open(req).read()
-    #            htmlfetch=True
-    #        except Exception as err:
-    #            print '#####################'
-    #            print err
-    #            if data!=False:
-    #                print '#Fail : page '+str(data['pageNo'])+' in category '+str(data['categoryId'])
-    #            else:
-    #                print '#Fail '+url
-    #            print '#####################'
-    #    write(filename,content)
+    else:
+        print 'not exist'
+        #htmlfetch=False
+        #while not htmlfetch:
+        #    try:
+        #        #login expired?
+        #        if time.time()-lastLoginTime>10*60:
+        #            if loginLock:
+        #                print 'LoginLocking'
+        #                while loginLock:
+        #                    time.sleep(1)
+        #            else:
+        #                print 'ReLogin'
+        #                while not login():
+        #                    print 'Fail ReLogin'
+        #        #for i in cookie:
+        #        #    print i.name+':'+i.value
+        #        #getAllAttrs(req)
+        #        content=opener.open(req).read()
+        #        #content=urllib2.urlopen(req)
+        #        htmlfetch=True
+        #    except Exception as err:
+        #        print '#####################'
+        #        print err
+        #        if data!=False:
+        #            print '#Fail : page '+str(data['pageNo'])+' in category '+str(data['categoryId'])
+        #        else:
+        #            print '#Fail '+url
+        #        print '#####################'
+        #write(filename,content)
+        #sys.exit(0)
     return BeautifulSoup(content)
 
 def initDirectoryExtractor():
@@ -245,10 +274,10 @@ def extractDirectory(cid,page):
         name=tracks[i].contents[0]
         url=tracks[i].attrs['href']
         id=tracks[i].parent.attrs['id'][4:]
-        db.naxos_music_library.update({
+        dbNaxos.update({
             'id':id
         },{
-            '$set':{
+            '$setOnInsert':{
                 'id':id,
                 'name':name,
                 'url':url
@@ -258,22 +287,16 @@ def extractDirectory(cid,page):
 
 def startMultiplyDirectoryExtractor(startIndex):
     global jobPool
-    total=len(jobPool)
-    def working(threadName):
-        data=queryList.pop()
-        print threadName+'INDEX '+str(data['index'])+'/'+str(total)
+    while len(jobPool):
+        data=jobPool.pop()
         extractDirectory(data['cid'],data['page'])
-    for i in range(0,threadNum):
-       thread.start_new_thread( working, ("Thread-"+str(i), ) )
 
 startIndex=0
 if len(sys.argv)>1:
     startIndex=int(sys.argv[1])
 
-#albums=db.naxos_music_library.find({'details':{'$exists':False}},{'id':1}).sort('id')
-#albums_len=db.naxos_music_library.find({'details':{'$exists':False}},{'id':1}).count()
-albums=db.naxos_music_library.find({'details.payments.0':{'$exists':False}},{'id':1}).sort('id')
-albums_len=db.naxos_music_library.find({'details.payments.0':{'$exists':False}},{'id':1}).count()
+albums=dbNaxos.find({'details':{'$exists':False}},{'id':1}).sort('id')
+albums_len=dbNaxos.find({'details':{'$exists':False}},{'id':1}).count()
 
 def initAlbumExtractor():
     global jobPool
@@ -283,7 +306,7 @@ def initAlbumExtractor():
 
 def extractAlbum(index):
     album=albums[index]
-    #album['id']='MA535'
+    #album['id']='ZZT031101.3'
     soupurl='http://www.naxosmusiclibrary.com/catalogue/item.asp?'+urllib.urlencode({'cid':str(album['id'])})
     content=soup(soupurl)
 
@@ -339,11 +362,12 @@ def extractAlbum(index):
                     try:
                         p=players[k]
                         playerName=nameSwap(p[p.find('">')+2:p.find('</a>')].strip())
-                        playerUrl=p[p.find('<a href="')+9:p.find('">')].strip()
+                        playerUrl=p[1:p.find('">')].strip()
                         instrument=''
-                        instrument=p[p.find('</a>')+22:p.find('<br/>')].strip()
+                        instrument=(p[p.find('</a>')+22:p.find('<br/>')+1]).strip()
                         if instrument.find(','):
                             instrument=instrument[:instrument.find(',')]
+                        instrument=instrument.strip()
                         curPlayers.append({
                             'name':playerName,
                             'url':playerUrl,
@@ -363,6 +387,9 @@ def extractAlbum(index):
             partsInWork=split(worksInComposer[j],'»')[1:]
             for k in range(0,len(partsInWork)):
                 partName=partsInWork[k][:partsInWork[k].find('</td>')].strip()
+                divIndex=partName.find('<div')
+                if divIndex>=0:
+                    partName=partName[:divIndex].strip()
                 curWork['parts'].append({'name':partName})
             data['works'].append(curWork)
 
@@ -457,13 +484,14 @@ def extractAlbum(index):
         print 'no works '+album['id']
         return
 
-    db.naxos_music_library.update({
+    dbNaxos.update({
         'id':album['id']
     },{
         '$set':{
             'details':data
         }
     })
+    print album['id']
 
 
 def startMultiplyAlubmExtractor(startIndex=0):

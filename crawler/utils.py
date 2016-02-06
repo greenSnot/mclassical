@@ -77,13 +77,13 @@ def bs(content):
 def html2text(content):
     return html_parser.unescape(content)
 
-def download(url,filename,forever=True,proxy_url=False):
+def download(url,filename,forever=True,proxy_url=False,timeout=120):
     fetch=False
     while not fetch:
         content=''
         if proxy_url!=False:
             try:
-                content=requests.get(url, proxies={"http":proxy_url,"https":proxy_url},timeout=600)
+                content=requests.get(url, proxies={"http":proxy_url,"https":proxy_url},timeout=timeout)
             except Exception as err:
                 print err
                 print 'Fail to fetch '+url
@@ -92,7 +92,15 @@ def download(url,filename,forever=True,proxy_url=False):
                 time.sleep(1)
                 continue
         else:
-            content=requests.get(url)
+            try:
+                content=requests.get(url)
+            except Exception as err:
+                print err
+                print 'Fail to fetch '+url
+                if not forever:
+                    return False
+                time.sleep(1)
+                continue
         if content.status_code==200:
             content=content.content
             fetch=True

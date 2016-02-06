@@ -20,12 +20,15 @@ def MusopenDownloader(index):
     works=composer['works']
     for i in works:
         work=i
+        if not ('resources' in work.keys()):
+            continue
         for j in work['resources']:
             url=j['url']
-            download(url,'./pdfs/'+sha1(url),proxy_url="http://localhost:8787")
-            print 'downloaded '+url+' '+sha1(url)
+            download(url,'./pdfs/'+sha1(url),proxy_url="http://localhost:8787",timeout=600)
+            print 'downloaded '+url+' '+sha1(url)+' '+composer['name']
+
     dbMusopen.update({'_id':composer['_id']},{'$set':{'downloaded':True}})
-    print str(index)+'/'+str(total)
+    print str(index)+'/'+str(total)+' '+composer['name']
 
 def worker(pid,startIndex,endIndex):
     global total

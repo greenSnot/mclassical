@@ -35,7 +35,7 @@ def mergeFromQQMusic(index):
         'publication_time':curAlbum['pub_time'],
         'album_thumbnail':'http://i.gtimg.cn/music/photo/mid_album_90/'+curAlbumMid[-2]+'/'+curAlbumMid[-1]+'/'+curAlbumMid+'.jpg',
         'album_image':'http://i.gtimg.cn/music/photo/mid_album_300/'+curAlbumMid[-2]+'/'+curAlbumMid[-1]+'/'+curAlbumMid+'.jpg',
-        'source':[{
+        'references':[{
             'name':'QQMusic',
             'url':'http://y.qq.com/#type=album&mid='+curAlbumMid
         }],
@@ -70,7 +70,7 @@ def mergeFromQQMusic(index):
                 'qqmusic_song_mid':mid,
                 'qqmusic_album_mid':album['other_id']['qqmusic_album_mid']
             },
-            'source':[{
+            'references':[{
                 'name':'QQMusic',
                 'url':'http://y.qq.com/#type=song&mid='+mid
             }],
