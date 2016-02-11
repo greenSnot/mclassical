@@ -31,7 +31,7 @@ def mergeFromMusopen(index):
             'works':[]
     }
     if composer['introduction']=='N/A' :
-        cur_composer['introduction']=''
+        cur_composer['introduction']['en']=''
     works=composer['works']
     for work in works:
         cur_work={

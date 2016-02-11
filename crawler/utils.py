@@ -1,5 +1,6 @@
 #-*-coding:utf-8-*-
 import urllib
+import copy
 import cookielib
 import os
 from threading import Lock, Thread

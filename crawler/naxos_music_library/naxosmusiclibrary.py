@@ -514,5 +514,8 @@ def startMultiplyAlubmExtractor(startIndex=0):
 
 initAlbumExtractor()
 startMultiplyAlubmExtractor(startIndex)
+
+#remove albums which not exist details
+#dbNaxos.remove({'details':{$exists:false}})
 while 1:
    pass
