@@ -36,7 +36,7 @@ curl -XGET "localhost:9200/test/_search" -d '
     "type": "mongodb", 
     "mongodb": { 
       "db": "mclassical", 
-      "collection": "_temp_SCMD_audios"
+      "collection": "SCMD_audios"
     }, 
     "index": {
       "name": "scmd_audios", 
@@ -48,7 +48,7 @@ curl -XGET "localhost:9200/test/_search" -d '
     "type": "mongodb", 
     "mongodb": { 
       "db": "mclassical", 
-      "collection": "_temp_SCMD_players"
+      "collection": "SCMD_players"
     }, 
     "index": {
       "name": "scmd_players", 
@@ -60,7 +60,7 @@ curl -XGET "localhost:9200/test/_search" -d '
     "type": "mongodb", 
     "mongodb": { 
       "db": "mclassical", 
-      "collection": "_temp_SCMD_albums"
+      "collection": "SCMD_albums"
     }, 
     "index": {
       "name": "scmd_albums", 
@@ -72,13 +72,14 @@ curl -XGET "localhost:9200/test/_search" -d '
     "type": "mongodb", 
     "mongodb": { 
       "db": "mclassical", 
-      "collection": "_temp_SCMD_composers"
+      "collection": "SCMD_composers"
     }, 
     "index": {
       "name": "scmd_composers", 
       "type": "composers" 
     }
   }'
+
 
 
   curl -XGET 'http://localhost:9200/scmd_audios/_search?q=other_id.qqmusic_song_id:103867699'

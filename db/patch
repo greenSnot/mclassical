@@ -1,2 +1,0 @@
-//apply to elastic-search
-db.getCollection('SCMD_albums').update({'publication_time':/.*-00/},{$set:{'publication_time':'1999-09-09'}},false,true)
