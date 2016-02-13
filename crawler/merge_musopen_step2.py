@@ -2,6 +2,7 @@ from utils import *
 reload(sys)
 sys.setdefaultencoding('utf-8')
 con=MongoClient()
+con.mclassical.authenticate('r','r',mechanism='SCRAM-SHA-1')
 db=con.mclassical
 
 dbQQMusic=db.qqmusic_albums

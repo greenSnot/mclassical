@@ -25,6 +25,7 @@ reload(sys)
 sys.setdefaultencoding('utf8') 
 
 con=MongoClient()
+con.mclassical.authenticate('r','r',mechanism='SCRAM-SHA-1')
 db=con.mclassical
 
 jobPool=[]

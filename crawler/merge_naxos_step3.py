@@ -2,6 +2,7 @@ from utils import *
 reload(sys)
 sys.setdefaultencoding('utf-8')
 con=MongoClient()
+con.mclassical.authenticate('r','r',mechanism='SCRAM-SHA-1')
 db=con.mclassical
 
 dbNaxos=db.__temp_naxos_music_library
