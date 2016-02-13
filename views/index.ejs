@@ -13,13 +13,12 @@
         <title>古典音乐放大镜</title>
     </head>
 <body>
-        <span id="__getwidth"></span>
         <div id="head">
             <div id="logo">
-            <div id="magnifier">
-                <div id="stick">
+                <div id="magnifier">
+                    <div id="stick">
+                    </div>
                 </div>
-            </div>
             </div>
             <div id="search-wrap" class="start">
                 <div class="input-wrap">
@@ -610,20 +609,14 @@
              hideDetails();
              setTimeout(function(){
                  var random=Math.random()*$('.music-content').size();
-                 var content=$('.music-content').eq(random);
                  pano.setRxRy(content.attr('rx')*-1,content.attr('ry'),1);
-                 musicClick(content);
              },300);
-        }
-
-        function musicClick(content){
         }
 
         function onSpriteClick(data){
             snot.autoRotation=0;
             snot.setRx(data.rx,true);
             snot.setRy(data.ry,true);
-            console.log(data);
             stopAllMusic();
             hideNavs();
             hideIntroduction();
@@ -674,7 +667,6 @@
             maxfov: maxfov,
             minfov: minfov,
             fov   : fov,
-
             callback:initMusicWall,
             autoRotation: 0.1,
             onClick:function(){},

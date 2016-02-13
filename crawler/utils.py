@@ -90,29 +90,35 @@ def download(url,filename,forever=True,proxy_url=False,timeout=120):
                 print 'Fail to fetch '+url
                 if not forever:
                     return False
+                print 'retrying'
                 time.sleep(1)
                 continue
+            if content.status_code==200:
+                content=content.content
+                fetch=True
+                with open(filename,'wb') as code:
+                    code.write(content)
+                return True
+            else:
+                print 'Fail to fetch '+url
+                if not forever:
+                    return False
+                time.sleep(1)
         else:
             try:
-                content=requests.get(url)
+                content=urllib2.urlopen(url).read()
+                fetch=True
+                with open(filename,'wb') as code:
+                    code.write(content)
+                return True
             except Exception as err:
                 print err
                 print 'Fail to fetch '+url
                 if not forever:
                     return False
+                print 'retrying'
                 time.sleep(1)
                 continue
-        if content.status_code==200:
-            content=content.content
-            fetch=True
-            with open(filename,'wb') as code:
-                code.write(content)
-            return True
-        else:
-            print 'Fail to fetch '+url
-            if not forever:
-                return False
-            time.sleep(1)
 
 def getHtml(url,data=False,forever=True,cache=True,cachePath='./htmls/',ua={},reCache=False,log=True):
     req=urllib2.Request(url)
@@ -190,3 +196,12 @@ def hasChinese(s):
         if isChinese(i):
             return True
     return False
+
+def hashFile(filename):
+    m = hashlib.md5()
+    with open(filename, 'rb') as fp: 
+        while True:
+            blk = fp.read(4096) # 4KB per block
+            if not blk: break
+            m.update(blk)
+    return m.hexdigest()

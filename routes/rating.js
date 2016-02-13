@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var utils=require('../utils');
-var config=require('../config');
+var config=require('./config');
 var db=require('../db/mongo_schema');
 var when=require('when');
 

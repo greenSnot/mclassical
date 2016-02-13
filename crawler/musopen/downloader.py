@@ -15,21 +15,45 @@ shards=1
 total=0
 dbMusopen=db.musopen_composers
 
+def clearDownloading():
+    filesdir='./pdfs';
+    files=os.listdir(filesdir)
+    for fname in files:
+        if fname.find('downloading_')==0:
+            remove(filesdir+'/'+fname)
+            print 'clear '+fname
+clearDownloading()
+
 def MusopenDownloader(index):
     global total
     composer=dbMusopen.find({'downloaded':{'$exists':False}})[index]
     works=composer['works']
+    print 'start '+str(index)+'/'+str(total)+' '+composer['name']
     for i in works:
         work=i
         if not ('resources' in work.keys()):
             continue
         for j in work['resources']:
             url=j['url']
+            print 'start downloading '+url
+            filename='./pdfs/'+sha1(url)
+            downloading_filename='./pdfs/downloading_'+sha1(url)
+            if exist(filename):
+                print 'exist! '+filename
+                continue
+            if exist(downloading_filename):
+                print 'downloading '+filename
+                continue
+
+            write(downloading_filename,'')
             download(url,'./pdfs/'+sha1(url),proxy_url="http://localhost:8787",timeout=600)
+            remove(downloading_filename)
+            ########### safely downloading
+
             print 'downloaded '+url+' '+sha1(url)+' '+composer['name']
 
     dbMusopen.update({'_id':composer['_id']},{'$set':{'downloaded':True}})
-    print str(index)+'/'+str(total)+' '+composer['name']
+    print 'finished '+str(index)+'/'+str(total)+' '+composer['name']
 
 def worker(pid,startIndex,endIndex):
     global total
@@ -41,5 +65,5 @@ def worker(pid,startIndex,endIndex):
 if __name__ == "__main__":
     total=dbMusopen.find({'downloaded':{'$exists':False}}).count()
     for i in range(0,shards):
-        p=multiprocessing.Process(target = worker, args = (i,int(float(i)/float(shards)*total),int(float(i+1)/float(shards)*total)))
+        p=multipro kkessing.Process(target = worker, args = (i,int(float(i)/float(shards)*total),int(float(i+1)/float(shards)*total)))
         p.start()

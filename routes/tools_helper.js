@@ -2,7 +2,7 @@
 var when=require('when');
 var nodegrass=require('nodegrass');
 var db=require('../db/mongo_schema');
-var utils=require('../utils');
+var utils=require('./utils');
 var exec = require('child_process').exec;
 var config=require('../config');
 
