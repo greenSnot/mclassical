@@ -47,10 +47,12 @@ def mergeFromQQMusic(index):
             'qqmusic_album_mid':curAlbumMid
         }
     }
-    if hasChinese(curAlbum['name']):
-        album['name']['cn']=curAlbum['name']
-    else:
-        album['name']['en']=curAlbum['name']
+    #if hasChinese(curAlbum['name']):
+    #    album['name']['cn']=curAlbum['name']
+    #else:
+    #    album['name']['en']=curAlbum['name']
+
+    album['name']['en']=curAlbum['name']
 
     audiosId={}
     audioPlayersMap={}
@@ -75,16 +77,15 @@ def mergeFromQQMusic(index):
                 'name':'QQMusic',
                 'url':'http://y.qq.com/#type=song&mid='+mid
             }],
-            'resource':[{
-                'quality':'low',
-                'type':'m4a',
+            'resources':[{
                 'url':'http://ws.stream.qqmusic.qq.com/'+id+'.m4a?fromtag=46'
             }]
         }
-        if hasChinese(j['songname']):
-            audio['name']['cn']=j['songname']
-        else:
-            audio['name']['en']=j['songname']
+        #if hasChinese(j['songname']):
+        #    audio['name']['cn']=j['songname']
+        #else:
+        #    audio['name']['en']=j['songname']
+        audio['name']['en']=j['songname']
         for k in j['singer']:
             curPlayer={
                 'other_id':{
@@ -93,10 +94,12 @@ def mergeFromQQMusic(index):
                 },
                 'name':{}
             }
-            if hasChinese(k['name']):
-                curPlayer['name']['cn']=k['name']
-            else:
-                curPlayer['name']['en']=k['name']
+            #if hasChinese(k['name']):
+            #    curPlayer['name']['cn']=k['name']
+            #else:
+            #    curPlayer['name']['en']=k['name']
+            curPlayer['name']['en']=k['name']
+
             #####
             up=dbPlayers.update({'other_id.qqmusic_player_id':k['id']},{'$setOnInsert':curPlayer},True)
             if up['updatedExisting']==False:

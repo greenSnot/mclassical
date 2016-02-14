@@ -475,7 +475,9 @@ td,tr,table{
                 -webkit-box-align:center;
                 -webkit-box-pack:start;
                 height:46px;
-                width:calc(100% - 62px);
+                width:100px;
+                padding-right:62px;
+                box-sizing:border-box;
                 -webkit-transform-origin-x:0;
                 -webkit-transform:perspective(100px) rotateZ(-90deg) rotateY(0deg);
                 opacity:0.01;
