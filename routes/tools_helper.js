@@ -177,7 +177,7 @@ exports.getQQMusicUrl=function(keyword,page){
 };
 
 exports.NeteaseMusic=function(keyword,page){
-    if(config.serverDuties.showapi){
+    if(!config.serverDuties.showapi){
         var url='http://'+config.servers.SZ+'/search';
 	    return when.promise(function(resolve,reject){
             getHtml(url,{keyword:keyword,type:'audios',audios_filter:'neteasemusic'}).then(function(data){
@@ -241,7 +241,7 @@ console.log('netease api');
     }
 }
 exports.QQMusic=function(keyword,page){
-    if(config.serverDuties.showapi){
+    if(!config.serverDuties.showapi){
         var url='http://'+config.servers.SZ+'/search';
 	    return when.promise(function(resolve,reject){
             getHtml(url,{keyword:keyword,type:'audios',audios_filter:'qqmusic'}).then(function(data){
@@ -314,7 +314,7 @@ console.log('qqmusic api');
 }
 
 exports.Youku=function(keyword,page){
-    if(config.serverDuties.youku_search){
+    if(!config.serverDuties.youku_search){
         var url='http://'+config.servers.SZ+'/search';
 	    return when.promise(function(resolve,reject){
             getHtml(url,{keyword:keyword,type:'videos',videos_filter:'youku'}).then(function(data){
