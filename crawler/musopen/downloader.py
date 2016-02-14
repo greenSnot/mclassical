@@ -35,7 +35,6 @@ def MusopenDownloader(index):
             continue
         for j in work['resources']:
             url=j['url']
-            print 'start downloading '+url
             filename='./pdfs/'+sha1(url)
             downloading_filename='./pdfs/downloading_'+sha1(url)
             if exist(filename):
@@ -45,8 +44,9 @@ def MusopenDownloader(index):
                 print 'downloading '+filename
                 continue
 
+            print 'start downloading '+url
             write(downloading_filename,'')
-            download(url,'./pdfs/'+sha1(url),proxy_url="http://localhost:8787",timeout=600)
+            download(url,'./pdfs/'+sha1(url),proxy_url="http://localhost:8787",timeout=60)
             remove(downloading_filename)
             ########### safely downloading
 
@@ -65,5 +65,5 @@ def worker(pid,startIndex,endIndex):
 if __name__ == "__main__":
     total=dbMusopen.find({'downloaded':{'$exists':False}}).count()
     for i in range(0,shards):
-        p=multipro kkessing.Process(target = worker, args = (i,int(float(i)/float(shards)*total),int(float(i+1)/float(shards)*total)))
+        p=multiprocessing.Process(target = worker, args = (i,int(float(i)/float(shards)*total),int(float(i+1)/float(shards)*total)))
         p.start()

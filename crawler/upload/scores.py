@@ -15,7 +15,13 @@ def remove(filename):
 def upload_scores():
     filesdir='../musopen/pdfs';
     files=os.listdir(filesdir)
+    ignores={}
     for fname in files:
+        if fname.find('downloading_')==0:
+            ignores[fname[12:]]=True
+    for fname in files:
+        if fname.find('downloading_')==0 or (fname in ignores.keys()):
+            continue
         filename=filesdir+'/'+fname
         print filename
         data=open(filename).read()

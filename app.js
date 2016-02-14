@@ -8,7 +8,7 @@ var app = express();
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
 var compression= require('compression');
-var config=require('./config');
+var config=require('./routes/config');
 
 // connect mongodb
 require('./db/mongo.js');
@@ -55,10 +55,9 @@ if(config.serverDuties.wechat){
 app.use(require('./routes/auth').loginFilter);
 app.use('/',require('./routes/index'));
 app.use('/search',require('./routes/search'));
-app.use('/rating',require('./routes/rating'));
+//app.use('/rating',require('./routes/rating'));
 app.use('/tools',require('./routes/tools'));
 app.use('/master',require('./routes/master'));
-app.use('/wiki',require('./routes/wiki'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

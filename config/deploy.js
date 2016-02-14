@@ -21,12 +21,13 @@ exports.config={
 			pollSize:5,
 			keepAlive:1
 		},
-		replset:{rs_name:'myReplicaSetName'},
-        //貌似没用
+		replset:{rs_name:'rs0'},
         user:'',
         pass:''
-        ////////
 	},
+    elastic_search:{
+        url:'http://47.88.150.168:9200'
+    },
 	youku:{
 		client_id:'',
 		client_secret:'',
@@ -96,7 +97,7 @@ exports.config={
             help:'Help',
             help_content:'Help',
             about_content:'<img class="qrcode" src="images/qrcode.jpg">The magnifier of classical music，non-commercial and free search engine of classical music。'+
-'</br>We collected most of scores,videos,audios about classical music, for providing convenient search tool to musican,classical music fans.'+
+'</br>We collected most of scores,videos,audios about classical music, for providing convenient search tool to musicans,classical music fans.'+
 '</br>At the same time ,we are working for classical music standardization. To make classical music easier to touch and share.',
             about:'About us',
             noResult:'No result',
@@ -111,7 +112,7 @@ exports.config={
             more:'更多',
             volunteer:'加入志愿者',
             volunteer_content:
-            '为了让放大镜搜索结果更精准，更多音乐爱好者从中受益，需要以下志愿者帮忙来完善放大镜:'+
+            '为了让放大镜搜索结果更精准，更多音乐爱好者从中受益，需要以下志愿者帮忙来完善:'+
             '</br>A 审计员,筛选检索结果 去重复和不准确的结果 审核机器识别后的乐谱（扫描的乐谱手稿转换成的电子乐谱）'+
             '</br>B 外交翻译,与国内外一些组织机构和唱片公司洽谈合作'+
             '</br>C 程序员,包括前端后端开发 搜索优化,图像(乐谱)及音频方向的识别工作'+
@@ -141,6 +142,7 @@ exports.config={
     },
     servers:{
         SZ:'112.74.211.14',
+        SGP:'47.88.150.168',
         JP:'52.68.201.23'
     },
     wechat:{

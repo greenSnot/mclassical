@@ -1,6 +1,6 @@
 var when=require('when');
 var nodegrass=require('nodegrass');
-var config=require('./config');
+var config=require('./routes/config');
 
 exports.dbFilter=function(text){
     text=text.toLowerCase();

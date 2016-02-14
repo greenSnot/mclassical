@@ -14,17 +14,19 @@
     </head>
 <body>
         <div id="head">
-            <div id="logo">
+            <a id="logo">
                 <div id="magnifier">
                     <div id="stick">
                     </div>
                 </div>
-            </div>
+            </a>
             <div id="search-wrap" class="start">
                 <div class="input-wrap">
-                    <input id="input-search">
+                    <div class="input-box">
+                        <input id="input-search"/>
+                    </div>
+                    <button id="btn-search"><%=language.search%></button>
                 </div>
-                <button id="btn-search"><%=language.search%></button>
             </div>
             <div id="result-wrap">
                 <div id="result-stick"></div>
@@ -52,19 +54,11 @@
                     <%=language.musicWall%>
                 </div>
             </div>
-            <%if(user_level>0){%>
-            <div class="nav-wrap user">
-                <div class="nav-stick">
-                    志愿者:<%=wechat_info.nickname%>
-                </div>
-            </div>
-            <%}else{%>
             <div class="nav-wrap volunteer">
                 <div class="nav-stick">
                     <%=language.volunteer%>
                 </div>
             </div>
-            <%}%>
             <div class="nav-wrap about">
                 <div class="nav-stick">
                     <%=language.about%>
@@ -293,18 +287,20 @@
         }
 
 
-        var QQMusicUrls=JSON.parse('<%-JSON.stringify(QQMusicUrls)%>');
-
         function initMusicWall(){
-        var ri=0;
-        var rj=-70;
-        var zindex=0;
-        for(var i in QQMusicUrls){
-            $.get(QQMusicUrls[i],function(res){
-                res=JSON.parse(res);
-                if(res.showapi_res_body&&res.showapi_res_body.pagebean&&res.showapi_res_body.pagebean.contentlist){
-                    var clist=res.showapi_res_body.pagebean.contentlist;
-                    for(var j=0;j<clist.length;++j){
+            var ri=0;
+            var rj=-70;
+            var zindex=0;
+            $.get('/random',function(res){
+                if(res.code!=0){
+                    alert(res.msg);
+                    return;
+                }
+                var audios=res.data;
+                var counter=0;
+                for(var i=0;i<6;++i){
+                    for(var j=0;j<15;++j,++counter){
+                        var audio=audios[counter]._source;
                         if(j>14)break;
 
                         var rx=rj;
@@ -322,15 +318,14 @@
 
                             rx:rx,
                             ry:ry,
-                            song_id:urldecode(clist[j].songid),
-                            song_name:urldecode(clist[j].songname),
-                            player:urldecode(clist[j].singername),
-                            album_name:urldecode(clist[j].albumname),
-                            url:clist[j].m4a,
-                            album_thumbnail:clist[j].albumpic_small?clist[j].albumpic_small:'/images/gray.jpg',
-                            album_image:clist[j].albumpic_big?clist[j].albumpic_big:'/images/gray.jpg',
+                            song_id:audio.other_id.qqmusic_song_id,
+                            song_name:audio.name.en||audio.name.cn,
+                            player:audio.players[0].name.en||audio.players[0].name.cn,
+                            album_name:audio.album_name.en||audio.album_name.cn,
+                            url:audio.resource[0].url,
+                            album_thumbnail:audio.album_thumbnail||'/images/gray.jpg',
+                            album_image:audio.album_image||'/images/gray.jpg',
                             zindex:++zindex
-
                         }]);
                         
                         //"http://tsmusic24.tc.qq.com/"+clist[j].songid+".mp3";
@@ -342,12 +337,8 @@
                             rj+=10;
                         }
                     }
-                }else{
-                    log('error');
                 }
-
             });
-        }
         };
 
         $('#input-search').focus(function(){
@@ -606,11 +597,14 @@
         }
 
         function randomPlay(){
-             hideDetails();
-             setTimeout(function(){
-                 var random=Math.random()*$('.music-content').size();
-                 pano.setRxRy(content.attr('rx')*-1,content.attr('ry'),1);
-             },300);
+            if($('#result-wrap').hasClass('show')){
+                return;
+            }
+            hideDetails();
+            setTimeout(function(){
+                var random=parseInt(Math.random()*$('.sprite').size());
+                ////////
+            },300);
         }
 
         function onSpriteClick(data){
@@ -629,6 +623,7 @@
                 $('#music-albumname').text(data.album_name);
                 $('#music-singer').text(data.player);
                 $('#sprite-music-content').offsetWidth=$('#sprite-music-content').offsetWidth;
+                $('#sprite-music-content .scrubberZ').width(271);
                 $('#sprite-music-content').addClass('show');
             },300);
             if(!audio){

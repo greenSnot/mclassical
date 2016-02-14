@@ -1,10 +1,9 @@
-
 var when=require('when');
 var nodegrass=require('nodegrass');
 var db=require('../db/mongo_schema');
-var utils=require('./utils');
+var utils=require('../utils');
 var exec = require('child_process').exec;
-var config=require('../config');
+var config=require('./config');
 
 var getHtmls=utils.getHtmls;
 var getHtml=utils.getHtml;
@@ -36,6 +35,52 @@ exports.google_translate=function(source){
 	    	});
 	    });
     }
+}
+
+exports.elastic_search_random=function(size){
+    var json={
+        "size":size,
+        "query": {
+          "function_score" : {
+            "query" : { "match_all": {} },
+            "random_score" : {}
+          }
+        }
+    };
+    var url=config.elastic_search.url+'/scmd_audios/_search?source='+JSON.stringify(json);
+	return when.promise(function(resolve,reject){
+		getHtml(url).then(function(data){
+			data=JSON.parse(data);
+            data=data.hits.hits;
+			resolve(data);
+		});
+	});
+}
+
+exports.elastic_search=function(keyword,type){
+    var map={
+        'scores':'scmd_composers',
+        'audios':'scmd_audios'
+    }
+
+    var json={
+        "size":20,
+        "query": {
+             "match":{
+                 "_all":keyword 
+             }
+        }
+    };
+    
+    var url=config.elastic_search.url+'/'+map[type]+'/_search?source='+JSON.stringify(json);
+    console.log(url);
+	return when.promise(function(resolve,reject){
+		getHtml(url).then(function(data){
+			data=JSON.parse(data);
+            data=data.hits.hits;
+			resolve(data);
+		});
+	});
 }
 
 exports.baidu_translate=function(source){
@@ -170,9 +215,9 @@ console.log('netease api');
                         model.pre('save',function(next){
                             next();//忽略错误
                         });
-                        qlist.push(
-                                model.save()
-                                );
+                        //qlist.push(
+                        //        model.save()
+                        //        );
                     }
                     console.log(t.length);
                     console.log('netease length');
@@ -242,9 +287,9 @@ console.log('qqmusic api');
                         model.pre('save',function(next){
                             next();//忽略错误
                         });
-                        qlist.push(
-                                model.save()
-                                );
+                        //qlist.push(
+                        //        model.save()
+                        //        );
                     }
                     console.log(t.length);
                     console.log('qqmusic length');
