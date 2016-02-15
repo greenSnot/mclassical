@@ -59,14 +59,14 @@ router.post('/', function(req,res) {
                             qlist.push(search.QQMusic(i));
                             qlist_type.push('audios');
                         }
-			if(audios_filter['neteasemusic']){
-                            qlist.push(search.NeteaseMusic(i));
-                            qlist_type.push('audios');
-                        }
+                        //if(audios_filter['neteasemusic']){
+                        //    qlist.push(search.NeteaseMusic(i));
+                        //    qlist_type.push('audios');
+                        //}
                     }else{
                         qlist.push(search.QQMusic(i));
-                        qlist.push(search.NeteaseMusic(i));
-                        qlist_type.push('audios');
+                        //qlist.push(search.NeteaseMusic(i));
+                        //qlist_type.push('audios');
                         qlist_type.push('audios');
                     }
                 }

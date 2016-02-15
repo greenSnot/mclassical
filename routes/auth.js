@@ -153,6 +153,7 @@ console.log('sorry');
             if (
                     req.path=='/'||
                     req.path=='/search'||
+                    req.path=='/random'||
                     req.path=='/tools'
                ){
                    next();

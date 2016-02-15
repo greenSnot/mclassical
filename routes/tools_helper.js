@@ -252,7 +252,7 @@ exports.QQMusic=function(keyword,page){
                     show:0,
                     song_link:'http://y.qq.com/#type=song&mid='+t._source.other_id.qqmusic_song_mid,
                     album_link:'http://y.qq.com/#type=album&mid='+t._source.other_id.qqmusic_album_mid,
-                    url:t._source.resource[0].url,
+                    url:t._source.resources[0].url,
                     player:t._source.players[0].name.en||t._source.players[0].name.cn,
                     album_name:t._source.album_name.en||t._source.album_name.cn,
                     song_name:t._source.name.en||t._source.name.cn,
