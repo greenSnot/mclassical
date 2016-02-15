@@ -67,12 +67,13 @@ exports.elastic_search=function(keyword,type){
         "size":20,
         "query": {
              "match":{
-                 "_all":utils.urlencode(keyword)
+                 "_all":keyword
              }
         }
     };
+    json=utils.urlencode(JSON.stringify(json));
     
-    var url=config.elastic_search.url+'/'+map[type]+'/_search?source='+JSON.stringify(json);
+    var url=config.elastic_search.url+'/'+map[type]+'/_search?source='+json;
     console.log(url);
 	return when.promise(function(resolve,reject){
 		getHtml(url).then(function(data){
