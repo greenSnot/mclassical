@@ -5,7 +5,7 @@ var nodegrass=require('nodegrass');
 var iconv=require('iconv-lite');
 var when=require('when');
 
-var config=require('../config');
+var config=require('./config');
 var search=require('./tools_helper');
 var utils=require('../utils');
 
@@ -59,14 +59,14 @@ router.post('/', function(req,res) {
                             qlist.push(search.QQMusic(i));
                             qlist_type.push('audios');
                         }
-			if(audios_filter['neteasemusic']){
-                            qlist.push(search.NeteaseMusic(i));
-                            qlist_type.push('audios');
-                        }
+                        //if(audios_filter['neteasemusic']){
+                        //    qlist.push(search.NeteaseMusic(i));
+                        //    qlist_type.push('audios');
+                        //}
                     }else{
                         qlist.push(search.QQMusic(i));
-                        qlist.push(search.NeteaseMusic(i));
-                        qlist_type.push('audios');
+                        //qlist.push(search.NeteaseMusic(i));
+                        //qlist_type.push('audios');
                         qlist_type.push('audios');
                     }
                 }

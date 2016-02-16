@@ -5,91 +5,18 @@ var nodegrass=require('nodegrass');
 var iconv=require('iconv-lite');
 var when=require('when');
 
-var config=require('../config');
+var config=require('./config');
 var search=require('./tools_helper');
 var utils=require('../utils');
 
 router.get('/',function(req,res){
     //防备案审核
     if(config.serverName=='SZ'&&utils.getPlatform(req).indexOf('pc')>=0){
-        res.redirect('/wiki');
+        res.json({code:-9,msg:'请使用微信打开'});
         return;
     }
 
-    var keys=[
-             'Anne-Sophie Mutter',
-             'Pinchas Zukerman',
-             'Itzak Perlman',
-             'Salvatore Accardo',
-             'Leonid Kogan',
-             'Arthur Grumiaux',
-             'Yehudi Menuhin',
-             'David Oistrakh',
-             'Nathan Milstein',
-             'Jascha Heifetz',
-             'Fritz Kreisler',
-             'Niccolo Paganini',
-             '吕思清',
-             '黄蒙拉',
-             'akiko suwanai',
-             'Midori Goto',
-             'Henryk Wieniawski',
-             'Julia Fischer',
-             'Hilary Hahn',
-             'Joseph Szigeti',
-
-             'Ingolf Turban',
-             'Denes Zsigmondy',
-             'Volker Reinhold',
-             'Vasko Vassilev',
-             'Vadim Repin', ///Violinists
-
-             'Sergei Rachmaninoff',
-             'Josef Hoffman',
-             'Vladimir Horowitz',
-             'Ludwig Van Beethoven',
-             'Wolfgang Mozart',
-             'Fredric Chopin',
-             'Arturo Benedetti Michelangeli',
-             'Emil Gilels',
-             'Anton Rubinstein',
-             'Hans von Bulow',
-             'Georges Cziffra',
-             'Ignaz Friedman',
-             'David Nadien',
-             'Glenn Gould',
-             'Julius Katchen',
-             'Sviatoslav Richte',
-             'Maurizio Pollini',
-             'Alfred Cortot',//Pianists
-
-             'Hollywood Orchestra',
-             '杨雪霏',
-             'Juliette Kang','Henry Doktorski','Chen Xingfu',
-             'Bruno Walter','Elmar Oliveira','Peter Serkin','I Salonisti',
-             'Vladimir Ashkenazy','Dubravka Tomsic','Joseph Cooper','Vladimir Ashkenazy','Shura Cherkassky','Daniela Ruso','Sviatoslav Richte','Benjamin Schmid','Cyprien Katsaris',
-             'Kantorow','Kyung Wha Chung','Johannes Brahms','Tal & Groethuysen','Alexis Weissenberg','András Schiff','The Palm Court Orchestra',
-             'Clara Haskil','Eric Hammerstein','Maria Barrientos','Ray Chen','Annette-Barbara Vogel','Natalia Walewska','Radu Lupu',
-             '文薇','Rachel Barton Pine','Manuel Quiroga','Emanuel Vardi','Gidon Kremer','André Previn','Herbert Von Karajan',
-             'Simone Dinnerstein','Angela Hewitt','Nigel Kennedy','Marcelle Meyer','Daniel Fuchs','Janine Johnson','Renaud','Leslie Howard','Julian Olevsky',
-             'Bob Eberly','Geschwister buchberger','Rosa Ponselle','Vladimir Horowitz','Alfred Cortot','Gil Shaham','Göran Söllscher','Ivan Moravec','Marian Migdal','Levon Ambartsumian',
-             'Frida Bauer','Andres Segovia','Mauro Giuliani','John Williams','Seiji Ozawa','Samson François',
-             'Barbara Bonney','Fritz Wunderlich','Martha Argerich','Andres Alen','St. Martin\'s Orchestra','Barry Wordsworth','Bernard Haitink','Paul Coker','Neville Marriner','John Lenehan',
-
-             'Franz Liszt'
-            ];
-
-    var urls=[];
-    for(var i in keys){
-        urls.push(search.getQQMusicUrl(keys[i]));
-    }
-
-    urls.sort(function(a,b){
-        return Math.random()>.5 ? -1 : 1;
-    });
-
     var json={
-        QQMusicUrls:urls.splice(0,6),
         language:config.languages[req.query.language]?(config.languages[req.query.language]?config.languages[req.query.language]:config.languages.cn):(config.serverName=='SZ'?config.languages.cn:config.languages.en),
         user_level:undefined,
         wechat_info:undefined,
@@ -106,5 +33,11 @@ router.get('/',function(req,res){
         res.render('index',json);
     }
 });
+
+router.get('/random',function(req,res){
+    search.elastic_search_random(90).then(function(r){
+        res.json({code:0,msg:'ok',data:r});
+    })
+})
 
 module.exports = router;

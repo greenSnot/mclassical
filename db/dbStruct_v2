@@ -14,29 +14,30 @@ composers:[{
            en:'bwv 1004',
            cn:'bwv 1004 无伴奏组曲'
        }
-       form:['Minuet','Waltz','Suite'],
-       genre:['jazz','pop'],
+       forms:['Minuet','Waltz','Suite'],
+       genres:['jazz','pop'],
        description:{
            en:'123'
        },
+       references:[{
+           name:'musopen',
+           url:'http://3r23r'
+       }],
        instruments:['violin'],
        sheets:[
             {
-                 type:'complete', //complete or part
+                 ///////////????????////////type:'complete', //complete or part
                  name:{
                      en:['Chaconne']
                  },
                  instruments:['violin'],
-                 composers:['bach'],
+                 ///???????????////composers:['bach'],
                  description:{
                      en:'123'
                  },
-                 resource:'xxx.pdf',
-                 source:[{
-                     name:'musopen'
-                     url:'http://3r23r'
-                 }],
-                 work_id:'123123'
+                 resources:[{
+                     url:'xxx.pdf'
+                 }]
             }
        ]
        audios_id:[2323,4,3,2],
@@ -52,7 +53,7 @@ albums:[{
     album_thumbnail:"flawmef.jpg",///
     album_image:"sdfwef.jpg",////
     instruments:['violin','piano'],
-    genre:['jazz','pop'],
+    genres:['jazz','pop'],
     description:{
         en:'haha',
         cn:'haha'
@@ -83,7 +84,7 @@ albums:[{
              instrument:'piano'
          }
     ],
-    source:{[
+    references:{[
         name:'musopen'
         url:'http://3r23r'
     ]},
@@ -119,7 +120,7 @@ audios:[{
     album_thumbnail:"flawmef.jpg",
     album_image:"sdfwef.jpg",
     album_id:'2323232',
-    source:[{
+    references:[{
         name:'QQMusic'
         url:'http://3r23r'
     },{
@@ -197,7 +198,7 @@ videos:[{
              instrument:'piano'
          }
     ],
-    source:[{
+    references:[{
         name:'musopen'
         url:'http://3r23r'
     }],

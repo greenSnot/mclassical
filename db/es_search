@@ -32,7 +32,7 @@ curl -XGET "localhost:9200/test/_search" -d '
 }
 '
 
- curl -XPUT 'http://localhost:9200/_river/mongodb/_meta' -d '{ 
+ curl -XPUT 'http://localhost:9200/_river/mongodb_audios/_meta' -d '{ 
     "type": "mongodb", 
     "mongodb": { 
       "db": "mclassical", 
@@ -43,3 +43,43 @@ curl -XGET "localhost:9200/test/_search" -d '
       "type": "audios" 
     }
   }'
+
+ curl -XPUT 'http://localhost:9200/_river/mongodb_players/_meta' -d '{ 
+    "type": "mongodb", 
+    "mongodb": { 
+      "db": "mclassical", 
+      "collection": "SCMD_players"
+    }, 
+    "index": {
+      "name": "scmd_players", 
+      "type": "players" 
+    }
+  }'
+
+ curl -XPUT 'http://localhost:9200/_river/mongodb_albums/_meta' -d '{ 
+    "type": "mongodb", 
+    "mongodb": { 
+      "db": "mclassical", 
+      "collection": "SCMD_albums"
+    }, 
+    "index": {
+      "name": "scmd_albums", 
+      "type": "albums" 
+    }
+  }'
+
+ curl -XPUT 'http://localhost:9200/_river/mongodb_composers/_meta' -d '{ 
+    "type": "mongodb", 
+    "mongodb": { 
+      "db": "mclassical", 
+      "collection": "SCMD_composers"
+    }, 
+    "index": {
+      "name": "scmd_composers", 
+      "type": "composers" 
+    }
+  }'
+
+
+
+  curl -XGET 'http://localhost:9200/scmd_audios/_search?q=other_id.qqmusic_song_id:103867699'

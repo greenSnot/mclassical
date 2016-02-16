@@ -1,5 +1,5 @@
 var mongoose=require('mongoose');
-var config=require('../config.js');
+var config=require('../routes/config.js');
 
 mongoose.connect(config.mongodb_url,config.mongodb);
 var con=mongoose.connection;

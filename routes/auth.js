@@ -4,7 +4,7 @@ var path = require('path');
 var favicon = require('serve-favicon');
 //var db = require('./model');
 var utils = require('../utils');
-var config = require('../config');
+var config = require('./config');
 var db=require('../db/mongo_schema');
 var nodegrass = require('nodegrass');
 var when=require('when');
@@ -21,6 +21,7 @@ exports.loginFilter = function(req, res, next){
                     if(!u){
                         req.session.user=undefined;
                         req.session.user_type=undefined;
+                        req.session.save();
                         console.log("未找到用户");
                         res.redirect(req.originalUrl);
                         return;
@@ -36,6 +37,7 @@ exports.loginFilter = function(req, res, next){
         if(config.serverName=='LOCAL'){
             req.session.user='5638574ef7fad38164340e12';
             req.session.user_type='wechat';
+            req.session.save();
             next();
             return;
         }
@@ -97,7 +99,8 @@ console.log('sorry');
                                 console.log('found');
                                 req.session.user=u._id;
                                 req.session.user_type='wechat';
-				next();
+                                req.session.save();
+                                next();
                                 return;
                             }
 			    console.log('not found');
@@ -128,6 +131,7 @@ console.log('sorry');
                                 }).then(function(r){
                                     req.session.user=r._id;
                                     req.session.user_type='wechat';
+                                    req.session.save();
                                     console.log('new wechat user');
                                     next();
                                 });
@@ -149,9 +153,9 @@ console.log('sorry');
             if (
                     req.path=='/'||
                     req.path=='/search'||
-                    req.path=='/wiki'||
 		    req.path=='/tools/google_translate'||
-		    req.path=='/tools/imslp_search'
+		    req.path=='/tools/imslp_search'||
+                    req.path=='/random'
                ){
                    next();
                    return;

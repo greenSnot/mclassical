@@ -8,12 +8,7 @@ $.post('/wechat/jsapi',{url:location.href.split('#')[0]},function(result){
                     jsApiList: ['onMenuShareAppMessage','onMenuShareTimeline']
                 });
     wx.ready(function(){
-        wx.checkJsApi({
-            jsApiList:['onMenuShareAppMessage'],
-            success:function(res){
-                config.permission_wechat=true;
-            }
-        });
+	wechatSharing();
     });
     wx.error(function(res){
         alert('error');
@@ -23,9 +18,10 @@ $.post('/wechat/jsapi',{url:location.href.split('#')[0]},function(result){
     window.wechatSharing=function(config){
         if(!config){
             config={
-                title: 'test', // 分享标题
+                title: '古典音乐放大镜', // 分享标题
                 link:location.href.split('#')[0],
-                imgUrl:'http://i.gtimg.cn/music/photo/mid_album_300/f/A/002stRua0aEvfA.jpg',
+		desc:'有趣又迷人的古典音乐搜索引擎',
+                imgUrl:'http://static.mclassical.org/images/mclassical.jpeg',
                 success: function () {
                     // 用户确认分享后执行的回调函数
                 },

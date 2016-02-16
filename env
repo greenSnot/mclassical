@@ -1,0 +1,184 @@
+##################### Format
+fdisk -l
+sudo mkfs -t ext4 /dev/xvdf
+sudo mount /dev/xvdf /data/
+
+################# install utils
+apt-get -y -qq install python redis-server unzip curl
+cd /home
+sudo mkdir libs
+cd libs
+sudo wget http://downloads.mongodb.org/linux/mongodb-linux-x86_64-2.6.6.tgz
+sudo tar -zxvf mongodb-linux-x86_64-2.6.6.tgz
+sudo mv mongodb-linux-x86_64-2.6.6 mongodb
+export PATH=/home/libs/mongodb/bin:$PATH
+
+############## install node
+cd ~/
+wget https://nodejs.org/dist/v4.3.0/node-v4.3.0-linux-x64.tar.xz && \
+tar -xvJf node-v4.3.0-linux-x64.tar.xz && \
+mv node-v4.3.0-linux-x64 node && \
+cd /usr/local/bin && \
+ln -s ~/node/bin/npm && \
+ln -s ~/node/bin/node
+
+#################### init db files
+sudo mkdir /data
+sudo mkdir /data/db
+sudo mkdir /data/replset/
+sudo mkdir /data/replset/key
+sudo chmod 777 -R /data
+sudo echo "asfawefawef" >> /data/replset/key/main
+sudo chmod 600 /data/replset/key/main 
+
+################# runMongo
+sudo env PATH=$PATH mongod --dbpath=/data/db --replSet rs0 --keyFile /data/replset/key/main --port 27017 --fork  --logpath /data/mongodb.log --logappend --oplogSize 5000
+
+use admin
+db.createUser(
+  {
+    user: "root",
+    pwd: "admin",
+    roles:
+    [
+      {
+        role: "userAdminAnyDatabase",
+        db: "admin"
+      }
+    ]
+  }
+)
+use mclassical
+db.createUser(
+{
+    user:'r',
+    pwd:'r',
+    roles:[
+        {
+            role:"readWrite",
+            db:"mclassical"
+        },"readWrite"
+    ]
+}
+)
+
+################mongo replset
+mongo
+rs.initiate(
+{
+	"_id" : "rs0",
+	"version" : 1,
+	"members" : [
+		{
+			"_id" : 0,
+			"host" : "47.88.150.168:27017"
+		},
+		{
+			"_id" : 1,
+			"host" : "52.68.201.23:27017"
+		}
+	]
+}
+)
+
+################# iptables
+sudo iptables -F
+sudo iptables -A INPUT -p tcp -s 52.68.201.23  --dport 9200 -j ACCEPT
+sudo iptables -A INPUT -p tcp -s 112.74.211.14 --dport 9200 -j ACCEPT
+sudo iptables -A INPUT -p tcp -s 47.88.150.168 --dport 9200 -j ACCEPT
+sudo iptables -A INPUT -p tcp -s 127.0.0.1 --dport 9300 -j ACCEPT
+sudo iptables -A INPUT -p tcp -s 127.0.0.1 --dport 9200 -j ACCEPT
+sudo iptables -A INPUT -p tcp -s 127.0.0.1 --dport 27017 -j ACCEPT
+sudo iptables -A INPUT -p tcp -s 127.0.0.1 --dport 6279 -j ACCEPT
+sudo iptables -A INPUT -p tcp -s 47.88.150.168 --dport 6379 -j ACCEPT
+sudo iptables -A INPUT -p tcp -s 112.74.211.14 --dport 6379 -j ACCEPT
+sudo iptables -A INPUT -p tcp -s 52.68.201.23 --dport 6379 -j ACCEPT
+sudo iptables -A INPUT -p tcp -s 47.88.150.168 --dport 27017 -j ACCEPT
+sudo iptables -A INPUT -p tcp -s 112.74.211.14 --dport 27017 -j ACCEPT
+sudo iptables -A INPUT -p tcp -s 52.68.201.23 --dport 27017 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 27017 -j DROP
+sudo iptables -A INPUT -p tcp --dport 6379 -j DROP
+sudo iptables -A INPUT -p tcp --dport 9200 -j DROP
+sudo iptables -A INPUT -p tcp -j ACCEPT
+
+
+############### install elastic
+cd ~
+mkdir zips
+cd zips
+wget https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-1.7.3.zip
+unzip elasticsearch-1.7.3.zip
+mv elasticsearch-1.7.3 /home/elasticsearch
+cd /home/elasticsearch
+./bin/plugin --install com.github.richardwilly98.elasticsearch/elasticsearch-river-mongodb/2.0.5
+
+????????????????INSTALL JAVA
+useradd elastic
+su bin/elastic
+
+
+################ init elastic
+ curl -XPUT 'http://localhost:9200/_river/mongodb_audios/_meta' -d '{ 
+    "type": "mongodb", 
+    "mongodb": { 
+      "credentials":
+      [
+          { "db": "admin", "user": "root", "password": "admin" }
+      ],
+      "db": "mclassical", 
+      "collection": "SCMD_audios"
+    }, 
+    "index": {
+      "name": "scmd_audios", 
+      "type": "audios" 
+    }
+  }'
+
+ curl -XPUT 'http://localhost:9200/_river/mongodb_players/_meta' -d '{ 
+    "type": "mongodb", 
+    "mongodb": { 
+      "credentials":
+      [
+          { "db": "admin", "user": "root", "password": "admin" }
+      ],
+      "db": "mclassical", 
+      "collection": "SCMD_players"
+    }, 
+    "index": {
+      "name": "scmd_players", 
+      "type": "players" 
+    }
+  }'
+
+ curl -XPUT 'http://localhost:9200/_river/mongodb_albums/_meta' -d '{ 
+    "type": "mongodb", 
+    "mongodb": { 
+      "credentials":
+      [
+          { "db": "admin", "user": "root", "password": "admin" }
+      ],
+      "db": "mclassical", 
+      "collection": "SCMD_albums"
+    }, 
+    "index": {
+      "name": "scmd_albums", 
+      "type": "albums" 
+    }
+  }'
+
+ curl -XPUT 'http://localhost:9200/_river/mongodb_composers/_meta' -d '{ 
+    "type": "mongodb", 
+    "mongodb": { 
+      "credentials":
+      [
+          { "db": "admin", "user": "root", "password": "admin" }
+      ],
+      "db": "mclassical", 
+      "collection": "SCMD_composers"
+    }, 
+    "index": {
+      "name": "scmd_composers", 
+      "type": "composers" 
+    }
+  }'
+

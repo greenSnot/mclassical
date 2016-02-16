@@ -1,0 +1,7 @@
+0.1
+origin_qqmusic_albums.filter({genre:[2,9]}) [CLASSICAL_MUSIC,PURE_MUSIC]
+origin_musopen_composers.filter({details:{$exists:true}})
+RUN:merge_qqmusic
+RUN:merge_musopen
+//apply to elastic-search
+db.getCollection('SCMD_albums').update({'publication_time':/.*-00/},{$set:{'publication_time':'1999-09-09'}},false,true)

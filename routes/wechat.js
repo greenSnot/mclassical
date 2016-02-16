@@ -1,9 +1,9 @@
-var config = require('../config');
+var config = require('./config');
 var express = require('express');
 var router = express.Router();
 var nodegrass = require('nodegrass');
 var token = require('./wechat_token');
-var sha1= require("../sha1");
+var sha1= require("../sha1").sha1;
 
 router.post('/jsapi',function(req,res){
     if(!req.body.url){
@@ -11,8 +11,8 @@ router.post('/jsapi',function(req,res){
         return;
     }
     var date=parseInt(new Date().valueOf()/1000);
-    var noncestr='suteng';
-    var signature=sha1.hex_sha1(
+    var noncestr='mclassical';
+    var signature=sha1(
         'jsapi_ticket='+token.jsapi_ticket+
         '&noncestr='+noncestr+
         '&timestamp='+date+
