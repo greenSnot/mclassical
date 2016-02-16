@@ -149,7 +149,9 @@ console.log('sorry');
             if (
                     req.path=='/'||
                     req.path=='/search'||
-                    req.path=='/wiki'
+                    req.path=='/wiki'||
+		    req.path=='/tools/google_translate'||
+		    req.path=='/tools/imslp_search'
                ){
                    next();
                    return;
