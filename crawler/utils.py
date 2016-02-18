@@ -19,12 +19,15 @@ from pymongo import MongoClient
 import json
 import re
 import demjson
+import qiniu
 import socket
 import multiprocessing
 import HTMLParser
 html_parser = HTMLParser.HTMLParser()
 from bs4 import BeautifulSoup
 socket.setdefaulttimeout( 125 ) 
+
+QN = qiniu.Auth('Ydyi73qwtgToPkCNkmBQzDIWtK1xzW_YN37Xy7TE','SQkOJg-B4JHaETjF5yJCqntsStMfdqi6hrCQCHq6')
 
 from Queue import Queue
 from time import sleep

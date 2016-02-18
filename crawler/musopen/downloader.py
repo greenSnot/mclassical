@@ -26,6 +26,34 @@ def clearDownloading():
             print 'clear '+fname
 clearDownloading()
 
+def uploadScores():
+    filesdir='./pdfs';
+    files=os.listdir(filesdir)
+    ignores={}
+    for fname in files:
+        if fname.find('downloading_')==0:
+            ignores[fname[12:]]=True
+    for fname in files:
+        if fname.find('downloading_')==0 or (fname in ignores.keys()):
+            continue
+        filename=filesdir+'/'+fname
+        print filename
+        data=open(filename).read()
+        key='musopen/'+fname+'.pdf'
+        token = QN.upload_token('scores')
+        ret, info = qiniu.put_data(token, key, data)
+        if ret is not None:
+            print 'upload success '+fname
+            remove(filename)
+        else:
+            print(info) # error message in info
+
+def checkFiles():
+    filesdir='./pdfs';
+    files=os.listdir(filesdir)
+    if len(files)>3:
+        uploadScores()
+
 def MusopenDownloader(index):
     global total
     composer=dbMusopen.find({'downloaded':{'$exists':False}})[index]
@@ -62,6 +90,7 @@ def worker(pid,startIndex,endIndex):
     global total
     total=dbMusopen.find({'downloaded':{'$exists':False}}).count()
     while total:
+        checkFiles()
         MusopenDownloader(int(float(pid)/float(shards)*total))
         total=total-1
 
