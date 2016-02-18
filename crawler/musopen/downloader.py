@@ -9,7 +9,8 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 con=MongoClient()
-con.mclassical.authenticate('root','admin',mechanism='SCRAM-SHA-1')
+#con.mclassical.authenticate('r','r',mechanism='SCRAM-SHA-1')
+con.mclassical.authenticate('r','r')
 db=con.mclassical
 
 shards=1
