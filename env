@@ -4,7 +4,7 @@ sudo mkfs -t ext4 /dev/xvdf
 sudo mount /dev/xvdf /data/
 
 ################# install utils
-apt-get -y -qq install python redis-server unzip curl ssh git
+apt-get -y -qq install python redis-server unzip curl ssh git python-pip
 cd /home
 sudo mkdir libs
 cd libs
