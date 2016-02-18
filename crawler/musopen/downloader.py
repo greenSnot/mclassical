@@ -1,3 +1,4 @@
+############ONLY FOR SGP
 import sys
 import socket
 socket.setdefaulttimeout( 30 ) 
@@ -8,7 +9,7 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 con=MongoClient()
-con.mclassical.authenticate('r','r',mechanism='SCRAM-SHA-1')
+con.mclassical.authenticate('root','admin',mechanism='SCRAM-SHA-1')
 db=con.mclassical
 
 shards=1
@@ -46,7 +47,8 @@ def MusopenDownloader(index):
 
             print 'start downloading '+url
             write(downloading_filename,'')
-            download(url,'./pdfs/'+sha1(url),proxy_url="http://localhost:8787",timeout=60)
+            #download(url,'./pdfs/'+sha1(url),proxy_url="http://localhost:8787",timeout=60)
+            download(url,'./pdfs/'+sha1(url))
             remove(downloading_filename)
             ########### safely downloading
 

@@ -4,7 +4,7 @@ sudo mkfs -t ext4 /dev/xvdf
 sudo mount /dev/xvdf /data/
 
 ################# install utils
-apt-get -y -qq install python redis-server unzip curl
+apt-get -y -qq install python redis-server unzip curl ssh git
 cd /home
 sudo mkdir libs
 cd libs
@@ -82,7 +82,13 @@ rs.initiate(
 )
 
 ################# iptables
+sudo iptables -P INPUT ACCEPT
 sudo iptables -F
+sudo iptables -X
+sudo iptables -Z
+sudo iptables -A INPUT -i lo -j ACCEPT 
+sudo iptables -A INPUT -p tcp --dport 80 -j ACCEP
+sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
 sudo iptables -A INPUT -p tcp -s 52.68.201.23  --dport 9200 -j ACCEPT
 sudo iptables -A INPUT -p tcp -s 112.74.211.14 --dport 9200 -j ACCEPT
 sudo iptables -A INPUT -p tcp -s 47.88.150.168 --dport 9200 -j ACCEPT
@@ -100,7 +106,6 @@ sudo iptables -A INPUT -p tcp --dport 27017 -j DROP
 sudo iptables -A INPUT -p tcp --dport 6379 -j DROP
 sudo iptables -A INPUT -p tcp --dport 9200 -j DROP
 sudo iptables -A INPUT -p tcp -j ACCEPT
-
 
 ############### install elastic
 cd ~
