@@ -25,7 +25,7 @@ reload(sys)
 sys.setdefaultencoding('utf8') 
 
 con=MongoClient()
-con.mclassical.authenticate('r','r',mechanism='SCRAM-SHA-1')
+con.mclassical.authenticate('r','r')
 db=con.mclassical
 
 jobPool=[]
@@ -33,12 +33,12 @@ threadNum=1
 
 cookie= cookielib.CookieJar()
 cookie_handler =urllib2.HTTPCookieProcessor(cookie)
-proxy_handler = urllib2.ProxyHandler({'http': 'http://127.0.0.1:8787'})
+#proxy_handler = urllib2.ProxyHandler({'http': 'http://127.0.0.1:8787'})
+#
+#opener = urllib2.build_opener(cookie_handler,proxy_handler)
+#urllib2.install_opener(opener)
 
-opener = urllib2.build_opener(cookie_handler,proxy_handler)
-urllib2.install_opener(opener)
-
-dbNaxos=db.__temp_naxos_music_library
+dbNaxos=db._test_naxos_music_library
 def write(filename,content,a=False):
     type='w'
     if a:
@@ -307,6 +307,7 @@ def initAlbumExtractor():
 
 def extractAlbum(index):
     album=albums[index]
+    #album['id']='TOCC0118'
     #album['id']='ZZT031101.3'
     soupurl='http://www.naxosmusiclibrary.com/catalogue/item.asp?'+urllib.urlencode({'cid':str(album['id'])})
     content=soup(soupurl)
@@ -327,6 +328,12 @@ def extractAlbum(index):
     data['works']=[]
     maincontent=contentStr[:]
     maincontent=maincontent[maincontent.find('<td align="left" id="mainbodycontent"'):maincontent.find('<div id="tooltip"')]
+    BStrackids=BeautifulSoup(maincontent).select('#trackid');
+    trackids=[]
+    trackids_cursor=0
+    for i in BStrackids:
+        trackids.append(i.attrs['value'])
+
     splitByComposer=split(maincontent,'<div class="composerheader">')[1:]
 
     print len(splitByComposer)
@@ -354,7 +361,21 @@ def extractAlbum(index):
             curComposers.append(curData)
         curPlayers=[]
         worksInComposer=split(splitByComposer[i],'<b>')[1:]
+        if len(worksInComposer)==0:
+            ###########this is a/some part of previous work
+            partsInWork=split(splitByComposer[i],'\n     »')[1:]
+            prevWork=data['works'][-1]
+            for k in range(0,len(partsInWork)):
+                partName=partsInWork[k][:partsInWork[k].find('</td>')].strip()
+                divIndex=partName.find('<div')
+                if divIndex>=0:
+                    partName=partName[:divIndex].strip()
+                prevWork['parts'].append({'name':partName,'id':trackids[trackids_cursor]})
+                trackids_cursor=trackids_cursor+1
+            
         for j in range(0,len(worksInComposer)):
+            if worksInComposer[j].find('valign="top"')==-1:
+                continue
             #####If contains artists
             if j==0 and worksInComposer[j].find('<div id="trackartists_')>=0:
                 tempindex=worksInComposer[j].find('<div id="trackartists_')
@@ -385,13 +406,17 @@ def extractAlbum(index):
                     'url':curComposers[k]['url']
                 })
 
-            partsInWork=split(worksInComposer[j],'»')[1:]
+            partsInWork=split(worksInComposer[j],'\n     »')[1:]
+            if len(partsInWork)==0:
+                curWork['id']=trackids[trackids_cursor]
+                trackids_cursor=trackids_cursor+1
             for k in range(0,len(partsInWork)):
                 partName=partsInWork[k][:partsInWork[k].find('</td>')].strip()
                 divIndex=partName.find('<div')
                 if divIndex>=0:
                     partName=partName[:divIndex].strip()
-                curWork['parts'].append({'name':partName})
+                curWork['parts'].append({'name':partName,'id':trackids[trackids_cursor]})
+                trackids_cursor=trackids_cursor+1
             data['works'].append(curWork)
 
     for j in range(0,len(albumInfo)):
@@ -481,6 +506,9 @@ def extractAlbum(index):
     if len(album_image)>0:
         data['album_image']=album_image[0].attrs['href']
 
+    if trackids_cursor!=len(trackids):
+        print 'cursor error'
+        sys.exit(0)
     if len(data['works'])==0:
         print 'no works '+album['id']
         return

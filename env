@@ -44,6 +44,9 @@ db.createUser(
       {
         role: "userAdminAnyDatabase",
         db: "admin"
+      },{
+          "role" : "readWrite",
+          "db" : "admin"
       }
     ]
   }
@@ -71,10 +74,12 @@ rs.initiate(
 	"members" : [
 		{
 			"_id" : 0,
+            "priority":1,
 			"host" : "47.88.150.168:27017"
 		},
 		{
 			"_id" : 1,
+            "priority":0.5,
 			"host" : "52.68.201.23:27017"
 		}
 	]
