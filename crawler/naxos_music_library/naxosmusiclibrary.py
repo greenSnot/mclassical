@@ -360,10 +360,26 @@ def extractAlbum(index):
                 curData['type']='composers'
             curComposers.append(curData)
         curPlayers=[]
-        worksInComposer=split(splitByComposer[i],'<b>')[1:]
+        #################performance problem
+        __split=split(splitByComposer[i],'<b>')
+        #if len(__split)>0:
+        #    _count1=len(split(__split[0],'name="trackgroupid"'))-1
+        #    _count2=len(split(__split[0],'name="trackid"'))-1
+
+        #    if _count1==0 and _count2>1:
+        #        trackids_cursor=trackids_cursor+_count2-1+1
+        #        continue
+        #    if _count1==1 and _count2>0:
+        #        trackids_cursor=trackids_cursor+_count2
+
+        worksInComposer=__split[1:]
         if len(worksInComposer)==0:
             ###########this is a/some part of previous work
-            partsInWork=split(splitByComposer[i],'\n     »')[1:]
+            partsInWork=split(splitByComposer[i],'    »')[1:]
+            if len(data['works'])==0:
+                for k in range(0,len(partsInWork)):
+                    trackids_cursor=trackids_cursor+1
+                continue
             prevWork=data['works'][-1]
             for k in range(0,len(partsInWork)):
                 partName=partsInWork[k][:partsInWork[k].find('</td>')].strip()
@@ -372,6 +388,7 @@ def extractAlbum(index):
                     partName=partName[:divIndex].strip()
                 prevWork['parts'].append({'name':partName,'id':trackids[trackids_cursor]})
                 trackids_cursor=trackids_cursor+1
+            continue
             
         for j in range(0,len(worksInComposer)):
             if worksInComposer[j].find('valign="top"')==-1:
@@ -508,7 +525,15 @@ def extractAlbum(index):
 
     if trackids_cursor!=len(trackids):
         print 'cursor error'
-        sys.exit(0)
+        dbNaxos.update({
+            'id':album['id']
+        },{
+            '$set':{
+                'details':False,
+                'error_occur':True
+            }
+        })
+        return
     if len(data['works'])==0:
         print 'no works '+album['id']
         return
