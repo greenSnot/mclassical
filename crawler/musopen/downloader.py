@@ -51,7 +51,7 @@ def uploadScores():
 def checkFiles():
     filesdir='./pdfs';
     files=os.listdir(filesdir)
-    if len(files)>3:
+    if len(files)>1000:
         uploadScores()
 
 def MusopenDownloader(index):
@@ -65,6 +65,8 @@ def MusopenDownloader(index):
             continue
         for j in work['resources']:
             url=j['url']
+	    if url=='https://app.box.com/shared/static/9i8bezbvtm90jzwqbykpkc6tverhmxla.pdf' or url=='https://app.box.com/shared/static/j1gxamguh57xuwy343ykfpkgcppxc3by.pdf':
+	        continue
             filename='./pdfs/'+sha1(url)
             downloading_filename='./pdfs/downloading_'+sha1(url)
             if exist(filename):
@@ -77,7 +79,7 @@ def MusopenDownloader(index):
             print 'start downloading '+url
             write(downloading_filename,'')
             #download(url,'./pdfs/'+sha1(url),proxy_url="http://localhost:8787",timeout=60)
-            download(url,'./pdfs/'+sha1(url))
+            download(url,'./pdfs/'+sha1(url),ignore_404=True,fails_path='./fails')
             remove(downloading_filename)
             ########### safely downloading
 
