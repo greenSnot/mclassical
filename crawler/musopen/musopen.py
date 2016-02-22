@@ -21,7 +21,7 @@ db=con.mclassical
 
 #find works,introduction and work details of each composer by composers.works_url
 dbComposers=db.musopen_composers;
-composers_len=int(db.composers_test.count())
+composers_len=int(db.musopen_composers.count())
 #len=4315
 
 #get all composers name and its works_url
