@@ -89,7 +89,6 @@ def login():
     if not fetch:
         return False
     
-    print content
     #for i in cookie:
     #    print i.name+':'+i.value
 
@@ -104,8 +103,8 @@ def login():
     #return True
     return False
 
-#while not login():
-#    continue
+while not login():
+    continue
 #login Success
 
 
@@ -122,14 +121,14 @@ def parseInt(num):
             return 0
         return int(''.join(result))
 
-count=0
+zip_sum=0
 def downloadById(id):
     id=str(parseInt(id))
     path='./resources/'
     files_sum=int(os.popen('ls -l '+path+' |grep \'^-\'|wc -l').read())
     if files_sum>10:
-        count=count+1
-        os.popen('tar -zcvf ./resources_zips/'+str(count)+'.tar ./resources')
+        zip_sum=zip_sum+1
+        os.popen('tar -zcvf ./resources_zips/'+str(zip_sum)+'.tar ./resources')
     download('http://www.naxosmusiclibrary.com/mediaplayer/PlayTrack.asp?id='+id+'&br=64','./resources/'+id)
 
 albums=dbNaxos.find({})

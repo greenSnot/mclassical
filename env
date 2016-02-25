@@ -6,6 +6,13 @@ sudo mount /dev/xvdf /data/
 ################# install utils
 apt-get update
 apt-get -y -qq install python redis-server unzip curl ssh git python-pip
+######## install python plugins
+pip install pymongo
+pip install demjson
+pip install threadpool
+pip install qiniu
+pip install beautifulsoup4
+
 cd /home
 sudo mkdir libs
 cd libs
