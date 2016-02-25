@@ -3,10 +3,10 @@ import sys
 sys.path.append('..')
 from utils import *
 
-#con=MongoClient()
-#con.mclassical.authenticate('r','r')
-#db=con.mclassical
-#dbNaxos=db.__temp_naxos_music_library
+con=MongoClient()
+con.mclassical.authenticate('r','r')
+db=con.mclassical
+dbNaxos=db.naxos_music_library
 
 cookie= cookielib.CookieJar()
 cookie_handler =urllib2.HTTPCookieProcessor(cookie)
@@ -104,23 +104,42 @@ def login():
     #return True
     return False
 
-while not login():
-    continue
+#while not login():
+#    continue
 #login Success
 
-download('http://www.naxosmusiclibrary.com/mediaplayer/PlayTrack.asp?id=996648&br=64','./test')
 
-#def worker(pid,startIndex,endIndex):
-#    getWorks(startIndex,endIndex)
-#    getWorksDetails(startIndex,endIndex)
-#
-#if __name__ == "__main__":
-#
-#    getAllComposers()
-#    shards=16
-#    db_len=composers_len
-#    for i in range(0,shards):
-#        p=multiprocessing.Process(target = worker, args = (i,int(float(i)/float(shards)*db_len),int(float(i+1)/float(shards)*db_len)))
-#        p.start()
+def parseInt(num):
+    try:
+        return int(num)
+    except ValueError:
+        result = []
+        for c in num:
+            if not ('0' <= c <= '9'):
+                break
+            result.append(c)
+        if len(result) == 0:
+            return 0
+        return int(''.join(result))
+
+count=0
+def downloadById(id):
+    id=str(parseInt(id))
+    path='./resources/'
+    files_sum=int(os.popen('ls -l '+path+' |grep \'^-\'|wc -l').read())
+    if files_sum>10:
+        count=count+1
+        os.popen('tar -zcvf ./resources_zips/'+str(count)+'.tar ./resources')
+    download('http://www.naxosmusiclibrary.com/mediaplayer/PlayTrack.asp?id='+id+'&br=64','./resources/'+id)
+
+albums=dbNaxos.find({})
+total=albums.count()
+for index in range(0,total):
+    album=albums[index]
+    for work in album['details']['works']:
+        if 'id' in work.keys():
+            downloadById(work['id'])
+        for part in work['parts']:
+            downloadById(part['id'])
 
 sys.exit(0)
