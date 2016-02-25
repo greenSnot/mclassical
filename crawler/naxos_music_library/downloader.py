@@ -126,10 +126,18 @@ def downloadById(id):
     global zip_sum
     id=str(parseInt(id))
     path='./resources/'
+    zips_path='./resources_zips/'
     files_sum=int(os.popen('ls -l '+path+' |grep \'^-\'|wc -l').read())
     if files_sum>10:
         zip_sum=zip_sum+1
-        os.popen('tar -zcvf ./resources_zips/'+str(zip_sum)+'.tar ./resources')
+        os.popen('tar -zcf '+zips_path+str(zip_sum)+'.tar ./resources')
+        os.popen('rm -f ./resources/*')
+    while int(os.popen('ls -l '+zips_path+' |grep \'^-\'|wc -l').read())>10:
+        time.sleep(60)
+    if time.time()-lastLoginTime>60*10:
+        while not login():
+            pass
+    print 'downloading '+id
     download('http://www.naxosmusiclibrary.com/mediaplayer/PlayTrack.asp?id='+id+'&br=64','./resources/'+id)
 
 albums=dbNaxos.find({})
