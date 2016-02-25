@@ -123,6 +123,7 @@ def parseInt(num):
 
 zip_sum=0
 def downloadById(id):
+    global zip_sum
     id=str(parseInt(id))
     path='./resources/'
     files_sum=int(os.popen('ls -l '+path+' |grep \'^-\'|wc -l').read())
