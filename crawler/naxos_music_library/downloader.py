@@ -140,13 +140,13 @@ def downloadById(id):
     print 'downloading '+id
     download('http://www.naxosmusiclibrary.com/mediaplayer/PlayTrack.asp?id='+id+'&br=64','./resources/'+id)
 
-dbNaxos.update({'download_status':{'$exists':False}},{'$set':{'download_status':0}},false,true);
+print dbNaxos.update({'download_status':{'$exists':False}},{'$set':{'download_status':0}},multi=True)
 
-albums=dbNaxos.find({'download_status':{'$gt':0}})
-total=albums.count()
+albums=dbNaxos.find({'download_status':{'$lt':1}})
+total=dbNaxos.find({'download_status':{'$lt':1}}).count()
 while total>0:
-    global total
     index=int(random.random()*total)
+    print str(index)+'/'+str(total)
     album=albums[index]
     if 'download_status' in album.keys() and album['download_status']>0:
         print 'downloaded album '+album['id']
@@ -155,14 +155,16 @@ while total>0:
     workIndex=0
     for work in album['details']['works']:
         if 'id' in work.keys():
-            if 'download_status' in work.keys() and work['download_status'>0:
+            if 'download_status' in work.keys() and work['download_status']>0:
+                print 'work downloaded '+work['id']
                 continue
             dbNaxos.update({'id':album['id']},{'$set':{'details.works.'+str(workIndex)+'.download_status':1}})
             downloadById(work['id'])
             dbNaxos.update({'id':album['id']},{'$set':{'details.works.'+str(workIndex)+'.download_status':2}})
         partIndex=0
         for part in work['parts']:
-            if 'download_status' in part.keys() and part['download_status'>0:
+            if 'download_status' in part.keys() and part['download_status']>0:
+                print 'part downloaded '+part['id']
                 continue
             dbNaxos.update({'id':album['id']},{'$set':{'details.works.'+str(workIndex)+'.parts.'+str(partIndex)+'.download_status':1}})
             downloadById(part['id'])
@@ -171,6 +173,6 @@ while total>0:
         workIndex=workIndex+1
     dbNaxos.update({'id':album['id']},{'$set':{'download_status':2}})
     print 'done album '+album['id']
-    total=dbNaxos.find({'download_status':{'$gt':0}}).count()
+    total=dbNaxos.find({'download_status':{'$lt':1}}).count()
 
 sys.exit(0)
