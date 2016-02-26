@@ -123,6 +123,7 @@ def parseInt(num):
 
 zip_sum=0
 def downloadById(id):
+    global lastLoginTime
     global zip_sum
     id=str(parseInt(id))
     path='./resources/'
