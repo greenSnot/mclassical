@@ -3,7 +3,7 @@ import sys
 sys.path.append('..')
 from utils import *
 
-path='mclassical/crawler/naxos_music_library/resources/'
+path='mclassical/crawler/naxos_music_library/resources_zips/'
 local_path='~/Downloads/'
 while True:
     files_sum=int(os.popen('ssh root@mclassicalUSA "ls -l '+path+' |grep \'^-\'|wc -l"').read())
@@ -20,5 +20,6 @@ while True:
                     fetch=True
                     print 'done '+filename
                 else:
+                    os.popen('rm '+local_path+filename)
                     print 'md5 error retrying'
     time.sleep(600)
