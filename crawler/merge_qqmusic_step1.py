@@ -101,7 +101,7 @@ def mergeFromQQMusic(index):
             curPlayer['name']['en']=k['name']
 
             #####
-            up=dbPlayers.update({'other_id.qqmusic_player_id':k['id']},{'$setOnInsert':curPlayer},True)
+            up=dbPlayers.update({'other_id.qqmusic_player_id':k['id']},{'$setOnInsert':curPlayer},upsert=True)
             if up['updatedExisting']==False:
                 curPlayer['id']=up['upserted']
             else:

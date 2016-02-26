@@ -283,7 +283,7 @@ def extractDirectory(cid,page):
                 'name':name,
                 'url':url
             }
-        },True)
+        },upsert=True)
     print 'Finish category '+str(cid)+' page:'+str(page)
 
 def startMultiplyDirectoryExtractor(startIndex):

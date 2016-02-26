@@ -42,7 +42,7 @@ def worker(pid,startIndex,endIndex):
         getDetails(int(float(pid)/float(shards)*total))
 
 def clear():
-    dbQQMusic.update({'details':{'$exists':True}},{'$unset':{'details':{'$exists':True}}},False,True)
+    dbQQMusic.update({'details':{'$exists':True}},{'$unset':{'details':{'$exists':True}}},upsert=False,multi=True)
 
 if __name__ == "__main__":
     clear()
