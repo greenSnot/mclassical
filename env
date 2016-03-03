@@ -55,24 +55,36 @@ db.createUser(
       },{
           "role" : "readWrite",
           "db" : "admin"
-      }
+      },"dbAdmin"
     ]
   }
 )
 use mclassical
 db.createUser(
 {
-    user:'r',
+    user:'rr',
     pwd:'r',
     roles:[
         {
             role:"readWrite",
             db:"mclassical"
-        },"readWrite"
+        },"readWrite","dbAdmin"
     ]
 }
 )
 
+db.updateUser(
+"root",
+  {
+    pwd: "admin",
+    roles:
+    [
+        "userAdminAnyDatabase"
+        ,"readWrite"
+        ,"dbAdmin","clusterManager"
+    ]
+  }
+)
 ################mongo replset
 mongo
 rs.initiate(
