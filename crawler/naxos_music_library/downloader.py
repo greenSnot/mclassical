@@ -10,6 +10,10 @@ dbNaxos=db.naxos_music_library
 
 cookie= cookielib.CookieJar()
 cookie_handler =urllib2.HTTPCookieProcessor(cookie)
+proxy_handler = urllib2.ProxyHandler({'http': 'http://127.0.0.1:8787'})
+
+opener = urllib2.build_opener(cookie_handler,proxy_handler)
+urllib2.install_opener(opener)
 
 headers={
         'Host':'www.naxosmusiclibrary.com',
@@ -107,7 +111,6 @@ while not login():
     continue
 #login Success
 
-
 def parseInt(num):
     try:
         return int(num)
@@ -122,29 +125,30 @@ def parseInt(num):
         return int(''.join(result))
 
 zip_sum=0
-def downloadById(id):
+def downloadById(album_id,id):
     global lastLoginTime
     global zip_sum
     id=str(parseInt(id))
     path='./resources/'
-    zips_path='./resources_zips/'
-    files_sum=int(os.popen('ls -l '+path+' |grep \'^-\'|wc -l').read())
-    if files_sum>100:
-        zip_sum=zip_sum+1
-        os.popen('tar -zcf '+zips_path+str(zip_sum)+'.tar ./resources')
-        os.popen('rm -f ./resources/*')
-    while int(os.popen('ls -l '+zips_path+' |grep \'^-\'|wc -l').read())>10:
-        time.sleep(60)
-    if time.time()-lastLoginTime>60*10:
+    createDir(path+album_id)
+    #zips_path='./resources_zips/'
+    #files_sum=int(os.popen('ls -l '+path+' |grep \'^-\'|wc -l').read())
+    #if files_sum>100:
+    #    zip_sum=zip_sum+1
+    #    os.popen('tar -zcf '+zips_path+str(zip_sum)+'.tar ./resources')
+    #    os.popen('rm -f ./resources/*')
+    #while int(os.popen('ls -l '+zips_path+' |grep \'^-\'|wc -l').read())>10:
+    #    time.sleep(60)
+    if time.time()-lastLoginTime>60*5:
         while not login():
             pass
     print 'downloading '+id
-    download('http://www.naxosmusiclibrary.com/mediaplayer/PlayTrack.asp?id='+id+'&br=64','./resources/'+id)
+    download('http://www.naxosmusiclibrary.com/mediaplayer/PlayTrack.asp?id='+id+'&br=64','./resources/'+album_id+'/'+id)
 
 print dbNaxos.update({'download_status':{'$exists':False}},{'$set':{'download_status':0}},multi=True)
 
-albums=dbNaxos.find({'download_status':{'$lt':1}})
-total=dbNaxos.find({'download_status':{'$lt':1}}).count()
+albums=dbNaxos.find({'download_status':0})
+total=albums.count()
 while total>0:
     index=int(random.random()*total)
     print str(index)+'/'+str(total)
@@ -153,27 +157,13 @@ while total>0:
         print 'downloaded album '+album['id']
         continue
     dbNaxos.update({'id':album['id']},{'$set':{'download_status':1}})
-    workIndex=0
     for work in album['details']['works']:
         if 'id' in work.keys():
-            if 'download_status' in work.keys() and work['download_status']>0:
-                print 'work downloaded '+work['id']
-                continue
-            dbNaxos.update({'id':album['id']},{'$set':{'details.works.'+str(workIndex)+'.download_status':1}})
-            downloadById(work['id'])
-            dbNaxos.update({'id':album['id']},{'$set':{'details.works.'+str(workIndex)+'.download_status':2}})
-        partIndex=0
+            downloadById(album['id'],work['id'])
         for part in work['parts']:
-            if 'download_status' in part.keys() and part['download_status']>0:
-                print 'part downloaded '+part['id']
-                continue
-            dbNaxos.update({'id':album['id']},{'$set':{'details.works.'+str(workIndex)+'.parts.'+str(partIndex)+'.download_status':1}})
-            downloadById(part['id'])
-            dbNaxos.update({'id':album['id']},{'$set':{'details.works.'+str(workIndex)+'.parts.'+str(partIndex)+'.download_status':2}})
-            partIndex=partIndex+1
-        workIndex=workIndex+1
+            downloadById(album['id'],part['id'])
     dbNaxos.update({'id':album['id']},{'$set':{'download_status':2}})
     print 'done album '+album['id']
-    total=dbNaxos.find({'download_status':{'$lt':1}}).count()
+    total=albums.count()
 
 sys.exit(0)

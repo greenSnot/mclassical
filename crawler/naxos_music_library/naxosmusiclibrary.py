@@ -33,12 +33,12 @@ threadNum=1
 
 cookie= cookielib.CookieJar()
 cookie_handler =urllib2.HTTPCookieProcessor(cookie)
-#proxy_handler = urllib2.ProxyHandler({'http': 'http://127.0.0.1:8787'})
-#
-#opener = urllib2.build_opener(cookie_handler,proxy_handler)
-#urllib2.install_opener(opener)
+proxy_handler = urllib2.ProxyHandler({'http': 'http://127.0.0.1:8787'})
 
-dbNaxos=db._test_naxos_music_library
+opener = urllib2.build_opener(cookie_handler,proxy_handler)
+urllib2.install_opener(opener)
+
+dbNaxos=db.naxos_music_library
 def write(filename,content,a=False):
     type='w'
     if a:
@@ -234,6 +234,9 @@ def soup(url,data=False,cover=False):
         #    except Exception as err:
         #        print '#####################'
         #        print err
+        #        if str(err).find('500')>0:
+        #            print '500 error'
+        #            return ''
         #        if data!=False:
         #            print '#Fail : page '+str(data['pageNo'])+' in category '+str(data['categoryId'])
         #        else:
@@ -307,12 +310,13 @@ def initAlbumExtractor():
 
 def extractAlbum(index):
     album=albums[index]
-    #album['id']='TOCC0118'
+    #album['id']='TOCC0310'
     #album['id']='ZZT031101.3'
     soupurl='http://www.naxosmusiclibrary.com/catalogue/item.asp?'+urllib.urlencode({'cid':str(album['id'])})
     content=soup(soupurl)
 
     contentStr=content.prettify()
+    print contentStr
 
     albumInfo=content.select('#left-sidebar b')
     if len(albumInfo)==0:
@@ -416,7 +420,7 @@ def extractAlbum(index):
                     'url':curComposers[k]['url']
                 })
 
-            partsInWork=split(worksInComposer[j],'\n     »')[1:]
+            partsInWork=split(worksInComposer[j],'    »')[1:]
             if len(partsInWork)==0:
                 curWork['id']=trackids[trackids_cursor]
                 trackids_cursor=trackids_cursor+1
@@ -564,5 +568,6 @@ startMultiplyAlubmExtractor(startIndex)
 
 #remove albums which not exist details
 #dbNaxos.remove({'details':{$exists:false}})
-while 1:
-   pass
+while True:
+    time.sleep(1000)
+    pass

@@ -25,7 +25,7 @@ import multiprocessing
 import HTMLParser
 html_parser = HTMLParser.HTMLParser()
 from bs4 import BeautifulSoup
-socket.setdefaulttimeout( 125 ) 
+socket.setdefaulttimeout( 1125 ) 
 
 QN = qiniu.Auth('Ydyi73qwtgToPkCNkmBQzDIWtK1xzW_YN37Xy7TE','SQkOJg-B4JHaETjF5yJCqntsStMfdqi6hrCQCHq6')
 
