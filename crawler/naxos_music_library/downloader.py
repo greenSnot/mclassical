@@ -3,7 +3,7 @@ import sys
 sys.path.append('..')
 from utils import *
 
-con=MongoClient()
+con=MongoClient('120.24.167.94',27017)
 con.mclassical.authenticate('r','r')
 db=con.mclassical
 dbNaxos=db.naxos_music_library
