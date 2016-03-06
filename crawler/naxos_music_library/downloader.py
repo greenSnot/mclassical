@@ -15,6 +15,7 @@ proxy_handler = urllib2.ProxyHandler({'http': 'http://127.0.0.1:8787'})
 opener = urllib2.build_opener(cookie_handler,proxy_handler)
 urllib2.install_opener(opener)
 
+print dbNaxos.update({'download_status':{'$exists':False}},{'$set':{'download_status':0}},multi=True)
 headers={
         'Host':'www.naxosmusiclibrary.com',
         'Proxy-Connection':'keep-alive',
@@ -124,16 +125,18 @@ def parseInt(num):
             return 0
         return int(''.join(result))
 
-zip_sum=0
+dir_sum=0;
 def downloadById(album_id,id):
     global lastLoginTime
-    global zip_sum
+    global dir_sum
     id=str(parseInt(id))
-    path='./resources/'
+    path='./resources'+str(dir_sum)+'/'
+    createDir(path)
     createDir(path+album_id)
     #zips_path='./resources_zips/'
-    #files_sum=int(os.popen('ls -l '+path+' |grep \'^-\'|wc -l').read())
-    #if files_sum>100:
+    files_sum=int(os.popen('ls '+path+' |wc -l').read())
+    if files_sum>5000:
+        dir_sum=dir_sum+1
     #    zip_sum=zip_sum+1
     #    os.popen('tar -zcf '+zips_path+str(zip_sum)+'.tar ./resources')
     #    os.popen('rm -f ./resources/*')
@@ -142,10 +145,11 @@ def downloadById(album_id,id):
     if time.time()-lastLoginTime>60*5:
         while not login():
             pass
-    print 'downloading '+id
-    download('http://www.naxosmusiclibrary.com/mediaplayer/PlayTrack.asp?id='+id+'&br=64','./resources/'+album_id+'/'+id)
+    print 'downloading '+album_id+' '+id
+    while not download('http://www.naxosmusiclibrary.com/mediaplayer/PlayTrack.asp?id='+id+'&br=64',path+album_id+'/'+id,forever=False):
+        while not login():
+            pass
 
-print dbNaxos.update({'download_status':{'$exists':False}},{'$set':{'download_status':0}},multi=True)
 
 albums=dbNaxos.find({'download_status':0})
 total=albums.count()
