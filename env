@@ -49,6 +49,7 @@ sudo env PATH=$PATH mongod --dbpath=/data/db --replSet rs0 --keyFile /data/repls
 sudo env PATH=$PATH mongod --dbpath=/data/db --port 27017 --fork  --logpath /data/mongodb.log --logappend
 
 ################# runMongo local
+sudo env PATH=$PATH mongod --dbpath=/data/db --replSet rs0 --keyFile /data/replset/key/main --port 27017 --fork  --logpath /data/mongodb.log --logappend --oplogSize 5000
 sudo env PATH=$PATH mongod --dbpath=/data/db_r0 --replSet rs0 --keyFile /data/replset/key/r0 --port 28010 --fork  --logpath /data/mongodb_r0.log --logappend --oplogSize 5000
 
 
@@ -59,6 +60,7 @@ db.createUser(
     pwd: "admin",
     roles:
     [
+      { role: "root", db: "admin" },
       {
         role: "userAdminAnyDatabase",
         db: "admin"
@@ -90,6 +92,7 @@ db.updateUser(
     pwd: "admin",
     roles:
     [
+        { role: "root", db: "admin" },
         "userAdminAnyDatabase"
         ,"readWrite"
         ,"dbAdmin","clusterManager"
@@ -196,6 +199,9 @@ su bin/elastic
       [
           { "db": "admin", "user": "root", "password": "admin" }
       ],
+      "options":{
+          "exclude_fields":[]
+      },
       "db": "mclassical", 
       "collection": "SCMD_audios"
     }, 
@@ -250,6 +256,22 @@ su bin/elastic
     "index": {
       "name": "scmd_composers", 
       "type": "composers" 
+    }
+  }'
+
+ curl -XPUT 'http://localhost:9200/_river/mongodb_works/_meta' -d '{ 
+    "type": "mongodb", 
+    "mongodb": { 
+      "credentials":
+      [
+          { "db": "admin", "user": "root", "password": "admin" }
+      ],
+      "db": "mclassical", 
+      "collection": "SCMD_works"
+    }, 
+    "index": {
+      "name": "scmd_works", 
+      "type": "works" 
     }
   }'
 
