@@ -51,7 +51,7 @@ def uploadScores():
 def checkFiles():
     filesdir='./pdfs';
     files=os.listdir(filesdir)
-    if len(files)>1000:
+    if len(files)>500:
         uploadScores()
 
 def MusopenDownloader(index):
@@ -76,6 +76,7 @@ def MusopenDownloader(index):
                 print 'downloading '+filename
                 continue
 
+            checkFiles()
             print 'start downloading '+url
             write(downloading_filename,'')
             #download(url,'./pdfs/'+sha1(url),proxy_url="http://localhost:8787",timeout=60)
@@ -92,7 +93,6 @@ def worker(pid,startIndex,endIndex):
     global total
     total=dbMusopen.find({'downloaded':{'$exists':False}}).count()
     while total:
-        checkFiles()
         MusopenDownloader(int(float(pid)/float(shards)*total))
         total=total-1
 
