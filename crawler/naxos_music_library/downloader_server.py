@@ -169,7 +169,7 @@ while total>0:
             downloadById(album['id'],part['id'])
 
     os.popen('tar -zcf '+zips_path+str(album['id'])+'.tar '+res_path+str(album['id']))
-    os.popen('rm -rf '+res_path+str(album[i]))
+    os.popen('rm -rf '+res_path+str(album['id']))
 
     dbNaxos.update({'id':album['id']},{'$set':{'download_status':2}})
     print 'done album '+album['id']
