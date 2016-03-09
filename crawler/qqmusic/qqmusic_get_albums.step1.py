@@ -46,7 +46,7 @@ def getAlbums(startIndex,endIndex):
             },{
                 '$setOnInsert':albums[j]
                 #'$set':albums[j]
-            },True)
+            },upsert=True)
 
 def worker(pid,startIndex,endIndex):
     getAlbums(startIndex,endIndex)

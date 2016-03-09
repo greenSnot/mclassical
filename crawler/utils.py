@@ -116,9 +116,9 @@ def download(url,filename,forever=True,proxy_url=False,timeout=120,ignore_404=Fa
                 return True
             except Exception as err:
                 print err
-		if ignore_404 and fails_path:
-		    write(fails_path,url,True) 
-		    return True
+                if ignore_404 and fails_path:
+                    write(fails_path,url,True) 
+                    return True
                 print 'Fail to fetch '+url
                 if not forever:
                     return False

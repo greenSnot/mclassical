@@ -10,10 +10,6 @@ dbNaxos=db.naxos_music_library
 
 cookie= cookielib.CookieJar()
 cookie_handler =urllib2.HTTPCookieProcessor(cookie)
-proxy_handler = urllib2.ProxyHandler({'http': 'http://127.0.0.1:8787'})
-
-opener = urllib2.build_opener(cookie_handler,proxy_handler)
-urllib2.install_opener(opener)
 
 print dbNaxos.update({'download_status':{'$exists':False}},{'$set':{'download_status':0}},multi=True)
 headers={
@@ -125,28 +121,33 @@ def parseInt(num):
             return 0
         return int(''.join(result))
 
-dir_sum=0;
+dir_sum=0
+zip_sum=0
+zips_path='./resources_zips/'
+res_path='./resources'+str(dir_sum)+'/'
 def downloadById(album_id,id):
     global lastLoginTime
     global dir_sum
+    global zip_sum
+    global res_path
     id=str(parseInt(id))
-    path='./resources'+str(dir_sum)+'/'
-    createDir(path)
-    createDir(path+album_id)
-    #zips_path='./resources_zips/'
-    files_sum=int(os.popen('ls '+path+' |wc -l').read())
-    if files_sum>5000:
-        dir_sum=dir_sum+1
+    res_path='./resources'+str(dir_sum)+'/'
+    createDir(res_path)
+    createDir(res_path+album_id)
+    createDir(zips_path)
+    files_sum=int(os.popen('ls '+res_path+' |wc -l').read())
+    #if files_sum>50:
+    #    dir_sum=dir_sum+1
     #    zip_sum=zip_sum+1
     #    os.popen('tar -zcf '+zips_path+str(zip_sum)+'.tar ./resources')
     #    os.popen('rm -f ./resources/*')
-    #while int(os.popen('ls -l '+zips_path+' |grep \'^-\'|wc -l').read())>10:
-    #    time.sleep(60)
+    while int(os.popen('ls -l '+zips_path+' |grep \'^-\'|wc -l').read())>50:
+        time.sleep(60)
     if time.time()-lastLoginTime>60*5:
         while not login():
             pass
     print 'downloading '+album_id+' '+id
-    while not download('http://www.naxosmusiclibrary.com/mediaplayer/PlayTrack.asp?id='+id+'&br=64',path+album_id+'/'+id,forever=False):
+    while not download('http://www.naxosmusiclibrary.com/mediaplayer/PlayTrack.asp?id='+id+'&br=64',res_path+album_id+'/'+id,forever=False):
         while not login():
             pass
 
@@ -166,8 +167,13 @@ while total>0:
             downloadById(album['id'],work['id'])
         for part in work['parts']:
             downloadById(album['id'],part['id'])
+
+    os.popen('tar -zcf '+zips_path+str(album['id'])+'.tar '+res_path+str(album['id']))
+    os.popen('rm -rf '+res_path+str(album[i]))
+
     dbNaxos.update({'id':album['id']},{'$set':{'download_status':2}})
     print 'done album '+album['id']
+
     total=albums.count()
 
 sys.exit(0)
