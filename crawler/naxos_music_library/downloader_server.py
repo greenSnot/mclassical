@@ -102,6 +102,9 @@ def login():
     #ingore Error
     #print 'INGORE ERROR'
     #return True
+    print "error login"
+    os.popen('nohup python -u downloader_server.py >>out4.txt &').read()
+    sys.exit(0)
     return False
 
 while not login():
