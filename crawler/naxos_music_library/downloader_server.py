@@ -168,6 +168,7 @@ while total>0:
         for part in work['parts']:
             downloadById(album['id'],part['id'])
 
+    print 'tar ing'
     os.popen('tar -zcf '+zips_path+str(album['id'])+'.tar '+res_path+str(album['id']))
     os.popen('rm -rf '+res_path+str(album['id']))
 
