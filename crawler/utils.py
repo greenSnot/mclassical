@@ -19,12 +19,15 @@ from pymongo import MongoClient
 import json
 import re
 import demjson
+import qiniu
 import socket
 import multiprocessing
 import HTMLParser
 html_parser = HTMLParser.HTMLParser()
 from bs4 import BeautifulSoup
 socket.setdefaulttimeout( 125 ) 
+
+QN = qiniu.Auth('Ydyi73qwtgToPkCNkmBQzDIWtK1xzW_YN37Xy7TE','SQkOJg-B4JHaETjF5yJCqntsStMfdqi6hrCQCHq6')
 
 from Queue import Queue
 from time import sleep
@@ -78,7 +81,7 @@ def bs(content):
 def html2text(content):
     return html_parser.unescape(content)
 
-def download(url,filename,forever=True,proxy_url=False,timeout=120):
+def download(url,filename,forever=True,proxy_url=False,timeout=120,ignore_404=False,fails_path=False):
     fetch=False
     while not fetch:
         content=''
@@ -113,6 +116,9 @@ def download(url,filename,forever=True,proxy_url=False,timeout=120):
                 return True
             except Exception as err:
                 print err
+                if ignore_404 and fails_path:
+                    write(fails_path,url,True) 
+                    return True
                 print 'Fail to fetch '+url
                 if not forever:
                     return False

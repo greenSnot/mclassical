@@ -82,4 +82,4 @@ curl -XGET "localhost:9200/test/_search" -d '
 
 
 
-  curl -XGET 'http://localhost:9200/scmd_audios/_search?q=other_id.qqmusic_song_id:103867699'
+  curl -XGET 'http://47.88.150.168:9200/scmd_audios/_search?q=other_id.qqmusic_song_id:103867699'

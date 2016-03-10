@@ -39,7 +39,7 @@ def QQMusicDownloader(index):
         print 'fail in '+str(songid)
         return
     remove(filename)
-    dbAudios.update({'_id':audio['_id']},{'$set':{'downloaded':True}},False)
+    dbAudios.update({'_id':audio['_id']},{'$set':{'downloaded':True}},upsert=False)
     print "worker "+str(songid)+' '+str(total)
     
 def worker(pid,startIndex,endIndex):

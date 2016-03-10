@@ -4,7 +4,15 @@ sudo mkfs -t ext4 /dev/xvdf
 sudo mount /dev/xvdf /data/
 
 ################# install utils
-apt-get -y -qq install python redis-server unzip curl
+apt-get update
+apt-get -y -qq install python redis-server unzip curl ssh git python-pip
+######## install python plugins
+pip install pymongo
+pip install demjson
+pip install threadpool
+pip install qiniu
+pip install beautifulsoup4
+
 cd /home
 sudo mkdir libs
 cd libs
@@ -25,14 +33,25 @@ ln -s ~/node/bin/node
 #################### init db files
 sudo mkdir /data
 sudo mkdir /data/db
+sudo mkdir /data/db_r0
 sudo mkdir /data/replset/
 sudo mkdir /data/replset/key
 sudo chmod 777 -R /data
 sudo echo "asfawefawef" >> /data/replset/key/main
 sudo chmod 600 /data/replset/key/main 
+####for local
+sudo echo "asfawefawef" >> /data/replset/key/r0
+sudo chmod 600 /data/replset/key/r0
 
 ################# runMongo
 sudo env PATH=$PATH mongod --dbpath=/data/db --replSet rs0 --keyFile /data/replset/key/main --port 27017 --fork  --logpath /data/mongodb.log --logappend --oplogSize 5000
+
+sudo env PATH=$PATH mongod --dbpath=/data/db --port 27017 --fork  --logpath /data/mongodb.log --logappend
+
+################# runMongo local
+sudo env PATH=$PATH mongod --dbpath=/data/db --replSet rs0 --keyFile /data/replset/key/main --port 27017 --fork  --logpath /data/mongodb.log --logappend --oplogSize 5000
+sudo env PATH=$PATH mongod --dbpath=/data/db_r0 --replSet rs0 --keyFile /data/replset/key/r0 --port 28010 --fork  --logpath /data/mongodb_r0.log --logappend --oplogSize 5000
+
 
 use admin
 db.createUser(
@@ -41,10 +60,15 @@ db.createUser(
     pwd: "admin",
     roles:
     [
+      { role: "root", db: "admin" },
       {
         role: "userAdminAnyDatabase",
         db: "admin"
-      }
+      },{
+          "role" : "readWrite",
+          "db" : "admin"
+      },"dbAdmin","clusterManager"
+
     ]
   }
 )
@@ -57,11 +81,34 @@ db.createUser(
         {
             role:"readWrite",
             db:"mclassical"
-        },"readWrite"
+        },"readWrite","dbAdmin"
     ]
 }
 )
 
+db.updateUser(
+"root",
+  {
+    pwd: "admin",
+    roles:
+    [
+        { role: "root", db: "admin" },
+        "userAdminAnyDatabase"
+        ,"readWrite"
+        ,"dbAdmin","clusterManager"
+    ]
+  }
+)
+db.updateUser(
+"r",
+  {
+    pwd: "r",
+    roles:
+    [
+        "readWrite"
+    ]
+  }
+)
 ################mongo replset
 mongo
 rs.initiate(
@@ -71,18 +118,46 @@ rs.initiate(
 	"members" : [
 		{
 			"_id" : 0,
+            "priority":1,
 			"host" : "47.88.150.168:27017"
 		},
 		{
 			"_id" : 1,
+            "priority":0.5,
 			"host" : "52.68.201.23:27017"
 		}
 	]
 }
 )
 
+###########for local
+rs.initiate(
+{
+	"_id" : "rs0",
+	"version" : 1,
+	"members" : [
+		{
+			"_id" : 0,
+            "priority":1,
+			"host" : "127.0.0.1:27017"
+		},
+		{
+			"_id" : 1,
+            "priority":0.5,
+			"host" : "127.0.0.1:28010"
+		}
+	]
+}
+)
+
 ################# iptables
+sudo iptables -P INPUT ACCEPT
 sudo iptables -F
+sudo iptables -X
+sudo iptables -Z
+sudo iptables -A INPUT -i lo -j ACCEPT 
+sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
 sudo iptables -A INPUT -p tcp -s 52.68.201.23  --dport 9200 -j ACCEPT
 sudo iptables -A INPUT -p tcp -s 112.74.211.14 --dport 9200 -j ACCEPT
 sudo iptables -A INPUT -p tcp -s 47.88.150.168 --dport 9200 -j ACCEPT
@@ -100,7 +175,6 @@ sudo iptables -A INPUT -p tcp --dport 27017 -j DROP
 sudo iptables -A INPUT -p tcp --dport 6379 -j DROP
 sudo iptables -A INPUT -p tcp --dport 9200 -j DROP
 sudo iptables -A INPUT -p tcp -j ACCEPT
-
 
 ############### install elastic
 cd ~
@@ -125,6 +199,9 @@ su bin/elastic
       [
           { "db": "admin", "user": "root", "password": "admin" }
       ],
+      "options":{
+          "exclude_fields":[]
+      },
       "db": "mclassical", 
       "collection": "SCMD_audios"
     }, 
@@ -179,6 +256,22 @@ su bin/elastic
     "index": {
       "name": "scmd_composers", 
       "type": "composers" 
+    }
+  }'
+
+ curl -XPUT 'http://localhost:9200/_river/mongodb_works/_meta' -d '{ 
+    "type": "mongodb", 
+    "mongodb": { 
+      "credentials":
+      [
+          { "db": "admin", "user": "root", "password": "admin" }
+      ],
+      "db": "mclassical", 
+      "collection": "SCMD_works"
+    }, 
+    "index": {
+      "name": "scmd_works", 
+      "type": "works" 
     }
   }'
 

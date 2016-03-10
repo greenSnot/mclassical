@@ -1,3 +1,4 @@
+############ONLY FOR SGP
 import sys
 import socket
 socket.setdefaulttimeout( 30 ) 
@@ -8,7 +9,8 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 con=MongoClient()
-con.mclassical.authenticate('r','r',mechanism='SCRAM-SHA-1')
+#con.mclassical.authenticate('r','r',mechanism='SCRAM-SHA-1')
+con.mclassical.authenticate('r','r')
 db=con.mclassical
 
 shards=1
@@ -24,6 +26,34 @@ def clearDownloading():
             print 'clear '+fname
 clearDownloading()
 
+def uploadScores():
+    filesdir='./pdfs';
+    files=os.listdir(filesdir)
+    ignores={}
+    for fname in files:
+        if fname.find('downloading_')==0:
+            ignores[fname[12:]]=True
+    for fname in files:
+        if fname.find('downloading_')==0 or (fname in ignores.keys()):
+            continue
+        filename=filesdir+'/'+fname
+        print filename
+        data=open(filename).read()
+        key='musopen/'+fname+'.pdf'
+        token = QN.upload_token('scores')
+        ret, info = qiniu.put_data(token, key, data)
+        if ret is not None:
+            print 'upload success '+fname
+            remove(filename)
+        else:
+            print(info) # error message in info
+
+def checkFiles():
+    filesdir='./pdfs';
+    files=os.listdir(filesdir)
+    if len(files)>500:
+        uploadScores()
+
 def MusopenDownloader(index):
     global total
     composer=dbMusopen.find({'downloaded':{'$exists':False}})[index]
@@ -35,6 +65,8 @@ def MusopenDownloader(index):
             continue
         for j in work['resources']:
             url=j['url']
+	    if url=='https://app.box.com/shared/static/9i8bezbvtm90jzwqbykpkc6tverhmxla.pdf' or url=='https://app.box.com/shared/static/j1gxamguh57xuwy343ykfpkgcppxc3by.pdf':
+	        continue
             filename='./pdfs/'+sha1(url)
             downloading_filename='./pdfs/downloading_'+sha1(url)
             if exist(filename):
@@ -44,9 +76,11 @@ def MusopenDownloader(index):
                 print 'downloading '+filename
                 continue
 
+            checkFiles()
             print 'start downloading '+url
             write(downloading_filename,'')
-            download(url,'./pdfs/'+sha1(url),proxy_url="http://localhost:8787",timeout=60)
+            #download(url,'./pdfs/'+sha1(url),proxy_url="http://localhost:8787",timeout=60)
+            download(url,'./pdfs/'+sha1(url),ignore_404=True,fails_path='./fails')
             remove(downloading_filename)
             ########### safely downloading
 

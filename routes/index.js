@@ -17,6 +17,7 @@ router.get('/',function(req,res){
     }
 
     var json={
+        pjax:false,
         language:config.languages[req.query.language]?(config.languages[req.query.language]?config.languages[req.query.language]:config.languages.cn):(config.serverName=='SZ'?config.languages.cn:config.languages.en),
         user_level:undefined,
         wechat_info:undefined,
@@ -40,4 +41,29 @@ router.get('/random',function(req,res){
     })
 })
 
+router.get('/s/:type/:keyword',function(req,res){
+    var type=req.params['type'];
+    var keyword=req.params['keyword'];
+    var json={
+        pjax:{
+            type:type,
+            keyword:keyword
+        },
+        language:config.languages[req.query.language]?(config.languages[req.query.language]?config.languages[req.query.language]:config.languages.cn):(config.serverName=='SZ'?config.languages.cn:config.languages.en),
+        user_level:undefined,
+        wechat_info:undefined,
+        youku_client_id:config.youku.client_id
+    };
+    if(req.session&&req.session.user&&req.session.user_type=='wechat'){
+        db.Users.findOne({
+            _id:req.session.user
+        }).then(function(r){
+            json.user_level=r.level;
+            json.wechat_info=r.wechat;
+            res.render('index',json);
+        });
+    }else{
+        res.render('index',json);
+    }
+})
 module.exports = router;

@@ -25,7 +25,7 @@ reload(sys)
 sys.setdefaultencoding('utf8') 
 
 con=MongoClient()
-con.mclassical.authenticate('r','r',mechanism='SCRAM-SHA-1')
+con.mclassical.authenticate('r','r')
 db=con.mclassical
 
 jobPool=[]
@@ -38,7 +38,7 @@ proxy_handler = urllib2.ProxyHandler({'http': 'http://127.0.0.1:8787'})
 opener = urllib2.build_opener(cookie_handler,proxy_handler)
 urllib2.install_opener(opener)
 
-dbNaxos=db.__temp_naxos_music_library
+dbNaxos=db.naxos_music_library
 def write(filename,content,a=False):
     type='w'
     if a:
@@ -234,6 +234,9 @@ def soup(url,data=False,cover=False):
         #    except Exception as err:
         #        print '#####################'
         #        print err
+        #        if str(err).find('500')>0:
+        #            print '500 error'
+        #            return ''
         #        if data!=False:
         #            print '#Fail : page '+str(data['pageNo'])+' in category '+str(data['categoryId'])
         #        else:
@@ -283,7 +286,7 @@ def extractDirectory(cid,page):
                 'name':name,
                 'url':url
             }
-        },True)
+        },upsert=True)
     print 'Finish category '+str(cid)+' page:'+str(page)
 
 def startMultiplyDirectoryExtractor(startIndex):
@@ -307,11 +310,13 @@ def initAlbumExtractor():
 
 def extractAlbum(index):
     album=albums[index]
+    #album['id']='TOCC0310'
     #album['id']='ZZT031101.3'
     soupurl='http://www.naxosmusiclibrary.com/catalogue/item.asp?'+urllib.urlencode({'cid':str(album['id'])})
     content=soup(soupurl)
 
     contentStr=content.prettify()
+    print contentStr
 
     albumInfo=content.select('#left-sidebar b')
     if len(albumInfo)==0:
@@ -327,6 +332,12 @@ def extractAlbum(index):
     data['works']=[]
     maincontent=contentStr[:]
     maincontent=maincontent[maincontent.find('<td align="left" id="mainbodycontent"'):maincontent.find('<div id="tooltip"')]
+    BStrackids=BeautifulSoup(maincontent).select('#trackid');
+    trackids=[]
+    trackids_cursor=0
+    for i in BStrackids:
+        trackids.append(i.attrs['value'])
+
     splitByComposer=split(maincontent,'<div class="composerheader">')[1:]
 
     print len(splitByComposer)
@@ -353,8 +364,32 @@ def extractAlbum(index):
                 curData['type']='composers'
             curComposers.append(curData)
         curPlayers=[]
-        worksInComposer=split(splitByComposer[i],'<b>')[1:]
+        #################performance problem
+        __split=split(splitByComposer[i],'<b>')
+
+        worksInComposer=__split[1:]
+        if len(worksInComposer)==0:
+            pass
+            #########error occur
+            ###########this is a/some part of previous work
+            #partsInWork=split(splitByComposer[i],'    »')[1:]
+            #if len(data['works'])==0:
+            #    for k in range(0,len(partsInWork)):
+            #        trackids_cursor=trackids_cursor+1
+            #    continue
+            #prevWork=data['works'][-1]
+            #for k in range(0,len(partsInWork)):
+            #    partName=partsInWork[k][:partsInWork[k].find('</td>')].strip()
+            #    divIndex=partName.find('<div')
+            #    if divIndex>=0:
+            #        partName=partName[:divIndex].strip()
+            #    prevWork['parts'].append({'name':partName,'id':trackids[trackids_cursor]})
+            #    trackids_cursor=trackids_cursor+1
+            #continue
+            
         for j in range(0,len(worksInComposer)):
+            if worksInComposer[j].find('valign="top"')==-1:
+                continue
             #####If contains artists
             if j==0 and worksInComposer[j].find('<div id="trackartists_')>=0:
                 tempindex=worksInComposer[j].find('<div id="trackartists_')
@@ -385,13 +420,17 @@ def extractAlbum(index):
                     'url':curComposers[k]['url']
                 })
 
-            partsInWork=split(worksInComposer[j],'»')[1:]
+            partsInWork=split(worksInComposer[j],'    »')[1:]
+            if len(partsInWork)==0:
+                curWork['id']=trackids[trackids_cursor]
+                trackids_cursor=trackids_cursor+1
             for k in range(0,len(partsInWork)):
                 partName=partsInWork[k][:partsInWork[k].find('</td>')].strip()
                 divIndex=partName.find('<div')
                 if divIndex>=0:
                     partName=partName[:divIndex].strip()
-                curWork['parts'].append({'name':partName})
+                curWork['parts'].append({'name':partName,'id':trackids[trackids_cursor]})
+                trackids_cursor=trackids_cursor+1
             data['works'].append(curWork)
 
     for j in range(0,len(albumInfo)):
@@ -481,6 +520,17 @@ def extractAlbum(index):
     if len(album_image)>0:
         data['album_image']=album_image[0].attrs['href']
 
+    if trackids_cursor!=len(trackids):
+        print 'cursor error'
+        dbNaxos.update({
+            'id':album['id']
+        },{
+            '$set':{
+                'details':False,
+                'error_occur':True
+            }
+        })
+        return
     if len(data['works'])==0:
         print 'no works '+album['id']
         return
@@ -518,5 +568,6 @@ startMultiplyAlubmExtractor(startIndex)
 
 #remove albums which not exist details
 #dbNaxos.remove({'details':{$exists:false}})
-while 1:
-   pass
+while True:
+    time.sleep(1000)
+    pass
