@@ -13,6 +13,7 @@
         <title>古典音乐放大镜</title>
     </head>
 <body>
+        <pjax style="display:none"><%=(pjax&&pjax.keyword)||""%></pjax>
         <div id="head">
             <a id="logo">
                 <div id="magnifier">
@@ -33,8 +34,8 @@
                 <div id="result">
                     <div class="tabs">
                         <div data-type="scores" class="tab"><%=language.scores%></div>
-                        <div data-type="videos" class="tab selected"><%=language.videos%></div>
-                        <div data-type="audios" class="tab"><%=language.audios%></div>
+                        <div data-type="videos" class="tab"><%=language.videos%></div>
+                        <div data-type="audios" class="tab selected"><%=language.audios%></div>
                     </div>
                     <div id="result-content">
                     </div>
@@ -192,25 +193,25 @@
         $('#search-wrap').removeClass('start');
         $('#search-wrap').addClass('show');
 
-        var inputSearch=$('#input-search');
-
         var stopSearchAnimation=false;
         var autoTyping=[
             'The magnifier of classical music'
         ];
 
-        function searchPost(){
+        function searchPost(type,keyword){
             for(var i in audios){
                 audios[i].pause();
             }
             audios=[];
             $('#result-content').html('<div id="result-loading-wrap"><div id="result-loading"></div></div>');
+            var keyword=keyword||$('#input-search').val();
+            var type=type||$('.tab.selected').attr('data-type');
             $.ajax({
                 url:'/search',
                 type:'post',
                 data:{
-                    type:$('.tab.selected').attr('data-type'),
-                    keyword:$('#input-search').val()
+                    type:type,
+                    keyword:keyword
                 },
                 timeout:6000,
                 success:function(res){
@@ -218,6 +219,7 @@
                         alert(res.msg);
                         return;
                     }
+                    history.pushState({},$('#input-search').val(),'/s/'+type+'/'+encodeURI(keyword));
                     res.ratio=(width-11-10)/200*100;
                     $('#result-content').html(template('template-results',res));
                     if($('.tab.selected').attr('data-type')=='audios'){
@@ -397,6 +399,15 @@
             $(this).addClass('selected');
             searchPost();
         }
+
+        <%if(pjax){%>
+        stopSearchAnimation=true;
+        $('.tab').removeClass('selected');
+        $('.tab[data-type="<%=pjax.type%>"]').addClass('selected');
+        $('#input-search').val($('pjax').text());
+        searchClick();
+        <%}%>
+
         function hideResults(){
             $('#result-wrap').removeClass('show');
         }

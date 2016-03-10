@@ -59,7 +59,7 @@ exports.elastic_search_random=function(size){
 
 exports.elastic_search=function(keyword,type){
     var map={
-        'scores':'scmd_composers',
+        'scores':'scmd_works',
         'audios':'scmd_audios'
     }
 
@@ -336,6 +336,25 @@ exports.google_imslp=function(keyword){
 		});
     }
 };
+exports.Musopen=function(keyword,page){
+    return when.promise(function(resolve,reject){
+        exports.elastic_search(keyword,'scores').then(function(r){
+            var data=[];
+            for(var i in r){
+                var t=r[i]._source;
+                var resources_length=t.resources.length;
+                for(var j =0;j<resources_length;++j){
+                    data.push({
+                        source:'Musopen',
+                        title:t.name+' '+t.resources[j].name,
+                        link:'http://static.mclassical.org/pdfjs/web/viewer.html?file='+'http://scores.mclassical.org/musopen/'+utils.sha1(t.resources[j].url)+'.pdf'
+                    });
+                }
+            }
+            resolve(data);
+        })
+    });
+}
 
 exports.Engine=function(keyword,engine){
 	if(engine=='google'){

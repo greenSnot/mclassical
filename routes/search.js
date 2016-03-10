@@ -44,6 +44,8 @@ router.post('/', function(req,res) {
         if(req.body.type){
             if(req.body.type=='scores'){
                 for(var i in keywords){
+                    qlist.push(search.Musopen(i));
+                    qlist_type.push('scores');
                     qlist.push(search.google_imslp(i));
                     qlist_type.push('scores');
                 }
@@ -89,10 +91,7 @@ router.post('/', function(req,res) {
 			for(var i in datas){
                 if(qlist_type[i]=='scores'){
                     for(var j in datas[i]){
-                        if(!scores_ids[datas[i][j].link]){
-                            scores_ids[datas[i][j].link]=true;
-                            result.scores.push(datas[i][j]);
-                        }
+                        result.scores.push(datas[i][j]);
                     }
                 }else if(qlist_type[i]=='videos'){
                     for(var j in datas[i]){
