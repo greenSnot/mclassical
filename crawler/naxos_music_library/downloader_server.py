@@ -8,9 +8,6 @@ con.mclassical.authenticate('r','r')
 db=con.mclassical
 dbNaxos=db.naxos_music_library
 
-cookie= cookielib.CookieJar()
-cookie_handler =urllib2.HTTPCookieProcessor(cookie)
-
 print dbNaxos.update({'download_status':{'$exists':False}},{'$set':{'download_status':0}},multi=True)
 headers={
         'Host':'www.naxosmusiclibrary.com',
