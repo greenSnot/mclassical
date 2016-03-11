@@ -50,6 +50,7 @@ def setTimeout(fun,time,**kwargs):
         signal.alarm(0)
         return res
     except AssertionError:
+        signal.alarm(0)
         return False
 
 def setTimeoutRepeat(fun,time,**kwargs):

@@ -20,7 +20,7 @@ if __name__=='__main__':
         return split(os.popen('ssh root@mclassicalUSA "md5sum '+path+filename+'"').read(),' ')[0]
     def scpRemote(filename):
         print 'scpRemote'
-        os.popen('scp root@mclassicalUSA:'+path+filename+' '+temp_path)
+        print os.popen('scp root@mclassicalUSA:'+path+filename+' '+temp_path)
         return True
     def rmRemote(filename):
         print 'rmRemote'
@@ -29,22 +29,22 @@ if __name__=='__main__':
 
 
     while True:
-        files_sum=setTimeoutRepeat(getRemoteFilesSum,20)
+        files_sum=setTimeoutRepeat(getRemoteFilesSum,200)
         if files_sum>0:
-            files=setTimeoutRepeat(getRemoteFiles,20)
+            files=setTimeoutRepeat(getRemoteFiles,200)
             print files
             for filename in files:
                 while int(os.popen('ls '+local_path+' |wc -l').read())>100:
                     print 'waitting'
                     time.sleep(600)
-                md5=setTimeoutRepeat(getRemoteMd5,20,filename=filename)
+                md5=setTimeoutRepeat(getRemoteMd5,200,filename=filename)
 
                 fetch=False
                 while not fetch:
                     print('downloading '+filename)
                     setTimeoutRepeat(scpRemote,200,filename=filename)
                     if md5==split(os.popen('md5sum '+temp_path+filename).read(),' ')[0]:
-                        setTimeoutRepeat(rmRemote,20,filename=filename)
+                        setTimeoutRepeat(rmRemote,200,filename=filename)
                         os.popen('mv '+temp_path+filename+' '+local_path)
                         fetch=True
                         print 'done '+filename
