@@ -172,7 +172,7 @@ while total>0:
 
     print 'tar ing'
     os.popen('tar -zcf '+temp_zips_path+str(album['id'])+'.tar '+res_path+str(album['id']))
-    os.popen('mv '+temp_zips_path+str(album['id'])+'.tar '+zips_path
+    os.popen('mv '+temp_zips_path+str(album['id'])+'.tar '+zips_path)
     os.popen('rm -rf '+res_path+str(album['id']))
 
     dbNaxos.update({'id':album['id']},{'$set':{'download_status':2}})
