@@ -32,6 +32,7 @@ QN = qiniu.Auth('Ydyi73qwtgToPkCNkmBQzDIWtK1xzW_YN37Xy7TE','SQkOJg-B4JHaETjF5yJC
 
 from Queue import Queue
 from time import sleep
+from timeout import timeout
 
 reload(sys)
 sys.setdefaultencoding('utf8') 
@@ -39,27 +40,6 @@ sys.setdefaultencoding('utf8')
 cookie= cookielib.CookieJar()
 opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie))
 urllib2.install_opener(opener)
-
-def setTimeout(fun,time,**kwargs):
-    def handler(signum,frame):
-        raise AssertionError
-    try:
-        signal.signal(signal.SIGALRM,handler)
-        signal.alarm(time)
-        res=fun(**kwargs)
-        signal.alarm(0)
-        return res
-    except AssertionError:
-        signal.alarm(0)
-        return False
-
-def setTimeoutRepeat(fun,time,**kwargs):
-    while True:
-        t=setTimeout(fun,time,**kwargs)
-        if t is False:
-            print 'timeout retrying'
-        else:
-            return t
 
 def exist(filename):
     return os.path.isfile(filename)
