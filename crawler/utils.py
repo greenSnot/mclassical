@@ -55,10 +55,10 @@ def setTimeout(fun,time,**kwargs):
 def setTimeoutRepeat(fun,time,**kwargs):
     while True:
         t=setTimeout(fun,time,**kwargs)
-        if t!=False:
-            return t
-        else:
+        if t is False:
             print 'timeout retrying'
+        else:
+            return t
 
 def exist(filename):
     return os.path.isfile(filename)

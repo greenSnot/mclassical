@@ -8,15 +8,22 @@ local_path='./resources_zips/'
 temp_path='~/'
 if __name__=='__main__':
     def getRemoteFilesSum():
-        return int(os.popen('ssh root@mclassicalUSA "ls -l '+path+' |grep \'^-\'|wc -l"').read())
+        print 'getRemoteFilesSum'
+        res=int(os.popen('ssh root@mclassicalUSA "ls -l '+path+' |grep \'^-\'|wc -l"').read())
+        print res
+        return res
     def getRemoteFiles():
+        print 'getRemoteFilesFiles'
         return split(os.popen('ssh root@mclassicalUSA "ls '+path+'"').read().strip(),'\n')
     def getRemoteMd5(filename):
+        print 'getRemoteMd5'
         return split(os.popen('ssh root@mclassicalUSA "md5sum '+path+filename+'"').read(),' ')[0]
     def scpRemote(filename):
+        print 'scpRemote'
         os.popen('scp root@mclassicalUSA:'+path+filename+' '+temp_path)
         return True
     def rmRemote(filename):
+        print 'rmRemote'
         os.popen('ssh root@mclassicalUSA "rm '+path+filename+'"')
         return True
 
