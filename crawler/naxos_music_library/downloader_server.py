@@ -124,6 +124,7 @@ def parseInt(num):
 dir_sum=0
 zip_sum=0
 zips_path='./resources_zips/'
+temp_zips_path='../'
 res_path='./resources'+str(dir_sum)+'/'
 def downloadById(album_id,id):
     global lastLoginTime
@@ -169,7 +170,8 @@ while total>0:
             downloadById(album['id'],part['id'])
 
     print 'tar ing'
-    os.popen('tar -zcf '+zips_path+str(album['id'])+'.tar '+res_path+str(album['id']))
+    os.popen('tar -zcf '+temp_zips_path+str(album['id'])+'.tar '+res_path+str(album['id']))
+    os.popen('mv '+temp_zips_path+str(album['id'])+'.tar '+res_path+str(album['id']))
     os.popen('rm -rf '+res_path+str(album['id']))
 
     dbNaxos.update({'id':album['id']},{'$set':{'download_status':2}})
