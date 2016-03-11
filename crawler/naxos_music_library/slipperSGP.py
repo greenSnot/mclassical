@@ -7,41 +7,38 @@ path='mclassical/crawler/naxos_music_library/resources_zips/'
 local_path='./resources_zips/'
 temp_path='~/'
 if __name__=='__main__':
-    def handler(signum,frame):
-        raise AssertionError
+    def getRemoteFilesSum():
+        return int(os.popen('ssh root@mclassicalUSA "ls -l '+path+' |grep \'^-\'|wc -l"').read())
+    def getRemoteFiles():
+        return split(os.popen('ssh root@mclassicalUSA "ls '+path+'"').read().strip(),'\n')
+    def getRemoteMd5(filename):
+        return split(os.popen('ssh root@mclassicalUSA "md5sum '+path+filename+'"').read(),' ')[0]
+    def scpRemote(filename):
+        os.popen('scp root@mclassicalUSA:'+path+filename+' '+temp_path)
+        return True
+    def rmRemote(filename):
+        os.popen('ssh root@mclassicalUSA "rm '+path+filename+'"')
+        return True
+
+
     while True:
-        files_sum=int(os.popen('ssh root@mclassicalUSA "ls -l '+path+' |grep \'^-\'|wc -l"').read())
+        files_sum=setTimeoutRepeat(getRemoteFilesSum,20)
         if files_sum>0:
-            files=split(os.popen('ssh root@mclassicalUSA "ls '+path+'"').read().strip(),'\n')
+            files=setTimeoutRepeat(getRemoteFiles,20)
             print files
             for filename in files:
                 while int(os.popen('ls '+local_path+' |wc -l').read())>100:
                     print 'waitting'
                     time.sleep(600)
-                md5=False
-                while not md5:
-                    try:
-                        signal.signal(signal.SIGALRM,handler)
-                        signal.alarm(20)
-                        md5=split(os.popen('ssh root@mclassicalUSA "md5sum '+path+filename+'"').read(),' ')[0]
-                        signal.alarm(0)
-                    except AssertionError:
-                        print 'md5sum time out'
-                        continue
+                md5=setTimeoutRepeat(getRemoteMd5,20,filename=filename)
+
                 fetch=False
                 while not fetch:
                     print('downloading '+filename)
-                    try:
-                        signal.signal(signal.SIGALRM,handler)
-                        signal.alarm(600)
-                        os.popen('scp root@mclassicalUSA:'+path+filename+' '+temp_path)
-                        signal.alarm(0)
-                    except AssertionError:
-                        print 'scp time out'
-                        continue
+                    setTimeoutRepeat(scpRemote,200,filename=filename)
                     if md5==split(os.popen('md5sum '+temp_path+filename).read(),' ')[0]:
                         os.popen('ssh root@mclassicalUSA "rm '+path+filename+'"')
-                        os.popen('mv '+temp_path+filename+' '+local_path)
+                        #setTimeoutRepeat(rmRemote,20,filename=filename)
                         fetch=True
                         print 'done '+filename
                     else:

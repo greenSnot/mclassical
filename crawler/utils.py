@@ -40,6 +40,26 @@ cookie= cookielib.CookieJar()
 opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie))
 urllib2.install_opener(opener)
 
+def setTimeout(fun,time,**kwargs):
+    def handler(signum,frame):
+        raise AssertionError
+    try:
+        signal.signal(signal.SIGALRM,handler)
+        signal.alarm(time)
+        res=fun(**kwargs)
+        signal.alarm(0)
+        return res
+    except AssertionError:
+        return False
+
+def setTimeoutRepeat(fun,time,**kwargs):
+    while True:
+        t=setTimeout(fun,time,**kwargs)
+        if t!=False:
+            return t
+        else:
+            print 'timeout retrying'
+
 def exist(filename):
     return os.path.isfile(filename)
 
