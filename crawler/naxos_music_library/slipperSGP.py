@@ -37,8 +37,8 @@ if __name__=='__main__':
                     print('downloading '+filename)
                     setTimeoutRepeat(scpRemote,200,filename=filename)
                     if md5==split(os.popen('md5sum '+temp_path+filename).read(),' ')[0]:
-                        os.popen('ssh root@mclassicalUSA "rm '+path+filename+'"')
-                        #setTimeoutRepeat(rmRemote,20,filename=filename)
+                        setTimeoutRepeat(rmRemote,20,filename=filename)
+                        os.popen('mv '+temp_path+filename+' '+local_path)
                         fetch=True
                         print 'done '+filename
                     else:
