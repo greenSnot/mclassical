@@ -22,6 +22,7 @@ import demjson
 import qiniu
 import socket
 import multiprocessing
+import signal
 import HTMLParser
 html_parser = HTMLParser.HTMLParser()
 from bs4 import BeautifulSoup
