@@ -5,6 +5,7 @@ import cookielib
 import os
 from threading import Lock, Thread
 import threadpool
+import subprocess
 import StringIO
 import gzip
 import requests
@@ -22,6 +23,7 @@ import demjson
 import qiniu
 import socket
 import multiprocessing
+import signal
 import HTMLParser
 html_parser = HTMLParser.HTMLParser()
 from bs4 import BeautifulSoup
@@ -38,6 +40,32 @@ sys.setdefaultencoding('utf8')
 cookie= cookielib.CookieJar()
 opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie))
 urllib2.install_opener(opener)
+
+class TimeoutError(Exception):
+    pass
+def sub(cmd,seconds):
+    p=subprocess.Popen([cmd],shell=True,stdout=subprocess.PIPE)
+    time.sleep(seconds)
+    if p.poll() is None:
+        p.kill()
+        raise TimeoutError('')
+    else:
+        out=p.stdout.readlines()
+        res=''
+        for i in out:
+            res+=i
+        return res
+
+def setTimeoutRepeat(fun,**kwargs):
+    res=False
+    fetch=False
+    while not fetch:
+        try:
+            res=fun(**kwargs)
+            fetch=True
+        except Exception:
+            print('timeout error')
+    return res
 
 def exist(filename):
     return os.path.isfile(filename)
@@ -89,11 +117,11 @@ def download(url,filename,forever=True,proxy_url=False,timeout=120,ignore_404=Fa
             try:
                 content=requests.get(url, proxies={"http":proxy_url,"https":proxy_url},timeout=timeout)
             except Exception as err:
-                print err
-                print 'Fail to fetch '+url
+                print(err)
+                print('Fail to fetch '+url)
                 if not forever:
                     return False
-                print 'retrying'
+                print('retrying')
                 time.sleep(1)
                 continue
             if content.status_code==200:
@@ -103,7 +131,7 @@ def download(url,filename,forever=True,proxy_url=False,timeout=120,ignore_404=Fa
                     code.write(content)
                 return True
             else:
-                print 'Fail to fetch '+url
+                print('Fail to fetch '+url)
                 if not forever:
                     return False
                 time.sleep(1)
@@ -115,14 +143,14 @@ def download(url,filename,forever=True,proxy_url=False,timeout=120,ignore_404=Fa
                     code.write(content)
                 return True
             except Exception as err:
-                print err
+                print(err)
                 if ignore_404 and fails_path:
                     write(fails_path,url,True) 
                     return True
-                print 'Fail to fetch '+url
+                print('Fail to fetch '+url)
                 if not forever:
                     return False
-                print 'retrying'
+                print('retrying')
                 time.sleep(1)
                 continue
 
@@ -138,7 +166,7 @@ def getHtml(url,data=False,forever=True,cache=True,cachePath='./htmls/',ua={},re
         hash=hash+sha1(postData)
     if cache and exist(cachePath+hash):
         if log:
-            print 'EXIST '+url+' '+hash
+            print('EXIST '+url+' '+hash)
         content=open(cachePath+hash).read()
         return content
     fetch=False
@@ -154,14 +182,14 @@ def getHtml(url,data=False,forever=True,cache=True,cachePath='./htmls/',ua={},re
             fetch=True
         except Exception as err:
             if log:
-                print err
-                print 'Fail to fetch '+url+' '+hash
+                print(err)
+                print('Fail to fetch '+url+' '+hash)
             if hasattr(err,'code') and err.code==404:
                 return False
             if not forever:
                 return False
             if log:
-                print 'Reloading'
+                print('Reloading')
             time.sleep(1)
     if cache or reCache:
         write(cachePath+hash,content)
@@ -171,7 +199,7 @@ def text2json(text):
     try:
         text=json.loads(text)
     except Exception as err:
-        print err
+        print(err)
     return text
 
 def jsonHtmlDecode(s):
