@@ -43,7 +43,8 @@ while True:
             print('waitting')
             time.sleep(60)
         createDir(local_path)
-        print quote(filename)
+        print filename
+        print timeout
         download(host+':'+port+'/'+remote_path+filename,local_path+filename,timeout=timeout)
         rmRemote(filename)
         print('done '+filename)
