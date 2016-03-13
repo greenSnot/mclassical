@@ -5,7 +5,7 @@ from utils import *
 
 path='mclassical/crawler/naxos_music_library/resources_zips/'
 local_path='./resources_zips/'
-temp_path='~/'
+temp_path='../'
 
 def getRemoteFilesSum(seconds):
     print('getRemoteFilesSum')
@@ -46,8 +46,12 @@ while True:
 
             fetch=False
             while not fetch:
+                if exist(temp_path+filename):
+                    break
+                if exist(local_path+filename):
+                    break
                 print('downloading '+filename)
-                setTimeoutRepeat(scpRemote,filename=filename,seconds=120)
+                setTimeoutRepeat(scpRemote,filename=filename,seconds=200)
                 if md5==split(os.popen('md5sum '+temp_path+filename).read(),' ')[0]:
                     os.popen('mv '+temp_path+filename+' '+local_path)
                     setTimeoutRepeat(rmRemote,filename=filename,seconds=10)
