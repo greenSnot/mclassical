@@ -38,7 +38,7 @@ while True:
         continue
     for f in files:
         filename=f['name']
-        timeout=int(f['size']/200)+10
+        timeout=int(f['size']/100)+10
         while int(os.popen('ls '+local_path+' |wc -l').read())>100:
             print('waitting')
             time.sleep(60)
