@@ -4,7 +4,7 @@ var fs= require('fs');
 var app = express();
 var path = require('path');
 
-var local_path='./';
+var local_path='./resources_zips/';
 
 app.set('port', process.env.PORT || 9000);
 app.use(express.static(path.join(__dirname, local_path)));
