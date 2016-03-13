@@ -16,14 +16,13 @@ port='9000'
 def getRemoteFiles():
     print('getRemoteFilesFiles')
     files=getHtml(host+':'+port+'?ls=true',{},cache=False)
-    files=split(files,'\n')[1:-2]
+    files=split(files,'\n')
+    if len(files):
+        files=files[:-1]
     res=[]
     for i in files:
         t=split(i,' ')
-        if len(t)==3:
-            res.append({'size':int(t[1])/2,'name':t[2]})
-        else:
-            res.append({'size':int(t[0])/2,'name':t[1]})
+        res.append({'size':int(t[0]),'name':t[1]})
     return res
 
 def rmRemote(filename):
