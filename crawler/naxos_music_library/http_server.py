@@ -20,7 +20,7 @@ class handler(CGIHTTPServer.CGIHTTPRequestHandler):
             self.end_headers()
             self.wfile.write('ok')
         elif cmds.get('ls'):
-            files=os.popen('ls '+local_path).read()
+            files=os.popen('ls -s '+local_path).read()
             self.send_response(200)
             self.end_headers()
             self.wfile.write(files)
