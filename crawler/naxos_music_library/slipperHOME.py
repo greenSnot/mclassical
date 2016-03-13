@@ -7,60 +7,33 @@ path='/data/mclassical/crawler/naxos_music_library/resources_zips/'
 local_dir_sum=0
 local_path='./resources_zips'+str(local_dir_sum)+'/'
 temp_path='../'
-host='root@mclassicalSGP'
+host='mclassicalSGP'
+port=9000
 
-def getRemoteFilesSum(seconds):
-    print('getRemoteFilesSum')
-    cmd='ssh '+host+' "ls -l '+path+' |grep \'^-\'|wc -l"'
-    return int(sub(cmd,seconds))
-
-def getRemoteFiles(seconds):
+def getRemoteFiles():
     print('getRemoteFilesFiles')
-    cmd='ssh '+host+' "ls '+path+'"'
-    return split(sub(cmd,seconds),'\n')[:-1]
+    files=split(getHTML(host+':'+port+'?ls=true',{},catche=False),'\n')
+    return files
 
-def getRemoteMd5(filename,seconds):
-    print('getRemoteMd5')
-    cmd='ssh '+host+' "md5sum '+path+filename+'"'
-    return split(sub(cmd,seconds),' ')[0]
-
-def scpRemote(filename,seconds):
-    print('scpRemote')
-    cmd='scp '+host+':'+path+filename+' '+temp_path
-    return sub(cmd,seconds)
-
-def rmRemote(filename,seconds):
+def rmRemote(filename):
     print('rmRemote')
-    cmd='ssh '+host+' "rm '+path+filename+'"'
-    return sub(cmd,seconds)
+    getHTML(host+':'+port+'?rm='+filename)
 
 while True:
-    files_sum=setTimeoutRepeat(getRemoteFilesSum,seconds=5)
-    if files_sum>0:
-        print(files_sum)
-        files=setTimeoutRepeat(getRemoteFiles,seconds=5)
-        print(files)
-        for filename in files:
-            while int(os.popen('ls '+local_path+' |wc -l').read())>100:
-                print('waitting')
-                time.sleep(60)
-            md5=setTimeoutRepeat(getRemoteMd5,filename=filename,seconds=10)
-            createDir(local_path)
-
-            fetch=False
-            while not fetch:
-                print('downloading '+filename)
-                setTimeoutRepeat(scpRemote,filename=filename,seconds=320)
-                if md5==split(os.popen('md5sum '+temp_path+filename).read(),' ')[0]:
-                    os.popen('mv '+temp_path+filename+' '+local_path)
-                    setTimeoutRepeat(rmRemote,filename=filename,seconds=10)
-                    fetch=True
-                    print('done '+filename)
-                else:
-                    print('error')
-                    os.popen('rm '+temp_path+filename)
-                    print('md5 error retrying')
-                if int(os.popen('ls '+local_path+' |wc -l').read())>500:
-                    local_dir_sum=local_dir_sum+1
-                    local_path='./resources_zips'+str(local_dir_sum)+'/'
-    time.sleep(60)
+    files=getRemoteFiles()
+    print(files)
+    if len(files)==0:
+        print('len 0 waitting')
+        time.sleep(60)
+        continue
+    for filename in files:
+        while int(os.popen('ls '+local_path+' |wc -l').read())>100:
+            print('waitting')
+            time.sleep(60)
+        createDir(local_path)
+        download(host+':'+port+'/'+filename,local_path+filename,timeout=400)
+        rmRemote(filename)
+        print('done '+filename)
+        if int(os.popen('ls '+local_path+' |wc -l').read())>500:
+            local_dir_sum=local_dir_sum+1
+            local_path='./resources_zips'+str(local_dir_sum)+'/'
