@@ -38,13 +38,14 @@ while True:
         time.sleep(60)
         continue
     for f in files:
+        timeout=int(f['size']/200)+10
         filename=f['name']
         while int(os.popen('ls '+local_path+' |wc -l').read())>100:
             print('waitting')
             time.sleep(60)
         createDir(local_path)
         print quote(filename)
-        download(host+':'+port+'/'+remote_path+filename,local_path+filename,timeout=int(f['size']/200))
+        download(host+':'+port+'/'+remote_path+filename,local_path+filename,timeout=timeout)
         rmRemote(filename)
         print('done '+filename)
         if int(os.popen('ls '+local_path+' |wc -l').read())>500:
