@@ -110,6 +110,7 @@ def html2text(content):
     return html_parser.unescape(content)
 
 def download(url,filename,forever=True,proxy_url=False,timeout=120,ignore_404=False,fails_path=False):
+    socket.setdefaulttimeout( timeout ) 
     fetch=False
     while not fetch:
         content=''
