@@ -17,14 +17,13 @@ port='9000'
 def getRemoteFiles():
     print('getRemoteFilesFiles')
     files=getHtml(host+':'+port+'?ls=true',{},cache=False)
-    files=split(files,'\n')[1:-2]
+    files=split(files,'\n')
+    if len(files):
+        files=files[:-1]
     res=[]
     for i in files:
         t=split(i,' ')
-        if len(t)==3:
-            res.append({'size':int(t[1])/2,'name':t[2]})
-        else:
-            res.append({'size':int(t[0])/2,'name':t[1]})
+        res.append({'size':int(t[0]),'name':t[1]})
     return res
 
 def rmRemote(filename):
@@ -40,9 +39,6 @@ while True:
     for f in files:
         timeout=int(f['size']/200)+10
         filename=f['name']
-        while int(os.popen('ls '+local_path+' |wc -l').read())>100:
-            print('waitting')
-            time.sleep(60)
         createDir(local_path)
         print filename
         print timeout
