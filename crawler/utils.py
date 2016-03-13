@@ -110,7 +110,6 @@ def html2text(content):
     return html_parser.unescape(content)
 
 def download(url,filename,forever=True,proxy_url=False,timeout=120,ignore_404=False,fails_path=False):
-    socket.setdefaulttimeout( timeout ) 
     fetch=False
     while not fetch:
         content=''
@@ -138,7 +137,7 @@ def download(url,filename,forever=True,proxy_url=False,timeout=120,ignore_404=Fa
                 time.sleep(1)
         else:
             try:
-                content=urllib2.urlopen(url).read()
+                content=urllib2.urlopen(url,timeout=timeout).read()
                 fetch=True
                 with open(filename,'wb') as code:
                     code.write(content)
