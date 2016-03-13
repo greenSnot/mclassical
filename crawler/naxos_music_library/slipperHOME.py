@@ -37,7 +37,7 @@ while True:
             time.sleep(60)
         createDir(local_path)
         print quote(filename)
-        download(host+':'+port+'/'+remote_path+filename,local_path+filename,timeout=400)
+        download(host+':'+port+'/'+remote_path+filename,local_path+filename,timeout=4000)
         rmRemote(filename)
         print('done '+filename)
         if int(os.popen('ls '+local_path+' |wc -l').read())>500:
