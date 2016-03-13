@@ -6,7 +6,7 @@ from urllib import unquote
 import re
 from urllib import quote
 
-remote_path='resources_zips/'
+remote_path=''
 local_dir_sum=0
 local_path='./resources_zips/'
 temp_path='../'
