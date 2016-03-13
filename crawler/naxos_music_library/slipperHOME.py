@@ -2,22 +2,27 @@
 import sys
 sys.path.append('..')
 from utils import *
+from urllib import unquote
+import re
+from urllib import quote
 
-path='/data/mclassical/crawler/naxos_music_library/resources_zips/'
+remote_path='resources_zips/'
 local_dir_sum=0
 local_path='./resources_zips'+str(local_dir_sum)+'/'
 temp_path='../'
-host='mclassicalSGP'
-port=9000
+host='http://mclassicalSGP'
+port='9000'
 
 def getRemoteFiles():
     print('getRemoteFilesFiles')
-    files=split(getHTML(host+':'+port+'?ls=true',{},catche=False),'\n')
+    files=getHtml(host+':'+port+'?ls=true',{},cache=False)
+    print files
+    files=split(files,'\n')[:-1]
     return files
 
 def rmRemote(filename):
     print('rmRemote')
-    getHTML(host+':'+port+'?rm='+filename)
+    getHtml(host+':'+port+'?rm='+quote(filename),{},cache=False)
 
 while True:
     files=getRemoteFiles()
@@ -31,7 +36,8 @@ while True:
             print('waitting')
             time.sleep(60)
         createDir(local_path)
-        download(host+':'+port+'/'+filename,local_path+filename,timeout=400)
+        print quote(filename)
+        download(host+':'+port+'/'+remote_path+filename,local_path+filename,timeout=400)
         rmRemote(filename)
         print('done '+filename)
         if int(os.popen('ls '+local_path+' |wc -l').read())>500:
