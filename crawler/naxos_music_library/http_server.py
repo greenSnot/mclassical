@@ -2,6 +2,9 @@ import BaseHTTPServer
 import CGIHTTPServer
 import cgitb; cgitb.enable()  ## This line enables CGI error reporting
 from urlparse import urlparse,parse_qs
+import threading
+from SocketServer import ThreadingMixIn
+from BaseHTTPServer import HTTPServer ,BaseHTTPRequestHandler
 import sys
 sys.path.append('..')
 from utils import *
@@ -9,7 +12,6 @@ from urllib import unquote
  
 local_path='./resources_zips/'
 
-server = BaseHTTPServer.HTTPServer
 class handler(CGIHTTPServer.CGIHTTPRequestHandler):
     def handle_one_request(self):
         """Handle a single HTTP request.
@@ -63,8 +65,13 @@ class handler(CGIHTTPServer.CGIHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(files)
         print 'ok'
-server_address = ("", 9000)
 handler.cgi_directories = ['./']
+class ThreadingHTTPServer(ThreadingMixIn,HTTPServer):
+    pass
  
-httpd = server(server_address, handler)
-httpd.serve_forever()
+    
+if __name__ == '__main__':
+    serveraddr = ('',9000)
+    ser = ThreadingHTTPServer(serveraddr,handler)
+    ser.serve_forever()
+    sys.exit(0)
