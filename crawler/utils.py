@@ -109,7 +109,7 @@ def bs(content):
 def html2text(content):
     return html_parser.unescape(content)
 
-def download(url,filename,forever=True,proxy_url=False,timeout=120,ignore_404=False,fails_path=False):
+def download(url,filename,forever=True,proxy_url=False,timeout=120,ignore_404=False,fails_path=False,raise_404=False):
     fetch=False
     while not fetch:
         content=''
@@ -142,12 +142,15 @@ def download(url,filename,forever=True,proxy_url=False,timeout=120,ignore_404=Fa
                 with open(filename,'wb') as code:
                     code.write(content)
                 return True
-            except Exception as err:
-                print(err)
-                if ignore_404 and fails_path:
-                    write(fails_path,url,True) 
-                    return True
+            except urllib2.URLError,e:
+                if hasattr(e,'code') and int(e.code)==404:
+                    if ignore_404 and fails_path:
+                        write(fails_path,url,True) 
+                        return True
+                    elif raise_404:
+                        raise Exception("404 error abort")
                 print('Fail to fetch '+url)
+                
                 if not forever:
                     return False
                 print('retrying')
