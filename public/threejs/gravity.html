@@ -1,0 +1,20 @@
+<script src="../js/zepto-tween-xss-pano.min.js"></script>
+<script type="text/javascript"> 
+var x = y = z = lastX = lastY = lastZ = 0; 
+window.addEventListener('deviceorientation', function(){ 
+var a=event.alpha*Math.PI/180; 
+var b=event.beta*Math.PI/180;
+var g=event.gamma*Math.PI/180;
+
+var t;
+if(g==0){
+t=-a;
+}else if(b!=0){
+t=Math.atan( (-Math.cos(a)*Math.sin(g)-Math.sin(a)*Math.sin(b)*Math.cos(g)) / (-Math.sin(a)*Math.sin(g)+Math.cos(a)*Math.sin(b)*Math.cos(g)) );
+}
+
+var r=parseInt(t*180/Math.PI)+'</br>'+parseInt(event.beta)+'</br>'+parseInt(event.gamma);
+$('body').css('font-size','40px');
+$('body').html((r));
+}, false); 
+</script> 

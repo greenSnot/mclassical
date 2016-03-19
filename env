@@ -29,6 +29,8 @@ mv node-v4.3.0-linux-x64 node && \
 cd /usr/local/bin && \
 ln -s ~/node/bin/npm && \
 ln -s ~/node/bin/node
+npm install -g pm2
+ln -s ~/node/bin/pm2
 
 #################### init db files
 sudo mkdir /data
@@ -156,6 +158,7 @@ sudo iptables -F
 sudo iptables -X
 sudo iptables -Z
 sudo iptables -A INPUT -i lo -j ACCEPT 
+sudo iptables -A INPUT -p tcp --dport 9000 -j ACCEPT
 sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
 sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
 sudo iptables -A INPUT -p tcp -s 52.68.201.23  --dport 9200 -j ACCEPT
