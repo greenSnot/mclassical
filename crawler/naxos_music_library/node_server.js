@@ -6,7 +6,19 @@ var path = require('path');
 
 var local_path='./resources_zips/';
 
+function getClientIp(req) {
+    var unknown='6.6.6.6';
+        return req.headers['x-forwarded-for'] ||
+        (req.connection?req.connection.remoteAddress:unknown) ||
+        (req.socket?req.socket.remoteAddress:unknown) ||
+        (req.connection.socket?req.connection.socket.remoteAddress:unknown)||unknown;
+};
+
 app.set('port', process.env.PORT || 9000);
+app.use(function(req,res,next){
+    console.log(getClientIp(req));
+    next();
+});
 app.use(express.static(path.join(__dirname, local_path)));
 var router=express.Router();
 router.post('/',function(req,res){
