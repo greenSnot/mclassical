@@ -154,7 +154,8 @@ console.log('sorry');
                     req.path=='/'||
                     req.path=='/search'||
                     req.path=='/random'||
-                    req.path=='/tools'
+                    req.path=='/tools'||
+                    req.path.indexOf('/s/')==0
                ){
                    next();
                    return;
