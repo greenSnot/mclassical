@@ -11,10 +11,10 @@ var utils=require('../utils');
 
 router.get('/',function(req,res){
     //防备案审核
-    if(config.serverName=='SZ'&&utils.getPlatform(req).indexOf('pc')>=0){
-        res.json({code:-9,msg:'请使用微信打开'});
-        return;
-    }
+    //if(config.serverName=='SZ'&&utils.getPlatform(req).indexOf('pc')>=0){
+    //    res.json({code:-9,msg:'请使用微信打开'});
+    //    return;
+    //}
 
     var json={
         pjax:false,
