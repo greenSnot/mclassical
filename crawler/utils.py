@@ -41,32 +41,6 @@ cookie= cookielib.CookieJar()
 opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie))
 urllib2.install_opener(opener)
 
-class TimeoutError(Exception):
-    pass
-def sub(cmd,seconds):
-    p=subprocess.Popen([cmd],shell=True,stdout=subprocess.PIPE)
-    time.sleep(seconds)
-    if p.poll() is None:
-        p.kill()
-        raise TimeoutError('')
-    else:
-        out=p.stdout.readlines()
-        res=''
-        for i in out:
-            res+=i
-        return res
-
-def setTimeoutRepeat(fun,**kwargs):
-    res=False
-    fetch=False
-    while not fetch:
-        try:
-            res=fun(**kwargs)
-            fetch=True
-        except Exception:
-            print('timeout error')
-    return res
-
 def exist(filename):
     return os.path.isfile(filename)
 
@@ -109,7 +83,8 @@ def bs(content):
 def html2text(content):
     return html_parser.unescape(content)
 
-def download(url,filename,forever=True,proxy_url=False,timeout=120,ignore_404=False,fails_path=False,raise_404=False):
+def download(url,filename,forever=True,proxy_url=False,timeout=120,ignore_404=False,fails_path=False):
+    socket.setdefaulttimeout( timeout) 
     fetch=False
     while not fetch:
         content=''
