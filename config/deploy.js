@@ -93,12 +93,17 @@ exports.config={
             audios:'Audios',
             more:'More',
             volunteer:'Join volunteer',
-            volunteer_content:'Join volunteer',
+            volunteer_content:'For more precise search results,we are trying to recruit following volunteers to refine our system'+
+            '</br>A. Reviewers who review the score images("musicXML" format tranlated by computers from PDF) and information of albums.'+
+            '</br>B. Messengers who contact with the record companys for cooperation.'+
+            '</br>C. Programmers who can handle audios analysis and scores recognition system, search engine optimization, database optimization and website maintenance.'+
+            '</br>'+
+            '</br>Contact: Mr.Calculon</br>0x00111111@gmail.com',
             help:'Help',
-            help_content:'Help',
-            about_content:'<img class="qrcode" src="images/qrcode.jpg">The magnifier of classical music，non-commercial and free search engine of classical music。'+
-'</br>We collected most of scores,videos,audios about classical music, for providing convenient search tool to musicans,classical music fans.'+
-'</br>At the same time ,we are working for classical music standardization. To make classical music easier to touch and share.',
+            help_content:'null',
+            about_content:'The magnifier of classical music，non-commercial and free search engine of classical music。'+
+'</br>We collected most of scores, videos, audios of classical music, for providing convenient search tool to musicans.'+
+'</br>At the same time,we are working for classical music standardization(establish relationship with scores, audios, artists etc and build stardard format of classical music database).To make classical music easier to touch and share.',
             about:'About us',
             noResult:'No result',
             musicWall:'Music Wall',
@@ -127,13 +132,11 @@ exports.config={
             '</br>A1:可能是以下原因之一:'+
             '</br>1)搜索的关键字太长会经常搜索不到,正在完善中'+
             '</br>2)搜索的关键字是中文英文以外的语言,其他语言暂时不支持'+
-            '</br>3)服务器繁忙或者出bug了'+
-            '</br>4)这曲子真的不好找,我们已经记录了所有搜索不到的关键字,会尽快完善的'+
             '</br>任何建议都欢迎来吐槽 微信:drcalculon'
             ,
             about:'关注公众号',
             about_content:
-            '<img class="qrcode" src="images/qrcode.jpg">古典音乐放大镜(The magnifier of classical music)，免费的古典音乐搜索工具。</br>我们汇集了大部分的古典音乐乐谱，视频，音频的资源，为古典音乐爱好者们提供便捷的工具。同时为实现古典音乐的信息标准化做努力，使得古典音乐的任何信息更容易获取和分享。'
+            '<img class="qrcode" src="images/qrcode.jpg">古典音乐放大镜(The magnifier of classical music)，非营利的古典音乐搜索工具。</br>我们汇集了大部分的古典音乐乐谱，视频，音频的资源。同时为实现古典音乐的信息标准化做努力（构建音频，乐谱，演奏家等信息的关系网和标准的存储格式），使得古典音乐的任何信息更容易获取和分享。'
             ,
             noResult:'未找到结果',
             musicWall:'音乐墙',

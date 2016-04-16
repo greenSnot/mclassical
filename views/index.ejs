@@ -183,8 +183,8 @@
         template.config('openTag','<#');
         template.config('closeTag','#>');
 
-        var height=window.innerHeight;
-        var width=window.innerWidth;
+        var height=document.documentElement.clientHeight;
+        var width=document.documentElement.clientWidth;
         $('#result').width(width-11);
         $('#result').height(height-100);
         $('#introduction').width(width-11);

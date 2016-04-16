@@ -8,9 +8,6 @@ con.mclassical.authenticate('r','r')
 db=con.mclassical
 dbNaxos=db.naxos_music_library
 
-cookie= cookielib.CookieJar()
-cookie_handler =urllib2.HTTPCookieProcessor(cookie)
-
 print dbNaxos.update({'download_status':{'$exists':False}},{'$set':{'download_status':0}},multi=True)
 headers={
         'Host':'www.naxosmusiclibrary.com',
@@ -127,6 +124,8 @@ def parseInt(num):
 dir_sum=0
 zip_sum=0
 zips_path='./resources_zips/'
+temp_zips_path='./temp/'
+createDir(temp_zips_path)
 res_path='./resources'+str(dir_sum)+'/'
 def downloadById(album_id,id):
     global lastLoginTime
@@ -150,7 +149,7 @@ def downloadById(album_id,id):
         while not login():
             pass
     print 'downloading '+album_id+' '+id
-    while not download('http://www.naxosmusiclibrary.com/mediaplayer/PlayTrack.asp?id='+id+'&br=64',res_path+album_id+'/'+id,forever=False):
+    while not download('http://www.naxosmusiclibrary.com/mediaplayer/PlayTrack.asp?id='+id+'&br=64',res_path+album_id+'/'+id,forever=False,raise_404=True):
         while not login():
             pass
 
@@ -161,17 +160,27 @@ while total>0:
     index=int(random.random()*total)
     print str(index)+'/'+str(total)
     album=albums[index]
+    break_tag=False
     if 'download_status' in album.keys() and album['download_status']>0:
         print 'downloaded album '+album['id']
         continue
     dbNaxos.update({'id':album['id']},{'$set':{'download_status':1}})
     for work in album['details']['works']:
-        if 'id' in work.keys():
-            downloadById(album['id'],work['id'])
-        for part in work['parts']:
-            downloadById(album['id'],part['id'])
+        try:
+            if 'id' in work.keys():
+                downloadById(album['id'],work['id'])
+            for part in work['parts']:
+                downloadById(album['id'],part['id'])
+        except Exception:
+            print('abortting')
+            break_tag=True
+            break
+    if break_tag:
+        continue
 
-    os.popen('tar -zcf '+zips_path+str(album['id'])+'.tar '+res_path+str(album['id']))
+    print 'tar ing'
+    os.popen('tar -zcf '+temp_zips_path+str(album['id'])+'.tar '+res_path+str(album['id']))
+    os.popen('mv '+temp_zips_path+str(album['id'])+'.tar '+zips_path)
     os.popen('rm -rf '+res_path+str(album['id']))
 
     dbNaxos.update({'id':album['id']},{'$set':{'download_status':2}})

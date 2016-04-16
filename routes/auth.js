@@ -155,7 +155,8 @@ console.log('sorry');
                     req.path=='/search'||
 		    req.path=='/tools/google_translate'||
 		    req.path=='/tools/imslp_search'||
-                    req.path=='/random'
+                    req.path=='/random'||
+                    req.path.indexOf('/s/')==0
                ){
                    next();
                    return;
