@@ -13,6 +13,12 @@
         <title>古典音乐放大镜</title>
     </head>
 <body>
+	<link href="/css/tips.css" rel="stylesheet">
+	<div id="tips-wrap">
+		<div class="tip"></div>
+	</div>
+	<script type="text/javascript" src="/js/tips.js"></script>
+
         <pjax style="display:none"><%=(pjax&&pjax.keyword)||""%></pjax>
         <div id="head">
             <a id="logo">
@@ -146,6 +152,7 @@
                     <div><#=audios[i].player#></div>
                 </div>
             </div>
+<!--
                  <div class="audiojsZ">
                     <audio data-url="<#=audios[i].url#>" preload="false"></audio>
                     <div class="play-pauseZ">
@@ -163,6 +170,7 @@
                     </div>
                     <div class="error-messageZ"></div>
                  </div>
+-->
         </a>
     <#}#>
 </script>
@@ -658,15 +666,25 @@
                         randomPlay();
                     }
                 });
-                audio.load(data.url);
-                audio.playPause();
+                //audio.load(data.url);
+                //audio.playPause();
+		window.localStorage.counter=window.localStorage.counter>=0?window.localStorage.counter+1:0;
+		if(window.localStorage.counter<3)
+		Tips.show({
+		   text:'<%-language.noLongerSupported%>'
+		});
             }else{
-                audio.load(data.url);
-                audio.playPause();
-                audio.playPause();
-                if(!audio.playing){
-                    audio.playPause();
-                }
+		window.localStorage.counter=window.localStorage.counter>=0?window.localStorage.counter+1:0;
+		if(window.localStorage.counter<3)
+		Tips.show({
+		   text:'<%-language.noLongerSupported%>'
+		});
+                //audio.load(data.url);
+                //audio.playPause();
+                //audio.playPause();
+                //if(!audio.playing){
+                //    audio.playPause();
+                //}
             }
         }
         snot.init({

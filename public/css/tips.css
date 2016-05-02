@@ -1,0 +1,25 @@
+#tips-wrap{
+    position:fixed;
+    top:10px;
+    left:0;
+    visibility:hidden;
+    width:100%;
+    opacity:0.01;
+    -webkit-transition:all 0.1s ease-out;
+    text-align:center;
+    z-index:200;
+}
+#tips-wrap.show{
+    visibility:visible;
+    opacity:1;
+}
+#tips-wrap .tip{
+    height:30px;
+    display:inline-block;
+    line-height:30px;
+    box-shadow:0px 0px 3px #666;
+    border-radius:3px;
+    color:#fff;
+    background:#D84949;
+    padding:0 40px 0 40px;
+}

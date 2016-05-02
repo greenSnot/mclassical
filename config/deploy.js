@@ -94,9 +94,9 @@ exports.config={
             more:'More',
             volunteer:'Join volunteer',
             volunteer_content:'For more precise search results,we are trying to recruit following volunteers to refine our system'+
-            '</br>A. Reviewers who review the score images("musicXML" format tranlated by computers from PDF) and information of albums.'+
-            '</br>B. Messengers who contact with the record companys for cooperation.'+
-            '</br>C. Programmers who can handle audios analysis and scores recognition system, search engine optimization, database optimization and website maintenance.'+
+            '</br>A. Programmer who can manager and design the databases and search engine optimization'+
+            '</br>B. Programmer who be able to develop the scores recognition system from PDF to electronic music scores(like musicXML).'+
+            '</br>C. Programmer who can handle audios analysis and convert audios to electronic music scores.'+
             '</br>'+
             '</br>Contact: Mr.Calculon</br>0x00111111@gmail.com',
             help:'Help',
@@ -107,6 +107,7 @@ exports.config={
             about:'About us',
             noResult:'No result',
             musicWall:'Music Wall',
+            noLongerSupported:'Online Listening is no longer supported',
             busy:'Server is too busy,please try later'
         },
         cn:{
@@ -117,21 +118,22 @@ exports.config={
             more:'更多',
             volunteer:'加入志愿者',
             volunteer_content:
-            '为了让放大镜搜索结果更精准，更多音乐爱好者从中受益，需要以下志愿者帮忙来完善:'+
-            '</br>A 审计员,筛选检索结果 去重复和不准确的结果 审核机器识别后的乐谱（扫描的乐谱手稿转换成的电子乐谱）'+
-            '</br>B 外交翻译,与国内外一些组织机构和唱片公司洽谈合作'+
-            '</br>C 程序员,包括前端后端开发 搜索优化,图像(乐谱)及音频方向的识别工作'+
-            '</br>D 微信公众号推广和招聘喜欢音乐的志愿者们'+
-            '</br>E 美工交互设计和产品经理。'+
+            '为了让放大镜搜索结果更精准，还有大量工作需要完成，主要是以下:'+
+            '</br>A 数据库设计和搜索优化'+
+	    '</br>B 图像(乐谱)的识别工作，扫描件转电子乐谱'+
+	    '</br>C 音频方向的识别工作，音频转电子乐谱'+
+	    '</br>D 乐理知识丰富的审核者，帮助审核机器经过识别并生成的乐谱'+
             '</br>'+
             '</br>感谢所有志愿者和音乐爱好者的支持'+
+	    '</br>如果你也有野心和兴趣'+
             '</br>联系微信:drcalculon',
             help:'帮助',
             help_content:
             'Q1:为什么搜索不到曲子？'+
             '</br>A1:可能是以下原因之一:'+
-            '</br>1)搜索的关键字太长会经常搜索不到,正在完善中'+
-            '</br>2)搜索的关键字是中文英文以外的语言,其他语言暂时不支持'+
+            '</br>1)本搜索工具仅限于古典音乐并不包含近代作品和影视BGM及轻音乐'+
+            '</br>2)如果关键字是中文英文以外的语言,这可能会产生不精准的搜索结果，建议使用中文或英文'+
+            '</br>3)如果关键字太长，建议使用英文并以这种形式进行搜索，作曲家／演奏家＋作品号'+
             '</br>任何建议都欢迎来吐槽 微信:drcalculon'
             ,
             about:'关注公众号',
@@ -140,6 +142,7 @@ exports.config={
             ,
             noResult:'未找到结果',
             musicWall:'音乐墙',
+            noLongerSupported:'目前暂不支持在线试听',
             busy:'服务器现在有点忙,请稍后再试试看'
         }
     },
