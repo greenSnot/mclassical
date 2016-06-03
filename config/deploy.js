@@ -94,9 +94,9 @@ exports.config={
             more:'More',
             volunteer:'Join volunteer',
             volunteer_content:'For more precise search results,we are trying to recruit following volunteers to refine our system'+
-            '</br>A. Programmer who can manager and design the databases and search engine optimization'+
-            '</br>B. Programmer who be able to develop the scores recognition system from PDF to electronic music scores(like musicXML).'+
-            '</br>C. Programmer who can handle audios analysis and convert audios to electronic music scores.'+
+            '</br>A. Databases designing and search engine optimization.'+
+            '</br>B. Scores recognition, from PDF to electronic music score format(like musicXML).'+
+            '</br>C. Audios analysis, audios fingerprint and convert audios to electronic music scores.'+
             '</br>'+
             '</br>Contact: Mr.Calculon</br>0x00111111@gmail.com',
             help:'Help',
