@@ -15,3 +15,6 @@ crawler/naxos_music_library/htmls
 *.swm
 *.swn
 *.pyc
+
+albert/preprocessing/input/*.*
+albert/preprocessing/output/*.*
