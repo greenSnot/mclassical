@@ -188,7 +188,7 @@ sudo iptables -A INPUT -p tcp -s 52.68.201.23 --dport 27017 -j ACCEPT
 sudo iptables -A INPUT -p tcp --dport 27017 -j DROP
 sudo iptables -A INPUT -p tcp --dport 6379 -j DROP
 sudo iptables -A INPUT -p tcp --dport 9200 -j DROP
-sudo iptables -A INPUT -p tcp -j ACCEPT
+sudo iptables -A INPUT -p tcp -j DROP
 
 ############JAVA
 apt-get install -y openjdk-7-jre-headless 
