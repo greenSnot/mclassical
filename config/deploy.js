@@ -26,7 +26,7 @@ exports.config={
         pass:''
 	},
     elastic_search:{
-        url:'http://47.88.150.168:9200'
+        url:'http://47.90.57.152:9200'
     },
 	youku:{
 		client_id:'',
@@ -148,8 +148,8 @@ exports.config={
     },
     servers:{
         SZ:'112.74.211.14',
-        SGP:'47.88.150.168',
-        JP:'52.68.201.23'
+        JP:'52.68.201.23',
+        HK:'47.90.57.152',
     },
     wechat:{
         app_id:'',

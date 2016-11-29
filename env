@@ -19,6 +19,9 @@ cd libs
 sudo wget http://downloads.mongodb.org/linux/mongodb-linux-x86_64-2.6.6.tgz
 sudo tar -zxvf mongodb-linux-x86_64-2.6.6.tgz
 sudo mv mongodb-linux-x86_64-2.6.6 mongodb
+cd /usr/local/bin && \
+ln -s ~/node/bin/npm && \
+
 export PATH=/home/libs/mongodb/bin:$PATH
 
 ############## install node
@@ -47,6 +50,7 @@ sudo chmod 600 /data/replset/key/r0
 
 ################# runMongo
 sudo env PATH=$PATH mongod --dbpath=/data/db --replSet rs0 --keyFile /data/replset/key/main --port 27017 --fork  --logpath /data/mongodb.log --logappend --oplogSize 5000
+sudo env PATH=$PATH mongod --dbpath=/data/db_r0 --replSet rs0 --keyFile /data/replset/key/r0 --port 28017 --fork  --logpath /data/mongodb.log --logappend --oplogSize 5000
 
 sudo env PATH=$PATH mongod --dbpath=/data/db --port 27017 --fork  --logpath /data/mongodb.log --logappend
 
@@ -111,6 +115,8 @@ db.updateUser(
     ]
   }
 )
+####login
+mongo -u root -p admin --authenticationDatabase admin
 ################mongo replset
 mongo
 rs.initiate(
@@ -118,11 +124,16 @@ rs.initiate(
 	"_id" : "rs0",
 	"version" : 1,
 	"members" : [
-		{
+    {
 			"_id" : 0,
-            "priority":1,
-			"host" : "47.88.150.168:27017"
-		},
+      "priority":1,
+			"host" : "47.90.57.152:27017"
+    },
+    {
+			"_id" : 1,
+      "priority":0.5,
+			"host" : "47.90.57.152:28017"
+    },
 		{
 			"_id" : 1,
             "priority":0.5,
@@ -158,20 +169,20 @@ sudo iptables -F
 sudo iptables -X
 sudo iptables -Z
 sudo iptables -A INPUT -i lo -j ACCEPT 
-sudo iptables -A INPUT -p tcp --dport 9000 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 9200 -j ACCEPT
 sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
 sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
 sudo iptables -A INPUT -p tcp -s 52.68.201.23  --dport 9200 -j ACCEPT
 sudo iptables -A INPUT -p tcp -s 112.74.211.14 --dport 9200 -j ACCEPT
-sudo iptables -A INPUT -p tcp -s 47.88.150.168 --dport 9200 -j ACCEPT
+sudo iptables -A INPUT -p tcp -s 47.90.57.152 --dport 9200 -j ACCEPT
 sudo iptables -A INPUT -p tcp -s 127.0.0.1 --dport 9300 -j ACCEPT
 sudo iptables -A INPUT -p tcp -s 127.0.0.1 --dport 9200 -j ACCEPT
 sudo iptables -A INPUT -p tcp -s 127.0.0.1 --dport 27017 -j ACCEPT
 sudo iptables -A INPUT -p tcp -s 127.0.0.1 --dport 6279 -j ACCEPT
-sudo iptables -A INPUT -p tcp -s 47.88.150.168 --dport 6379 -j ACCEPT
+sudo iptables -A INPUT -p tcp -s 47.90.57.152 --dport 6379 -j ACCEPT
 sudo iptables -A INPUT -p tcp -s 112.74.211.14 --dport 6379 -j ACCEPT
 sudo iptables -A INPUT -p tcp -s 52.68.201.23 --dport 6379 -j ACCEPT
-sudo iptables -A INPUT -p tcp -s 47.88.150.168 --dport 27017 -j ACCEPT
+sudo iptables -A INPUT -p tcp -s 47.90.57.152 --dport 27017 -j ACCEPT
 sudo iptables -A INPUT -p tcp -s 112.74.211.14 --dport 27017 -j ACCEPT
 sudo iptables -A INPUT -p tcp -s 52.68.201.23 --dport 27017 -j ACCEPT
 sudo iptables -A INPUT -p tcp --dport 27017 -j DROP
@@ -179,6 +190,9 @@ sudo iptables -A INPUT -p tcp --dport 6379 -j DROP
 sudo iptables -A INPUT -p tcp --dport 9200 -j DROP
 sudo iptables -A INPUT -p tcp -j ACCEPT
 
+############JAVA
+apt-get install -y openjdk-7-jre-headless 
+export JAVA_HOME=/usr/
 ############### install elastic
 cd ~
 mkdir zips
@@ -189,7 +203,6 @@ mv elasticsearch-1.7.3 /home/elasticsearch
 cd /home/elasticsearch
 ./bin/plugin --install com.github.richardwilly98.elasticsearch/elasticsearch-river-mongodb/2.0.5
 
-????????????????INSTALL JAVA
 useradd elastic
 su bin/elastic
 
