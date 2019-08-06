@@ -97,7 +97,7 @@ function isIpad(){
     return u.indexOf('iPad')>=0?1:0;
 }
 
-function isMobile(){
+function checkMobile(){
     if(/AppleWebKit.*Mobile/i.test(navigator.userAgent) 
             || /Android/i.test(navigator.userAgent) 
             || /BlackBerry/i.test(navigator.userAgent) 
