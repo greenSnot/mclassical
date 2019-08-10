@@ -29,18 +29,16 @@ router.get('/random',function(req,res){
 
 router.get('/s/:type/:keyword',function(req,res){
   var type=req.params['type'];
-  var keyword=req.params['keyword'];
-  var json={
+  var keyword=decodeURIComponent(req.params['keyword']);
+  var json = {
     pjax:{
-      type:type,
-      keyword:keyword
+      type: type,
+      keyword: keyword
     },
-    language:config.languages[req.query.language]?(config.languages[req.query.language]?config.languages[req.query.language]:config.languages.cn):(config.serverName=='SZ'?config.languages.cn:config.languages.en),
-    user_level:undefined,
-    wechat_info:undefined,
-    youku_client_id:config.youku.client_id
+    language: config.languages.cn,
+    youku_client_id: config.youku.client_id
   };
-  res.render('index',json);
+  res.render('index', json);
 })
 
 router.get('/pdf/:id', function(req, res) {
