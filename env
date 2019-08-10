@@ -58,12 +58,15 @@ sudo env PATH=$PATH mongod --dbpath=/data/db --port 27017 --fork  --logpath /dat
 sudo env PATH=$PATH mongod --dbpath=/data/db --replSet rs0 --keyFile /data/replset/key/main --port 27017 --fork  --logpath /data/mongodb.log --logappend --oplogSize 5000
 sudo env PATH=$PATH mongod --dbpath=/data/db_r0 --replSet rs0 --keyFile /data/replset/key/r0 --port 28010 --fork  --logpath /data/mongodb_r0.log --logappend --oplogSize 5000
 
+## with auth
+sudo env PATH=$PATH mongod --auth --dbpath=/data/db --replSet rs0 --keyFile /data/replset/key/main --port 27017 --fork  --logpath /data/mongodb.log --logappend --oplogSize 5000
+sudo env PATH=$PATH mongod --auth --dbpath=/data/db_r0 --replSet rs0 --keyFile /data/replset/key/r0 --port 28010 --fork  --logpath /data/mongodb_r0.log --logappend --oplogSize 5000
 
 use admin
 db.createUser(
   {
     user: "root",
-    pwd: "admin",
+    pwd: "1qaz2wsxUJIA",
     roles:
     [
       { role: "root", db: "admin" },
@@ -81,8 +84,8 @@ db.createUser(
 use mclassical
 db.createUser(
 {
-    user:'r',
-    pwd:'r',
+    user:'root2',
+    pwd:'1qaz2wsxUJIA',
     roles:[
         {
             role:"readWrite",
@@ -116,7 +119,7 @@ db.updateUser(
   }
 )
 ####login
-mongo -u root -p admin --authenticationDatabase admin
+mongo -u root -p 1qaz2wsxUJIA --authenticationDatabase admin
 ################mongo replset
 mongo
 rs.initiate(
@@ -169,7 +172,7 @@ sudo iptables -F
 sudo iptables -X
 sudo iptables -Z
 sudo iptables -A INPUT -i lo -j ACCEPT 
-sudo iptables -A INPUT -p tcp --dport 9200 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 9200 -j ACCEPT //be careful
 sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
 sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
 sudo iptables -A INPUT -p tcp -s 52.68.201.23  --dport 9200 -j ACCEPT
@@ -213,7 +216,7 @@ su bin/elastic
     "mongodb": { 
       "credentials":
       [
-          { "db": "admin", "user": "root", "password": "admin" }
+          { "db": "admin", "user": "root", "password": "1qaz2wsxUJIA" }
       ],
       "options":{
           "exclude_fields":[]
@@ -232,7 +235,7 @@ su bin/elastic
     "mongodb": { 
       "credentials":
       [
-          { "db": "admin", "user": "root", "password": "admin" }
+          { "db": "admin", "user": "root", "password": "1qaz2wsxUJIA" }
       ],
       "db": "mclassical", 
       "collection": "SCMD_players"
@@ -248,7 +251,7 @@ su bin/elastic
     "mongodb": { 
       "credentials":
       [
-          { "db": "admin", "user": "root", "password": "admin" }
+          { "db": "admin", "user": "root", "password": "1qaz2wsxUJIA" }
       ],
       "db": "mclassical", 
       "collection": "SCMD_albums"
@@ -264,7 +267,7 @@ su bin/elastic
     "mongodb": { 
       "credentials":
       [
-          { "db": "admin", "user": "root", "password": "admin" }
+          { "db": "admin", "user": "root", "password": "1qaz2wsxUJIA" }
       ],
       "db": "mclassical", 
       "collection": "SCMD_composers"
@@ -280,7 +283,7 @@ su bin/elastic
     "mongodb": { 
       "credentials":
       [
-          { "db": "admin", "user": "root", "password": "admin" }
+          { "db": "admin", "user": "root", "password": "1qaz2wsxUJIA" }
       ],
       "db": "mclassical", 
       "collection": "SCMD_works"
@@ -291,3 +294,6 @@ su bin/elastic
     }
   }'
 
+### dump & restore
+
+mongorestore -u root -p 1qaz2wsxUJIA --authenticationDatabase admin --db mclassical ./mclassical
