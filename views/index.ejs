@@ -2,14 +2,13 @@
     <meta charset="utf-8">
     <meta name="format-detection" content="telephone=no">
     <meta name="viewport" content=" user-scalable=no, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0">
-    <meta name="author" content="greenSnot@github">
     <head>
-        <link rel="stylesheet" type="text/css" href="http://static.mclassical.org/css/mclassical.css">
+        <link rel="stylesheet" type="text/css" href="css/mclassical.css">
         <script>var log=console.log.bind(console);</script>
         <script type="text/javascript" src="http://player.youku.com/jsapi">
 </script>
         <script>console.log=log;</script>
-        <script src='http://static.mclassical.org/js/mclassical-base.js?version=<%=version%>'></script>
+        <script src="/js/mclassical-base.js"></script>
         <title>古典音乐放大镜</title>
     </head>
 <body>
@@ -119,7 +118,7 @@
         </div>
 
 </body>
-<script src="http://static.mclassical.org/js/template-native.js"></script>
+<script src="/js/template-native.js"></script>
 <script id="template-results" type="text/html">
     <#if(
     (scores==undefined||(scores&&scores.length==0))&&
@@ -174,7 +173,7 @@
         </a>
     <#}#>
 </script>
-<script src="http://static.mclassical.org/js/audio.min.js"></script>
+<script src="/js/audio.min.js"></script>
 <script id="template-youku" type="text/html">
     <div id="youkuplayer<#=youku_id#>" style="height:<#=height#>px;width:100%;display:block;"></div>
 </script>
@@ -183,10 +182,10 @@
         <div type="<#=spriteType#>" class="sprite-music" style="z-index:<#=zindex#>;background-image:url(<#=album_thumbnail#>);background-size:100%"></div>
     </div>
 </script>
-<script src='http://static.mclassical.org/js/snot-utils.min.js?version=<%=version%>'></script>
-<script src='http://static.mclassical.org/js/snot-pano.min.js?version=<%=version%>'></script>
+<script src="/js/snot-utils.min.js"></script>
+<script src="/js/snot-pano.min.js"></script>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-<script src="http://static.mclassical.org/js/wechatSharing.js?version=<%=version%>"></script>
+<script src="/js/wechatSharing.js"></script>
 <script>
         template.config('openTag','<#');
         template.config('closeTag','#>');
@@ -227,7 +226,7 @@
                         alert(res.msg);
                         return;
                     }
-                    history.pushState({},$('#input-search').val(),'/s/'+type+'/'+encodeURI(keyword));
+                    history.pushState({},$('#input-search').val(),'/s/'+type+'/'+encodeURIComponent(keyword));
                     res.ratio=(width-11-10)/200*100;
                     $('#result-content').html(template('template-results',res));
                     if($('.tab.selected').attr('data-type')=='audios'){

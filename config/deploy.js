@@ -26,7 +26,7 @@ exports.config={
         pass:''
 	},
     elastic_search:{
-        url:'http://47.90.57.152:9200'
+        url:'http://66.42.117.219:9200'
     },
 	youku:{
 		client_id:'',
