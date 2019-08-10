@@ -329,7 +329,7 @@ exports.Musopen=function(keyword,page){
           data.push({
             source:'Musopen',
             title: t.name+' '+t.resources[j].name,
-            link: config.domain + '/pdf?id=' + id,
+            link: config.domain + '/pdf/' + id,
           });
         }
       }
