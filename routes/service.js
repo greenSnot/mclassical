@@ -1,4 +1,5 @@
 var when=require('when');
+var request = require('request');
 var nodegrass=require('nodegrass');
 var utils=require('../utils');
 var exec = require('child_process').exec;
@@ -73,7 +74,6 @@ exports.elastic_search=function(keyword,type){
   json=utils.urlencode(JSON.stringify(json));
 
   var url=config.elastic_search.url+'/'+map[type]+'/_search?source='+json;
-  console.log(url);
   return when.promise(function(resolve,reject){
     getHtml(url).then(function(data){
       data=JSON.parse(data);
@@ -316,6 +316,7 @@ exports.google_imslp=function(keyword){
     });
   }
 };
+
 exports.Musopen=function(keyword,page){
   return when.promise(function(resolve,reject){
     exports.elastic_search(keyword,'scores').then(function(r){
@@ -324,16 +325,21 @@ exports.Musopen=function(keyword,page){
         var t=r[i]._source;
         var resources_length=t.resources.length;
         for(var j =0;j<resources_length;++j){
+          const id = t.resources[j].url.match(/(\w)+\.pdf$/)[0].split('.pdf')[0];
           data.push({
             source:'Musopen',
-            title:t.name+' '+t.resources[j].name,
-            link:'http://static.mclassical.org/pdfjs/web/viewer.html?file='+'http://scores.mclassical.org/musopen/'+utils.sha1(t.resources[j].url)+'.pdf'
+            title: t.name+' '+t.resources[j].name,
+            link: config.domain + '/pdf?id=' + id,
           });
         }
       }
       resolve(data);
     })
   });
+}
+
+exports.pdfProxy = function(id, res) {
+  request('https://app.box.com/shared/static/' + id + '.pdf').pipe(res);
 }
 
 exports.Engine=function(keyword,engine){

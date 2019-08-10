@@ -5,13 +5,16 @@ var iconv=require('iconv-lite');
 var when=require('when');
 
 var config=require('./config');
-var search=require('./service');
+var service=require('./service');
 var utils=require('../utils');
 
 router.get('/',function(req,res){
   var json={
     pjax:false,
-    language:config.languages[req.query.language]?(config.languages[req.query.language]?config.languages[req.query.language]:config.languages.cn):(config.serverName=='SZ'?config.languages.cn:config.languages.en),
+    language:
+    config.languages[req.query.language]
+      ? (config.languages[req.query.language]?config.languages[req.query.language]:config.languages.cn) :
+      (config.languages.cn),
     user_level:undefined,
     wechat_info:undefined,
     youku_client_id:config.youku.client_id};
@@ -19,7 +22,7 @@ router.get('/',function(req,res){
 });
 
 router.get('/random',function(req,res){
-  search.elastic_search_random(90).then(function(r){
+  service.elastic_search_random(90).then(function(r){
     res.json({code:0,msg:'ok',data:r});
   })
 })
@@ -39,5 +42,10 @@ router.get('/s/:type/:keyword',function(req,res){
   };
   res.render('index',json);
 })
+
+router.get('/pdf/:id', function(req, res) {
+  var id = req.params['id'];
+  service.pdfProxy(id, res);
+});
 
 module.exports = router;

@@ -50,13 +50,19 @@ exports.getHtml=function(url,data){
 			data._='_';
 			nodegrass.post(url,function(r){
 				resolve(r);
-			},headers,data,'utf8');
+      },headers,data,'utf8').on('error', function(e) {
+        console.error(e);
+        resolve('');
+      });
 		}else{
 			nodegrass.get(url,function(data){
-				resolve(data);	
-			},headers);
+				resolve(data);
+			},headers).on('error', function(e) {
+        console.error(e);
+        resolve('');
+      });
 		}
-	})	
+	})
 }
 
 exports.before_translate_filter=function(text){
@@ -109,7 +115,7 @@ exports.after_translate_mix=function(key,map){
     map[key]=true;
 }
 
-exports.unicode2Chr=function(str) { 
+exports.unicode2Chr=function(str) {
                 return unescape(str.replace(/\\u/gi, '%u'));
 
 }
@@ -121,44 +127,44 @@ exports.showapi_genstr=function(s){
 	}
 	return r;
 }
-//字符转换为unicode 
-exports.chr2Unicode=function(str) { 
+//字符转换为unicode
+exports.chr2Unicode=function(str) {
 	                return escape(str).toLocaleLowerCase().replace(/%u/gi, '\\u');
 }
-exports.urlencode =function(str) {  
-    str = (str + '').toString();   
+exports.urlencode =function(str) {
+    str = (str + '').toString();
 
-    return encodeURIComponent(str).replace(/!/g, '%21').replace(/'/g, '%27').replace(/\(/g, '%28').  
-    replace(/\)/g, '%29').replace(/\*/g, '%2A').replace(/%20/g, '+');  
-} 
-exports.urldecode=function(zipStr){  
-    var uzipStr="";  
-    for(var i=0;i<zipStr.length;i++){  
-        var chr = zipStr.charAt(i);  
-        if(chr == "+"){  
-            uzipStr+=" ";  
-        }else if(chr=="%"){  
-            var asc = zipStr.substring(i+1,i+3);  
-            if(parseInt("0x"+asc)>0x7f){  
-                uzipStr+=decodeURI("%"+asc.toString()+zipStr.substring(i+3,i+9).toString());  
-                i+=8;  
-            }else{  
-                uzipStr+=AsciiToString(parseInt("0x"+asc));  
-                i+=2;  
-            }  
-        }else{  
-            uzipStr+= chr;  
-        }  
-    }  
-  
-    return uzipStr;  
-}  
-  
-function StringToAscii(str){  
-    return str.charCodeAt(0).toString(16);  
-}  
-function AsciiToString(asccode){  
-    return String.fromCharCode(asccode);  
+    return encodeURIComponent(str).replace(/!/g, '%21').replace(/'/g, '%27').replace(/\(/g, '%28').
+    replace(/\)/g, '%29').replace(/\*/g, '%2A').replace(/%20/g, '+');
+}
+exports.urldecode=function(zipStr){
+    var uzipStr="";
+    for(var i=0;i<zipStr.length;i++){
+        var chr = zipStr.charAt(i);
+        if(chr == "+"){
+            uzipStr+=" ";
+        }else if(chr=="%"){
+            var asc = zipStr.substring(i+1,i+3);
+            if(parseInt("0x"+asc)>0x7f){
+                uzipStr+=decodeURI("%"+asc.toString()+zipStr.substring(i+3,i+9).toString());
+                i+=8;
+            }else{
+                uzipStr+=AsciiToString(parseInt("0x"+asc));
+                i+=2;
+            }
+        }else{
+            uzipStr+= chr;
+        }
+    }
+
+    return uzipStr;
+}
+
+function StringToAscii(str){
+    return str.charCodeAt(0).toString(16);
+}
+function AsciiToString(asccode){
+    return String.fromCharCode(asccode);
 }
 
 exports.getPlatform=function(req){
