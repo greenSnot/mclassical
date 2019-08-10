@@ -85,79 +85,37 @@ exports.config={
 		access_key:'',
 		secret_key:''
 	},
-    languages:{
-        en:{
-            search:'Search',
-            videos:'Videos',
-            scores:'Scores',
-            audios:'Audios',
-            more:'More',
-            volunteer:'Join volunteer',
-            volunteer_content:'For more precise search results,we are trying to recruit following volunteers to refine our system'+
-            '</br>A. Databases designing and search engine optimization.'+
-            '</br>B. Scores recognition, from PDF to electronic music score format(like musicXML).'+
-            '</br>C. Audios analysis, audios fingerprint and convert audios to electronic music scores.'+
-            '</br>'+
-            '</br>Contact: Mr.Calculon</br>0x00111111@gmail.com',
-            help:'Help',
-            help_content:'null',
-            about_content:'The magnifier of classical music，non-commercial and free search engine of classical music。'+
-'</br>We collected most of scores, videos, audios of classical music, for providing convenient search tool to musicans.'+
-'</br>At the same time,we are working for classical music standardization(establish relationship with scores, audios, artists etc and build stardard format of classical music database).To make classical music easier to touch and share.',
-            about:'About us',
-            noResult:'No result',
-            musicWall:'Music Wall',
-            noLongerSupported:'Online Listening is no longer supported',
-            busy:'Server is too busy,please try later'
-        },
-        cn:{
-            search:'搜索',
-            videos:'视频',
-            scores:'乐谱',
-            audios:'音频',
-            more:'更多',
-            volunteer:'加入志愿者',
-            volunteer_content:
-            '为了让放大镜搜索结果更精准，还有大量工作需要完成，主要是以下:'+
-            '</br>A 数据库设计和搜索优化'+
-	    '</br>B 图像(乐谱)的识别工作，扫描件转电子乐谱'+
-	    '</br>C 音频方向的识别工作，音频转电子乐谱'+
-	    '</br>D 乐理知识丰富的审核者，帮助审核机器经过识别并生成的乐谱'+
-            '</br>'+
-            '</br>感谢所有志愿者和音乐爱好者的支持'+
-	    '</br>如果你也有野心和兴趣'+
-            '</br>联系微信:drcalculon',
-            help:'帮助',
-            help_content:
-            'Q1:为什么搜索不到曲子？'+
-            '</br>A1:可能是以下原因之一:'+
-            '</br>1)本搜索工具仅限于古典音乐并不包含近代作品和影视BGM及轻音乐'+
-            '</br>2)如果关键字是中文英文以外的语言,这可能会产生不精准的搜索结果，建议使用中文或英文'+
-            '</br>3)如果关键字太长，建议使用英文并以这种形式进行搜索，作曲家／演奏家＋作品号'+
-            '</br>任何建议都欢迎来吐槽 微信:drcalculon'
-            ,
-            about:'关注公众号',
-            about_content:
-            '<img class="qrcode" src="images/qrcode.jpg">古典音乐放大镜(The magnifier of classical music)，非营利的古典音乐搜索工具。</br>我们汇集了大部分的古典音乐乐谱，视频，音频的资源。同时为实现古典音乐的信息标准化做努力（构建音频，乐谱，演奏家等信息的关系网和标准的存储格式），使得古典音乐的任何信息更容易获取和分享。'
-            ,
-            noResult:'未找到结果',
-            musicWall:'音乐墙',
-            noLongerSupported:'目前暂不支持在线试听',
-            busy:'服务器现在有点忙,请稍后再试试看'
-        }
-    },
-    servers:{
-        SZ:'112.74.211.14',
-        JP:'52.68.201.23',
-        HK:'47.90.57.152',
-    },
-    wechat:{
-        app_id:'',
-        app_secret:''
-    },
-    neteasemusic:{
-        search_url:'http://route.showapi.com/760-1?'
-    },
-    domain:'http://mclassical.org',
-    version:'1.0'
+  languages:{
+      cn:{
+          search:'搜索',
+          videos:'视频',
+          scores:'乐谱',
+          audios:'音频',
+          more:'更多',
+          volunteer: '实验室',
+          volunteer_content: 'TODO',
+          help: '帮助',
+          help_content:
+          'email: kasichdand@gmail.com',
+          about: '关于',
+          about_content: '这是个充满野心与热情的业余项目，目的是希望古典音乐更容易被获取。这不仅仅是数据的收集工作，还包含对历史数据的数字化的工作（如乐谱识别）。',
+          noResult:'未找到结果',
+          musicWall:'音乐墙',
+          noLongerSupported:'目前暂不支持在线试听',
+          busy:'服务器现在有点忙,请稍后再试试看'
+      }
+  },
+  servers:{
+    JP:'52.68.201.23',
+    HK:'47.90.57.152',
+  },
+  wechat:{
+      app_id:'',
+      app_secret:''
+  },
+  neteasemusic:{
+      search_url:'http://route.showapi.com/760-1?'
+  },
+  domain:'http://mclassical.org',
+  version:'1.0'
 }
