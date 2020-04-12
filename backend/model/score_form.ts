@@ -2,20 +2,14 @@ import { Index, ManyToOne, Entity, PrimaryGeneratedColumn, Column } from 'typeor
 import { Score } from './score';
 
 @Entity()
-export class ScoreName {
+export class ScoreForm {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToOne(type => Score, score => score.names)
+  @ManyToOne(type => Score, score => score.forms)
   score!: Score;
-
-  @Column({ type: 'varchar', length: 1024 })
-  name!: string;
 
   @Index()
   @Column()
-  lang!: string;
-
-  @Column()
-  is_local_name!: boolean;
+  name!: string;
 }

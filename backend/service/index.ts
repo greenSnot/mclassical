@@ -2,10 +2,15 @@ import * as request from 'request';
 import { request_get, request_post, unicode_to_chr } from '../utils';
 import config from '../config';
 import { Score, AudioWithAlbum, Video } from '../types';
+import * as Model from '../model/audio_with_album';
+import { getConnection } from '../db';
 
 export default {
   random_audios: async function(n: number): Promise<AudioWithAlbum[]> {
-    // TODO
+    const connection = await getConnection();
+    const repository = connection.getRepository(Model.AudioWithAlbum);
+    const res = await repository.findOne(1);
+    console.log(res);
     return [];
   },
 

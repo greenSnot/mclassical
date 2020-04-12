@@ -2,13 +2,13 @@ import { ManyToOne, Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { Score } from './score';
 
 @Entity()
-export class ScoreRelation {
+export class ScoreComposer {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToOne(type => Score, score => score.relations)
+  @ManyToOne(type => Score, score => score.composers)
   score!: Score;
 
-  @Column({ nullable: true })
-  parent_score_id?: number;
+  @Column({ unique: true })
+  name!: string;
 }

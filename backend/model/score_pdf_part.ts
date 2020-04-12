@@ -2,20 +2,16 @@ import { Index, ManyToOne, Entity, PrimaryGeneratedColumn, Column } from 'typeor
 import { Score } from './score';
 
 @Entity()
-export class ScoreName {
+export class ScorePDFPart {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToOne(type => Score, score => score.names)
+  @ManyToOne(type => Score, score => score.pdf_parts)
   score!: Score;
 
-  @Column({ type: 'varchar', length: 1024 })
+  @Column()
   name!: string;
 
-  @Index()
   @Column()
-  lang!: string;
-
-  @Column()
-  is_local_name!: boolean;
+  pdf_url!: string;
 }
