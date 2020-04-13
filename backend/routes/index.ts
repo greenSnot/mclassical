@@ -1,6 +1,7 @@
 import express from 'express';
 import service from '../service';
-import { Score, AudioWithAlbum, Video } from '../types';
+import { Score, Video } from '../types';
+import { AudioWithAlbum } from '../model/audio_with_album';
 
 const router = express.Router();
 export default router;
@@ -42,6 +43,9 @@ router.post('/search', async (req, res) => {
   if (req.body.type === 'scores') {
     result.scores.push(
       ...await service.search_scores_db(keyword, page),
+    );
+  } else if (req.body.type == 'scores_imslp') {
+    result.scores.push(
       ...await service.search_scores_imslp(keyword),
     );
   } else if (req.body.type == 'videos') {

@@ -26,9 +26,6 @@ export const config = {
     },
     logging: false,
   },
-  mongodb_connection: {
-    url: 'mongodb://127.0.0.1:27017',
-  },
   i18n: {
     cn: {
       search: '搜索',

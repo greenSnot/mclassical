@@ -1,6 +1,7 @@
-import { Entity, Unique, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Index, Entity, Unique, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
+@Index(['name', 'player', 'album_name'], { fulltext: true })
 @Unique(['uid'])
 export class AudioWithAlbum {
   @PrimaryGeneratedColumn()

@@ -9,6 +9,7 @@ export class ScoreName {
   @ManyToOne(type => Score, score => score.names)
   score!: Score;
 
+  @Index({ fulltext: true })
   @Column({ type: 'varchar', length: 1024 })
   name!: string;
 

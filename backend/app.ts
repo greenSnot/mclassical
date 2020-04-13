@@ -7,10 +7,10 @@ import { getConnection } from './db';
 
 const app = express();
 
-app.use('/', index);
 app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use('/', index);
 
 getConnection().then(() => {
   app.listen(config.port, () => console.log('listening'));

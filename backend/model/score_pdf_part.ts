@@ -9,6 +9,7 @@ export class ScorePDFPart {
   @ManyToOne(type => Score, score => score.pdf_parts)
   score!: Score;
 
+  @Index({ fulltext: true })
   @Column()
   name!: string;
 

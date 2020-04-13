@@ -53,11 +53,11 @@ async function do_migrate_scores(mysql_connection: any) {
               if (item === null || item.works.length === 0) {
                 continue;
               }
-              const composer = new ScoreComposer();
-              composer.name = item.name[Object.keys(item.name)[0]].trim();
-              await repository_score_composer.save(composer).catch((e: any) => console.log(e.message));
-
               for (const work of item.works) {
+                const composer = new ScoreComposer();
+                composer.name = item.name[Object.keys(item.name)[0]].trim();
+                await repository_score_composer.save(composer).catch((e: any) => console.log(e.message));
+
                 const score = new Score();
                 score.instruments = [];
                 score.composers = [composer];

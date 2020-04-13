@@ -1,4 +1,4 @@
-import { ManyToOne, Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Index, ManyToOne, Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { Score } from './score';
 
 @Entity()
@@ -9,6 +9,7 @@ export class ScoreComposer {
   @ManyToOne(type => Score, score => score.composers)
   score!: Score;
 
-  @Column({ unique: true })
+  @Index({ fulltext: true })
+  @Column()
   name!: string;
 }

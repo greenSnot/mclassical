@@ -1,36 +1,35 @@
 import * as request from 'request';
 import { request_get, request_post, unicode_to_chr } from '../utils';
 import config from '../config';
-import { Score, AudioWithAlbum, Video } from '../types';
-import * as Model from '../model/audio_with_album';
+import { Score, Video } from '../types';
+import { AudioWithAlbum } from '../model/audio_with_album';
+import { ScoreName } from '../model/score_name';
 import { getConnection } from '../db';
 
 export default {
   random_audios: async function(n: number): Promise<AudioWithAlbum[]> {
     const connection = await getConnection();
-    const repository = connection.getRepository(Model.AudioWithAlbum);
-    const res = await repository.findOne(1);
-    console.log(res);
-    return [];
+    const items = await connection
+      .createQueryBuilder(AudioWithAlbum, 'audio_with_album')
+      .orderBy('RAND()')
+      .limit(n)
+      .getMany();
+    return items;
   },
 
   search_audios: async function(keyword: string, page: number): Promise<AudioWithAlbum[]> {
-    /*
-    data.push({
-      song_id: t._source.other_id.qqmusic_song_id,
-      id: 'qqmusic_' + t._source.other_id.qqmusic_song_id,
-      song_link: 'http://y.qq.com/#type=song&mid=' + t._source.other_id.qqmusic_song_mid,
-      album_link: 'http://y.qq.com/#type=album&mid=' + t._source.other_id.qqmusic_album_mid,
-      url: t._source.resources[0].url,
-      player: t._source.players[0].name.en || t._source.players[0].name.cn,
-      album_name: t._source.album_name.en || t._source.album_name.cn,
-      song_name: t._source.name.en || t._source.name.cn,
-      album_small: t._source.album_image,
-      album_big: t._source.album_image,
-      source: 'QQMusic',
-    });
-     */
-    return [];
+    const connection = await getConnection();
+    const limit = 10;
+    page = Math.max(1, page);
+    const result = await connection.manager
+      .getRepository(AudioWithAlbum)
+      .createQueryBuilder()
+      .select()
+      .where('match (player, `name`, album_name) AGAINST (:searchTerm)', { searchTerm: `%${keyword}%` })
+      .limit(limit)
+      .skip(limit * (page - 1))
+      .getMany();
+    return result;
   },
 
   search_videos: async function(keyword: string, page: number) {
@@ -59,23 +58,63 @@ export default {
     if (result.error) {
       return [];
     }
-    return result.items.map(i => ({
-      title: i.title.indexOf(' - IMSLP') ? i.title.substring(0, i.title.indexOf(' - IMSLP')) : i.title,
-      link: i.link,
-      source: 'IMSLP',
-    } as Score));
+    return result.items.map(
+      i =>
+        ({
+          title: i.title.indexOf(' - IMSLP') ? i.title.substring(0, i.title.indexOf(' - IMSLP')) : i.title,
+          link: i.link,
+          source: 'IMSLP',
+        } as Score)
+    );
   },
 
-  search_scores_db: function(keyword: string, page: number): Score[] {
-    /*
-    const id = t.resources[j].url.match(/(\w)+\.pdf$/)[0].split('.pdf')[0];
-    data.push({
-      source: 'Musopen',
-      title: t.name + ' ' + t.resources[j].name,
-      link: config.domain + '/pdf/' + id,
-    });
-    */
-    return [] as Score[];
+  search_scores_db: async function(keyword: string, page: number): Promise<Score[]> {
+    const connection = await getConnection();
+    const limit = 10;
+    page = Math.max(1, page);
+    const result: Score[] = await connection.manager.query(
+      `
+SELECT distinct score_name.scoreId, score.pdf_complete, score_name.name as score_name, score_composer.name as composer_name,
+MATCH (score_name.name)
+    AGAINST (?) as relevance
+FROM score_name
+    LEFT JOIN score ON score_name.scoreId = score.id
+    LEFT JOIN score_composer ON score_name.scoreId = score_composer.scoreId
+    WHERE MATCH (score_name.name)
+    AGAINST (?)
+UNION ALL
+SELECT distinct score_pdf_part.scoreId, score.pdf_complete, score_name.name as score_name, score_composer.name as composer_name,
+MATCH (score_pdf_part.name)
+    AGAINST (?) as relevance
+FROM score_pdf_part
+    LEFT JOIN score ON score_pdf_part.scoreId = score.id
+    LEFT JOIN score_name ON score_pdf_part.scoreId = score_name.scoreId
+    LEFT JOIN score_composer ON score_pdf_part.scoreId = score_composer.scoreId
+    WHERE MATCH (score_pdf_part.name)
+    AGAINST (?)
+UNION ALL
+SELECT distinct score_composer.scoreId, score.pdf_complete, score_name.name as score_name, score_composer.name as composer_name,
+MATCH (score_composer.name)
+    AGAINST (?) as relevance
+FROM score_composer
+    RIGHT JOIN score ON score_composer.scoreId = score.id
+    RIGHT JOIN score_name ON score_composer.scoreId = score_name.scoreId
+    WHERE MATCH (score_composer.name)
+    AGAINST (?)
+    ORDER BY relevance DESC limit ? offset ?;
+      `,
+      [
+        keyword,
+        keyword,
+        keyword,
+        keyword,
+        keyword,
+        keyword,
+        limit,
+        limit * (page - 1),
+      ]
+    );
+    return result.sort((a, b) => b.relevance! - a.relevance!);
   },
 
   pdf_proxy: function(id: string, res: any) {
