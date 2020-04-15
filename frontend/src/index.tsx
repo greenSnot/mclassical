@@ -1,306 +1,16 @@
 import './index.css';
+
+import { sleep } from './utils';
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
+
+const height = document.documentElement.clientHeight;
+const width = document.documentElement.clientWidth;
 /*
-var height = document.documentElement.clientHeight;
-var width = document.documentElement.clientWidth;
 $('#result').width(width - 11);
 $('#result').height(height - 100);
 k('#introduction').width(width - 11);
 $('#introduction').height(height - 100);
-
-$('#search-wrap').removeClass('start');
-$('#search-wrap').addClass('show');
-
-var stopSearchAnimation = false;
-var autoTyping = ['The magnifier of classical music'];
-
-function searchPost(type, keyword) {
-  for (var i in audios) {
-    audios[i].pause();
-  }
-  audios = [];
-  $('#result-content').html('<div id="result-loading-wrap"><div id="result-loading"></div></div>');
-  var keyword = keyword || $('#input-search').val();
-  var type = type || $('.tab.selected').attr('data-type');
-  $.ajax({
-    url: '/search',
-    type: 'post',
-    data: {
-      type: type,
-      keyword: keyword,
-    },
-    timeout: 6000,
-    success: function(res) {
-      if (res.code != 0) {
-        alert(res.msg);
-        return;
-      }
-      history.pushState({}, $('#input-search').val(), '/s/' + type + '/' + encodeURIComponent(keyword));
-      res.ratio = ((width - 11 - 10) / 200) * 100;
-      $('#result-content').html(template('template-results', res));
-      if ($('.tab.selected').attr('data-type') == 'audios') {
-        $('#result-content')
-          .find('audio')
-          .each(function() {
-            audios[$(this).attr('data-url')] = audiojs.create($(this)[0], {
-              preload: false,
-              css: false,
-              createPlayer: {
-                markup: false,
-                playPauseClass: 'play-pauseZ',
-                scrubberClass: 'scrubberZ',
-                progressClass: 'progressZ',
-                loaderClass: 'loadedZ',
-                timeClass: 'timeZ',
-                durationClass: 'durationZ',
-                playedClass: 'playedZ',
-                errorMessageClass: 'error-messageZ',
-                playingClass: 'playingZ',
-                loadingClass: 'loadingZ',
-                errorClass: 'errorZ',
-              },
-            });
-          });
-      }
-    },
-    error: function() {
-      $('#result-content').html('<%=language.busy%>');
-    },
-  });
-}
-
-var audios = {};
-
-function search(keyword) {
-  $('#input-search').blur();
-  hideNavs();
-  $('#search-wrap').addClass('show');
-  if ($('#result-wrap').hasClass('show')) {
-    $('#result-wrap').removeClass('show');
-    setTimeout(function() {
-      $('#result-wrap').addClass('show');
-    }, 500);
-  } else {
-    $('#result-wrap').addClass('show');
-  }
-  searchPost();
-}
-
-var inputstr = '';
-function changeInput(inputstr) {
-  return function() {
-    if (!stopSearchAnimation) {
-      $('#input-search').val(inputstr);
-    }
-  };
-}
-
-var delay = 0;
-for (var i in autoTyping) {
-  $('#input-search').val('');
-  inputstr = '';
-  for (var j in autoTyping[i]) {
-    inputstr += autoTyping[i][j];
-    delay += 100;
-    setTimeout(changeInput(inputstr), delay);
-  }
-}
-
-function initMusicWall() {
-  var ri = 0;
-  var rj = -70;
-  var zindex = 0;
-  $.get('/random', function(res) {
-    if (res.code != 0) {
-      alert(res.msg);
-      return;
-    }
-    var audios = res.data;
-    var counter = 0;
-    for (var i = 0; i < 6; ++i) {
-      for (var j = 0; j < 15; ++j, ++counter) {
-        var audio = audios[counter]._source;
-        if (j > 14) break;
-
-        var rx = rj;
-        var ry = (ri + (rj / 80) * 360) % 360;
-        var p = rotation2Position(300, rx, ry);
-
-        snot.loadSprites([
-          {
-            template: 'template-sprite-music',
-            spriteType: 'sprite-music',
-            id: '123',
-
-            x: p[0],
-            y: p[1],
-            z: p[2],
-
-            rx: rx,
-            ry: ry,
-            song_id: audio.other_id.qqmusic_song_id,
-            song_name: audio.name.en || audio.name.cn,
-            player: audio.players[0].name.en || audio.players[0].name.cn,
-            album_name: audio.album_name.en || audio.album_name.cn,
-            url: audio.resources[0].url,
-            album_thumbnail: audio.album_thumbnail || '/images/gray.jpg',
-            album_image: audio.album_image || '/images/gray.jpg',
-            zindex: ++zindex,
-          },
-        ]);
-
-        //"http://tsmusic24.tc.qq.com/"+clist[j].songid+".mp3";
-
-        if (rj >= 70) {
-          rj = -70;
-          ri += 60;
-        } else {
-          rj += 10;
-        }
-      }
-    }
-  });
-}
-
-$('#input-search').focus(function() {
-  $(this).addClass('focus');
-});
-
-$('#input-search').blur(function() {
-  $(this).removeClass('focus');
-});
-
-function nothing(e) {
-  e.stopPropagation();
-}
-function moreInfo(e) {
-  e.stopPropagation();
-  e.preventDefault();
-  stopSearchAnimation = true;
-  $('#input-search').val($('#music-songname').text());
-  search($('#music-songname').text());
-  $('#sprite-music-content').offsetWidth = $('#sprite-music-content').offsetWidth;
-  $('#sprite-music-content').removeClass('show');
-}
-function hideDetails() {
-  $('#sprite-music-content').offsetWidth = $('#sprite-music-content').offsetWidth;
-  $('#sprite-music-content').removeClass('show');
-}
-function clearSearch() {
-  if (stopSearchAnimation == false) {
-    $('#input-search').val('');
-    stopSearchAnimation = true;
-  }
-  if ($('#input-search').val() == autoTyping[0]) {
-    $('#input-search').val('');
-  }
-}
-$('#input-search').on('focus', function() {
-  $('#search-wrap').addClass('showbtn');
-});
-
-$('#input-search').on('keypress', function(e) {
-  var keyCode = null;
-  if (e.which) keyCode = e.which;
-  else if (e.keyCode) keyCode = e.keyCode;
-
-  if (keyCode == 13) {
-    search($(this).val());
-    return false;
-  }
-});
-
-function switchTab() {
-  if (contentScrolling) return;
-  $('.tab').removeClass('selected');
-  $(this).addClass('selected');
-  searchPost();
-}
-
-function hideResults() {
-  $('#result-wrap').removeClass('show');
-}
-function showNavs() {
-  var delay = 0;
-  $('.nav-wrap').each(function() {
-    var self = $(this);
-    setTimeout(function() {
-      self.addClass('show');
-    }, delay);
-  });
-  //$('#result-wrap').removeClass('show');
-}
-function hideNavs() {
-  var delay = 0;
-  $('.nav-wrap').each(function() {
-    var self = $(this);
-    setTimeout(function() {
-      self.removeClass('show');
-    }, delay);
-  });
-}
-$('#logo').addClass('click');
-function magnifierClick() {
-  $('#logo').removeClass();
-  $('#logo')[0].offsetWidth = $('#logo')[0].offsetWidth;
-  $('#logo').addClass('click');
-  $('#input-search').blur();
-  if ($('.nav-wrap').hasClass('show')) {
-    hideNavs();
-  } else {
-    $('#search-wrap').addClass('show');
-    showNavs();
-  }
-}
-
-function hideSearch() {
-  $('#search-wrap').removeClass('show');
-  $('#search-wrap').removeClass('start');
-}
-
-function showAbout() {
-  hideDetails();
-  hideNavs();
-  $('#result-wrap').removeClass('show');
-  $('#introduction-wrap').removeClass('show');
-  setTimeout(function() {
-    $('#introduction-title').text('<%-language.about%>');
-    $('#introduction-wrap').addClass('show');
-    $('#introduction-content').html('<%-language.about_content%>');
-  }, 400);
-}
-function showVolunteer() {
-  hideDetails();
-  hideNavs();
-  $('#result-wrap').removeClass('show');
-  $('#introduction-wrap').removeClass('show');
-  setTimeout(function() {
-    $('#introduction-title').text('<%-language.volunteer%>');
-    $('#introduction-wrap').addClass('show');
-    $('#introduction-content').html('<%-language.volunteer_content%>');
-  }, 400);
-}
-function hideIntroduction() {
-  $('#introduction-wrap').removeClass('show');
-}
-function showHelp() {
-  hideDetails();
-  hideNavs();
-  $('#introduction-wrap').removeClass('show');
-  $('#result-wrap').removeClass('show');
-  setTimeout(function() {
-    $('#introduction-title').text('<%-language.help%>');
-    $('#introduction-wrap').addClass('show');
-    $('#introduction-content').html('<%-language.help_content%>');
-  }, 400);
-}
-
-function hideAll() {
-  hideNavs();
-  hideSearch();
-  hideIntroduction();
-  hideDetails();
-  $('#result-wrap').removeClass('show');
-}
 
 function showIframe() {
   stopBackgroundMusic();
@@ -313,7 +23,6 @@ function showIframe() {
   }
   $(this).addClass('playing');
   hideDetails();
-  hideNavs();
   var self = $(this);
   videoDom = self;
   videoHtml = self.html();
@@ -331,161 +40,6 @@ function showIframe() {
 var videoDom;
 var videoHtml;
 
-function stopBackgroundMusic(e) {
-  if (e) e.stopPropagation();
-  if (audio && audio.playing) {
-    audio.playPause();
-  }
-}
-
-function stopAllMusic() {
-  stopBackgroundMusic();
-  for (var i in audios) {
-    if (audios[i].playing) {
-      audios[i].playPause();
-    }
-  }
-}
-function searchClick() {
-  hideDetails();
-  $('#introduction-wrap').removeClass('show');
-  hideNavs();
-  search($('#input-search').val());
-}
-
-var audio = false;
-var contentScrolling = false;
-var maxfov = 120,
-  fov = 120,
-  minfov = 120;
-
-var bodyDom = $('body');
-var result_wrap = $('#result-wrap');
-if (isMobile()) {
-  maxfov = 100;
-  fov = 100;
-  minfov = 100;
-
-  bindClick($('#sprite-music-content'), hideDetails);
-  bindClick($('#music-more'), moreInfo);
-  bindClick($('#music-info'), nothing);
-  bindClick($('#music-album'), nothing);
-
-  bindClick($('#input-search'), clearSearch);
-  bindClick($('#btn-search'), searchClick);
-  bindClick($('.tab'), switchTab);
-
-  bindClick($('#magnifier'), magnifierClick);
-  bindClick($('.about'), showAbout);
-  bindClick($('.volunteer'), showVolunteer);
-  bindClick($('.help'), showHelp);
-  bindClick($('.musicwall'), hideAll);
-
-  bindClick($('.video-wrap'), showIframe, result_wrap, '.video-wrap');
-  bindClick($('.result-audio'), stopBackgroundMusic, result_wrap, '.result-audio');
-
-  $('#result-content').on('touchstart', function() {
-    contentScrolling = true;
-  });
-  $('#result-content').on('touchend', function() {
-    contentScrolling = false;
-  });
-
-  $('.play-pauseZ').on('touchend', nothing);
-  $('.play-pauseZ').on('touchstart', nothing);
-  $('.scrubberZ').on('touchend', nothing);
-  $('.scrubberZ').on('touchstart', nothing);
-  $('.user').on('touchstart', function() {
-    location.href = '/rating';
-  });
-} else {
-  $('.user').on('mouseup', function() {
-    location.href = '/rating';
-  });
-  $('#sprite-music-content').on('mouseup', hideDetails);
-  $('#music-more').on('mouseup', moreInfo);
-  $('#music-album').on('mouseup', nothing);
-  $('#input-search').on('mouseup', clearSearch);
-  $('#btn-search').on('mouseup', function() {
-    hideDetails();
-    $('#introduction-wrap').removeClass('show');
-    hideNavs();
-    search($('#input-search').val());
-  });
-  $('.tab').on('mouseup', switchTab);
-  $('#magnifier').on('mouseup', magnifierClick);
-  $('.about').on('mouseup', showAbout);
-  $('.musicwall').on('mouseup', hideAll);
-  $('.volunteer').on('mouseup', showVolunteer);
-  $('.help').on('mouseup', showHelp);
-  bodyDom.on('click', '.video-wrap', showIframe, true);
-  result_wrap.delegate('.result-audio', 'click', stopBackgroundMusic);
-}
-
-function randomPlay() {
-  if ($('#result-wrap').hasClass('show')) {
-    return;
-  }
-  hideDetails();
-  setTimeout(function() {
-    var random = parseInt(Math.random() * $('.sprite').size());
-    ////////
-  }, 300);
-}
-
-function onSpriteClick(data) {
-  snot.autoRotation = 0;
-  snot.setRx(data.rx, true);
-  snot.setRy(data.ry, true);
-  stopAllMusic();
-  hideNavs();
-  hideIntroduction();
-  $('#search-wrap').removeClass('show');
-  $('#result-wrap').removeClass('show');
-  setTimeout(function() {
-    $('#music-album').css('background-image', 'url(' + data.album_thumbnail + ')');
-    $('#music-album-full').css('background-image', 'url(' + data.album_image + ')');
-    $('#music-songname').text(data.song_name);
-    $('#music-albumname').text(data.album_name);
-    $('#music-singer').text(data.player);
-    $('#sprite-music-content').offsetWidth = $('#sprite-music-content').offsetWidth;
-    $('#sprite-music-content .scrubberZ').width(271);
-    $('#sprite-music-content').addClass('show');
-  }, 300);
-  if (!audio) {
-    audio = audiojs.create($('#audio')[0], {
-      css: false,
-      createPlayer: {
-        markup: false,
-        playPauseClass: 'play-pauseZ',
-        scrubberClass: 'scrubberZ',
-        progressClass: 'progressZ',
-        loaderClass: 'loadedZ',
-        timeClass: 'timeZ',
-        durationClass: 'durationZ',
-        playedClass: 'playedZ',
-        errorMessageClass: 'error-messageZ',
-        playingClass: 'playingZ',
-        loadingClass: 'loadingZ',
-        errorClass: 'errorZ',
-      },
-      trackEnded: function() {
-        randomPlay();
-      },
-    });
-  }
-}
-
-snot.init({
-  maxfov: maxfov,
-  minfov: minfov,
-  fov: fov,
-  callback: initMusicWall,
-  autoRotation: 0.1,
-  onClick: function() {},
-  minDetectDistance: 30,
-  onSpriteClick: onSpriteClick,
-});
 */
 /*
   <script id="template-results" type="text/html">
@@ -526,80 +80,338 @@ snot.init({
   <script id="template-youku" type="text/html">
     <div id="youkuplayer<#=youku_id#>" style="height:<#=height#>px;width:100%;display:block;"></div>
   </script>
-  <script id="template-sprite-music" type="text/html">
-    <div className="sprite-music-wrap">
-        <div type="<#=spriteType#>" className="sprite-music" style="z-index:<#=zindex#>;background-image:url(<#=album_thumbnail#>);background-size:100%"></div>
-    </div>
-  </script>
   */
-import React from 'react';
-import ReactDOM from 'react-dom';
 
 import config from '../config';
 
-const { i18n } = config;
+const { i18n, backend_domain, backend_port } = config;
 
-const Navigator = ({}) => (
-  <div>
-    <div className="nav-wrap musicwall">
+template.config('openTag', '<#');
+template.config('closeTag', '#>');
+
+const Navigator = ({ show }: { show: boolean }) => (
+  <div className={`navigator ${show ? 'show' : ''}`}>
+    <div className="nav-wrap">
       <div className="nav-stick">{i18n.musicWall}</div>
     </div>
-    <div className="nav-wrap volunteer">
+    <div className="nav-wrap">
       <div className="nav-stick">{i18n.volunteer}</div>
     </div>
-    <div className="nav-wrap about">
+    <div className="nav-wrap">
       <div className="nav-stick">{i18n.about}</div>
     </div>
-    <div className="nav-wrap help">
+    <div className="nav-wrap">
       <div className="nav-stick">{i18n.help}</div>
     </div>
   </div>
 );
 
-const SearchInput = ({}) => (
-  <div id="search-wrap" className="start">
-    <div className="input-wrap">
-      <div className="input-box">
-        <input id="input-search" />
+const SearchInput = ({ onSearch }: { onSearch: (keyword: string) => void }) => {
+  const placeholder = 'The magnifier of classical music';
+  const [stopAnimation, setStopAnimation] = useState(false);
+  const [index, setIndex] = useState(0);
+  const [value, setValue] = useState('');
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      if (stopAnimation || index === placeholder.length) {
+        clearInterval(interval);
+        return;
+      }
+      setIndex(idx => idx + 1);
+    }, 100);
+  }, []);
+  return (
+    <div id="search-wrap">
+      <div className="input-wrap">
+        <div className="input-box">
+          <input
+            onClick={() => {
+              setStopAnimation(v => true);
+              setIndex(placeholder.length);
+            }}
+            onInput={e => {
+              e.persist();
+              const v = e.currentTarget.value;
+              setValue(a => v);
+            }}
+            onChange={e => {
+              e.persist();
+              const v = e.currentTarget.value;
+              setValue(a => v);
+            }}
+            onKeyUp={e => {
+              if (e.keyCode === 13) {
+                onSearch(value);
+              }
+            }}
+            value={value}
+            id="input-search"
+            placeholder={placeholder.substr(0, index)}
+          />
+        </div>
+        {value ? (
+          <button id="btn-search" onClick={() => onSearch(value)}>
+            {i18n.search}
+          </button>
+        ) : null}
       </div>
-      <button id="btn-search">{i18n.search}</button>
     </div>
-  </div>
-);
+  );
+};
 
-const SearchResult = ({}) => (
-  <div id="result-wrap">
+const SearchResult = ({ show, tab, data }: { show: boolean, tab: Tab, data: Result }) => (
+  <div id="result-wrap" className={show ? 'show' : ''}>
     <div id="result-stick"></div>
     <div id="result">
       <div className="tabs">
-        <div data-type="scores" className="tab">
+        <div data-type="scores" className={`tab ${tab === Tab.score ? 'selected' : ''}`}>
           {i18n.scores}
         </div>
-        <div data-type="videos" className="tab">
+        <div data-type="videos" className={`tab ${tab === Tab.video ? 'selected' : ''}`}>
           {i18n.videos}
         </div>
-        <div data-type="audios" className="tab selected">
+        <div data-type="audios" className={`tab ${tab === Tab.audio ? 'selected' : ''}`}>
           {i18n.audios}
         </div>
       </div>
-      <div id="result-content"></div>
+      <div id="result-content">
+			</div>
     </div>
   </div>
 );
 
-class App extends React.Component<{}, {}> {
-  render() {
-    return (
-      <div id="frame">
-        <a id="logo">
-          <div id="magnifier">
-            <div id="stick"></div>
-          </div>
-        </a>
-        <SearchInput/>
-      </div>
-    );
-  }
+let maxfov = 120,
+  fov = 120,
+  minfov = 120;
+
+if (isMobile()) {
+  maxfov = 100;
+  fov = 100;
+  minfov = 100;
 }
 
-ReactDOM.render(<App/>, document.getElementById('root'));
+type Audio = {
+  id: number;
+  uid: string;
+  reference_url: string;
+  player: string;
+  album_name: string;
+  name: string;
+  album_sd: string;
+  album_hd: string;
+  source: string;
+};
+
+const MusicWallDetail = ({
+  data,
+  show,
+  hideOnClick,
+	moreOnClick,
+}: {
+  hideOnClick: Function;
+	moreOnClick: Function;
+  data?: Audio;
+  show: boolean;
+}) => (
+  <div
+    id="sprite-music-content"
+    className={show ? 'show' : ''}
+    onClick={e => hideOnClick()}>
+    <div id="music-wrap">
+      <div id="music-album" onClick={e => e.stopPropagation()}>
+        <div
+          id="music-album-full"
+          style={{
+            backgroundImage: `url(${data ? data.album_hd : ''})`,
+          }}></div>
+      </div>
+      <div id="music-info-wrap">
+        <div id="music-info">
+          <div id="music-songname">{data ? data.name : ''}</div>
+          <div id="music-singer">{data ? data.player : ''}</div>
+          <div id="music-albumname">{data ? data.album_name : ''}</div>
+        </div>
+        <div id="music-more" onClick={() => moreOnClick(data ? data.name : '')}>{i18n.more}</div>
+      </div>
+    </div>
+  </div>
+);
+
+enum Tab {
+  audio = 'audio',
+  video = 'video',
+  score = 'score',
+}
+
+type Video = {
+  link: string;
+  thumbnail: string;
+  title: string;
+  id: string;
+};
+
+type Score = {
+  link: string;
+  title: string;
+  source: string;
+  relevance?: number;
+};
+
+type SearchType = 'scores' | 'scores_imslp' | 'videos' | 'audios';
+type Result = {
+  code: number;
+  type: SearchType;
+  videos: Video[];
+  audios: Audio[];
+  scores: Score[];
+};
+
+const App = ({}) => {
+  const [active_id, set_active_id] = useState(0);
+  const [show_navigator, set_navigator_visibility] = useState(false);
+  const [show_result, set_result_visibility] = useState(false);
+  const [tab, set_tab] = useState<Tab>(Tab.audio);
+  const [data, set_data] = useState<Audio[]>([]);
+  const [result_loading, set_result_loading] = useState(false);
+  const [result_data, set_result_data] = useState<Result>({
+    code: -1,
+    type: 'scores',
+    videos: [],
+    audios: [],
+    scores: [],
+  });
+  async function init() {
+    const sprite_on_click = async (data: any) => {
+      snot.autoRotation = 0;
+      snot.setRx(data.rx, true);
+      snot.setRy(data.ry, true);
+      await sleep(300);
+      set_active_id(state => data.id);
+      set_navigator_visibility(state => false);
+    };
+    await new Promise(resolve =>
+      snot.init({
+        maxfov: maxfov,
+        minfov: minfov,
+        fov: fov,
+        callback: resolve,
+        autoRotation: 0.1,
+        onClick: function() {},
+        minDetectDistance: 30,
+        onSpriteClick: sprite_on_click,
+      })
+    );
+
+    const res = await (
+      await fetch(`${backend_domain}:${backend_port}/random`)
+    ).json();
+    let ri = 0;
+    let rj = -70;
+    let zindex = 0;
+
+    if (res.code != 0) {
+      alert(res.msg);
+      return;
+    }
+
+    var audios = res.data;
+    set_data(state => res.data);
+    var counter = 0;
+    for (let i = 0; i < 6; ++i) {
+      for (let j = 0; j < 15; ++j, ++counter) {
+        var audio = audios[counter];
+        if (j > 14) break;
+
+        var rx = rj;
+        var ry = (ri + (rj / 80) * 360) % 360;
+        var p = rotation2Position(300, rx, ry);
+
+        snot.loadSprites([
+          {
+            template: 'template-sprite-music',
+            spriteType: 'sprite-music',
+            id: audio.id,
+
+            x: p[0],
+            y: p[1],
+            z: p[2],
+
+            rx,
+            ry,
+            album_thumbnail: audio.album_sd,
+            zindex: ++zindex,
+          },
+        ]);
+
+        if (rj >= 70) {
+          rj = -70;
+          ri += 60;
+        } else {
+          rj += 10;
+        }
+      }
+    }
+  }
+  	// $('#result-content').html('<div id="result-loading-wrap"><div id="result-loading"></div></div>');
+	async function do_search(keyword: string) {
+    const res = await (
+      await fetch(`${backend_domain}:${backend_port}/search`, {
+			method: 'POST',
+mode: 'cors',
+cache: 'no-cache',
+			headers: {
+    		'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				type: tab,
+				keyword,
+				page: 1,
+			})
+		})
+    ).json();
+		console.log(res);
+  	if (res.code !== 0) {
+  	  alert(res.msg);
+  	  return;
+  	}
+		set_result_loading(s => false);
+		set_result_data(s => res);
+	}
+do_search('asd');
+  React.useEffect(() => {
+    init();
+  }, []);
+  const logo_ref = React.useRef(null);
+  return (
+    <React.Fragment>
+      <div id="head">
+        <div
+          id="logo"
+          ref={logo_ref}
+          onClick={async () => {
+            const e = logo_ref.current;
+            set_navigator_visibility(v => !v);
+          }}>
+          <div
+            id="magnifier"
+            style={{
+              backgroundImage: `url(${config.cdn_prefix}/m_gray.jpg)`,
+            }}>
+            <div id="stick"></div>
+          </div>
+        </div>
+        <SearchInput onSearch={(keyword: string) => console.log(keyword)} />
+        <Navigator show={show_navigator} />
+      </div>
+      <MusicWallDetail
+        show={!!active_id}
+        hideOnClick={() => set_active_id(state => 0)}
+        moreOnClick={(keyword: string) => do_search(keyword)}
+        data={data.filter(i => i.id === active_id)[0]}
+      />
+      <SearchResult show={show_result} tab={tab} data={result_data} />
+    </React.Fragment>
+  );
+};
+
+ReactDOM.render(<App />, document.getElementById('root'));

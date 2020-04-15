@@ -12,4 +12,8 @@ exports.config = {
     api_key: 'AIzaSyCOu26eZ6fObnqNgmOJ1LyUqx4xGrf618M',
     search_engine_id: '001951362915465840896:gpf1yjhkjoa',
   },
+  frontend_port: 8080,
+  frontend_domain: 'http://localhost',
+  backend_domain: 'http://localhost',
+  cdn_prefix: 'http://localhost:8080',
 };

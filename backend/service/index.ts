@@ -9,12 +9,19 @@ import { getConnection } from '../db';
 export default {
   random_audios: async function(n: number): Promise<AudioWithAlbum[]> {
     const connection = await getConnection();
-    const items = await connection
-      .createQueryBuilder(AudioWithAlbum, 'audio_with_album')
-      .orderBy('RAND()')
-      .limit(n)
-      .getMany();
-    return items;
+    const limit = 90;
+    let result: AudioWithAlbum[] = [];
+    while (result.length < limit) {
+      const x = `*${Math.random().toString(16).substr(3, 2)}*`;
+      result = result.concat(await connection.manager
+        .getRepository(AudioWithAlbum)
+        .createQueryBuilder()
+        .select()
+        .where('match (player, `name`, album_name) AGAINST (:searchTerm in boolean mode)', { searchTerm: x })
+        .limit(limit)
+        .getMany());
+    }
+    return result.splice(0, limit);
   },
 
   search_audios: async function(keyword: string, page: number): Promise<AudioWithAlbum[]> {

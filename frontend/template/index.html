@@ -12,23 +12,14 @@
         <div id="camera"></div>
       </div>
     </div>
-    <div id="sprite-music-content">
-      <div id="music-wrap">
-        <div id="music-album">
-          <div id="music-album-full"></div>
-        </div>
-        <div id="music-info-wrap">
-          <div id="music-info">
-            <div id="music-songname">songname</div>
-            <div id="music-singer">singer</div>
-            <div id="music-albumname">albumname</div>
-          </div>
-          <div id="music-more"><%=i18n.more%></div>
-        </div>
-      </div>
-    </div>
   </body>
+  <script id="template-sprite-music" type="text/html">
+    <div class="sprite-music-wrap">
+      <div type="<#=spriteType#>" class="sprite-music" style="z-index:<#=zindex#>;background-image:url(<#=album_thumbnail#>);background-size:100%"></div>
+    </div>
+  </script>
   <script type="text/javascript" src="http://player.youku.com/jsapi"></script>
-  <script src="/js/snot-utils.min.js"></script>
-  <script src="/js/snot-pano.min.js"></script>
+  <script type="text/javascript" src="<%=cdn_prefix%>/snot-utils.min.js"></script>
+  <script type="text/javascript" src="<%=cdn_prefix%>/snot-pano.min.js"></script>
+  <script type="text/javascript" src="<%=cdn_prefix%>/index.js"></script>
 </html>
