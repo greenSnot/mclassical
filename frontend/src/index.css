@@ -272,9 +272,9 @@ table {
   display: none;
 
   background-image: -webkit-linear-gradient(0deg, #c7c7c6, #a5a5a5, #e8f1e8);
-  -webkit-transform-origin-y: 0;
-  -webkit-transform-origin-x: 0;
-  -webkit-transform: translate3d(28px, 33px, 0px) rotateZ(-45deg);
+  transform-origin-y: 0;
+  transform-origin-x: 0;
+  transform: translate3d(28px, 33px, 0px) rotateZ(-45deg);
   border-bottom-left-radius: 2px;
   border-bottom-right-radius: 1px;
 }
