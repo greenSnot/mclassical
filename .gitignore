@@ -17,3 +17,4 @@ crawler/naxos_music_library/htmls
 *.pyc
 
 frontend/dist
+config/local.ts
