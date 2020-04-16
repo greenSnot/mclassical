@@ -3,9 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "frontend-dev": "webpack-dev-server --config frontend/webpack.config.ts",
-		"frontend-build": "webpack --config frontend/webpack.config.ts",
-    "backend-start": "ts-node ./backend/app.ts"
+		"build": "npm run build:frontend",
+    "dev:frontend": "webpack-dev-server --config frontend/webpack.config.ts",
+		"build:frontend": "webpack --config frontend/webpack.config.ts",
+    "dev:backend": "ts-node ./backend/app.ts"
   },
   "dependencies": {
     "react": "^16.8.2",

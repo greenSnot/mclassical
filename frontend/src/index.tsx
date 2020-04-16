@@ -1,8 +1,7 @@
 import './index.css';
-
-import { sleep } from './utils';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
+import { sleep } from './utils';
 
 import config from '../config';
 

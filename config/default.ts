@@ -16,8 +16,8 @@ export const config = {
     type: 'mysql',
     host: 'localhost',
     port: 3306,
-    username: 'root',
-    password: 'root',
+    username: 'chu',
+    password: 'user_password',
     database: 'classical',
     synchronize: true,
     extra: {

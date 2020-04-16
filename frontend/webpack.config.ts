@@ -48,7 +48,7 @@ module.exports = {
       },
     ],
   },
-  devtool: 'inline-source-map',
+  // devtool: 'inline-source-map',
   devServer: {
     port: config.frontend_port,
   },
