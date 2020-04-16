@@ -10,6 +10,7 @@ const app = express();
 app.use(compression());
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', `${config.frontend_domain}:${config.frontend_port}`);
+	res.header('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
 app.use(bodyParser.json());

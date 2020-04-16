@@ -2,6 +2,7 @@ import express from 'express';
 import service from '../service';
 import { Score, Video } from '../types';
 import { AudioWithAlbum } from '../model/audio_with_album';
+import config from '../config';
 
 const router = express.Router();
 export default router;
@@ -40,22 +41,23 @@ router.post('/search', async (req, res) => {
     res.json({ code: -1, msg: 'type is missing' });
     return;
   }
-  if (req.body.type === 'scores') {
+  if (req.body.type === 'score') {
     result.scores.push(
       ...await service.search_scores_db(keyword, page),
     );
-  } else if (req.body.type == 'scores_imslp') {
+  } else if (req.body.type == 'score_imslp') {
     result.scores.push(
       ...await service.search_scores_imslp(keyword),
     );
-  } else if (req.body.type == 'videos') {
+  } else if (req.body.type == 'video') {
     result.videos.push(...await service.search_videos(keyword, page));
-  } else if (req.body.type == 'audios') {
+  } else if (req.body.type == 'audio') {
     result.audios.push(...await service.search_audios(keyword, page));
   } else {
     res.json({ code: -2, msg: 'type error' });
     return;
   }
 
+  res.header('Access-Control-Allow-Origin', `${config.frontend_domain}:${config.frontend_port}`);
   res.json(result);
 });

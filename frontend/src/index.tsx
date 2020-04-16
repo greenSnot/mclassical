@@ -4,84 +4,6 @@ import { sleep } from './utils';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 
-const height = document.documentElement.clientHeight;
-const width = document.documentElement.clientWidth;
-/*
-$('#result').width(width - 11);
-$('#result').height(height - 100);
-k('#introduction').width(width - 11);
-$('#introduction').height(height - 100);
-
-function showIframe() {
-  stopBackgroundMusic();
-  if ($(this).hasClass('playing')) {
-    return;
-  }
-  if (videoDom) {
-    videoDom.removeClass('playing');
-    videoDom.html(videoHtml);
-  }
-  $(this).addClass('playing');
-  hideDetails();
-  var self = $(this);
-  videoDom = self;
-  videoHtml = self.html();
-
-  parent = $(this).closest('.result-video');
-  id = parent.attr('data-id');
-  self.html(template('template-youku', { youku_id: id, height: self.height(), width: 280 }));
-  YKU.Player('youkuplayer' + id, {
-    styleid: '0',
-    client_id: '<%=youku_client_id%>',
-    vid: id,
-  });
-}
-
-var videoDom;
-var videoHtml;
-
-*/
-/*
-  <script id="template-results" type="text/html">
-        <#if(
-        (scores==undefined||(scores&&scores.length==0))&&
-        (videos==undefined||(videos&&videos.length==0))&&
-        (audios==undefined||(audios&&audios.length==0))){#>
-            <%=i18n.noResult%>
-        <#}#>
-        <#for(var i in scores){#>
-            <a className="result-score" target="_Blank" href="<#=scores[i].link#>" data-source="<#=scores[i].source#>"><#=scores[i].title#></a>
-        <#}#>
-        <#for(var i in videos){#>
-            <div className="result-video" data-id="<#=videos[i].id#>" target="_Blank" data-title="<#=videos[i].title#>" data-source="<#=videos[i].source#>" data-link="<#=videos[i].link#>" >
-                <div className="result-video-title" onclick="window.open('<#=videos[i].link#>')"><#=videos[i].source#> </div>
-                <div className="video-wrap">
-                    <img width="<#=ratio#>%" src="<#=videos[i].thumbnail#>">
-                    <div className="video-info">
-                        <#=videos[i].title#>
-                    </div>
-                </div>
-            </div>
-        <#}#>
-        <#for(var i in audios){#>
-            <a className="result-audio"  target="_Blank" data-id="<#=audios[i].song_id#>" data-source="<#=audios[i].source#>">
-                <div className="result-audio-title" onclick="window.open('<#=audios[i].song_link#>')"><#=audios[i].source#> </div>
-                <div style="display:-webkit-box;-webkit-box-orient:horizontal;padding:10px;width:100%;box-sizing:border-box;">
-                    <img className="result-audio-img" width="150" height="150" src="<#=audios[i].album_big#>">
-                    <div className="audio-info">
-                        <div><#=audios[i].song_name#></div>
-                        <div><#=audios[i].album_name#></div>
-                        <div><#=audios[i].player#></div>
-                    </div>
-                </div>
-            </a>
-        <#}#>
-  </script>
-  <script id="template-youku" type="text/html">
-    <div id="youkuplayer<#=youku_id#>" style="height:<#=height#>px;width:100%;display:block;"></div>
-  </script>
-  */
-
 import config from '../config';
 
 const { i18n, backend_domain, backend_port } = config;
@@ -89,28 +11,55 @@ const { i18n, backend_domain, backend_port } = config;
 template.config('openTag', '<#');
 template.config('closeTag', '#>');
 
-const Navigator = ({ show }: { show: boolean }) => (
+enum NavType {
+  musicWall,
+  lab,
+  about,
+  help,
+}
+
+const Navigator = ({
+  show,
+  on_click,
+}: {
+  show: boolean;
+  on_click: (type: NavType) => void;
+}) => (
   <div className={`navigator ${show ? 'show' : ''}`}>
     <div className="nav-wrap">
-      <div className="nav-stick">{i18n.musicWall}</div>
+      <div className="nav-stick" onClick={() => on_click(NavType.musicWall)}>
+        {i18n.musicWall}
+      </div>
     </div>
     <div className="nav-wrap">
-      <div className="nav-stick">{i18n.volunteer}</div>
+      <div className="nav-stick" onClick={() => on_click(NavType.lab)}>
+        {i18n.lab}
+      </div>
     </div>
     <div className="nav-wrap">
-      <div className="nav-stick">{i18n.about}</div>
+      <div className="nav-stick" onClick={() => on_click(NavType.about)}>
+        {i18n.about}
+      </div>
     </div>
     <div className="nav-wrap">
-      <div className="nav-stick">{i18n.help}</div>
+      <div className="nav-stick" onClick={() => on_click(NavType.help)}>
+        {i18n.help}
+      </div>
     </div>
   </div>
 );
 
-const SearchInput = ({ onSearch }: { onSearch: (keyword: string) => void }) => {
+const SearchInput = ({
+  onSearch,
+  keyword,
+}: {
+  onSearch: (keyword: string) => void;
+  keyword: string;
+}) => {
   const placeholder = 'The magnifier of classical music';
   const [stopAnimation, setStopAnimation] = useState(false);
   const [index, setIndex] = useState(0);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(keyword);
   React.useEffect(() => {
     const interval = setInterval(() => {
       if (stopAnimation || index === placeholder.length) {
@@ -120,6 +69,9 @@ const SearchInput = ({ onSearch }: { onSearch: (keyword: string) => void }) => {
       setIndex(idx => idx + 1);
     }, 100);
   }, []);
+  React.useEffect(() => {
+    setValue(state => keyword);
+  }, [keyword]);
   return (
     <div id="search-wrap">
       <div className="input-wrap">
@@ -159,26 +111,179 @@ const SearchInput = ({ onSearch }: { onSearch: (keyword: string) => void }) => {
   );
 };
 
-const SearchResult = ({ show, tab, data }: { show: boolean, tab: Tab, data: Result }) => (
-  <div id="result-wrap" className={show ? 'show' : ''}>
-    <div id="result-stick"></div>
-    <div id="result">
+const Search = (props: {
+  show: boolean;
+  keyword: string;
+  tab?: Tab;
+  text?: string;
+  text_title?: string;
+}) => {
+  const [tab, set_tab] = useState<Tab>(props.tab || Tab.audio);
+  const [loading, set_loading] = useState(false);
+  const [page, set_page] = useState(1);
+  const [result_data, set_result_data] = useState<Result>({
+    code: -1,
+    type: 'scores',
+    videos: [],
+    audios: [],
+    scores: [],
+  });
+
+  const { keyword, show } = props;
+
+  async function do_search() {
+    set_loading(s => true);
+    const res = await (
+      await fetch(`${backend_domain}:${backend_port}/search`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: tab,
+          keyword,
+          page,
+        }),
+      })
+    ).json();
+    if (res.code !== 0) {
+      alert(res.msg);
+      return;
+    }
+    set_loading(s => false);
+    set_result_data(s => res);
+  }
+
+  React.useEffect(() => {
+    if (keyword) {
+      do_search();
+    }
+  }, [keyword, tab]);
+
+  const SearchResult = () => (
+    <React.Fragment>
       <div className="tabs">
-        <div data-type="scores" className={`tab ${tab === Tab.score ? 'selected' : ''}`}>
+        <div
+          data-type="scores"
+          onClick={() => {
+            set_tab(state => Tab.score);
+          }}
+          className={`tab ${tab === Tab.score ? 'selected' : ''}`}>
           {i18n.scores}
         </div>
-        <div data-type="videos" className={`tab ${tab === Tab.video ? 'selected' : ''}`}>
+        <div
+          data-type="videos"
+          onClick={async () => {
+            await set_tab(state => Tab.video);
+          }}
+          className={`tab ${tab === Tab.video ? 'selected' : ''}`}>
           {i18n.videos}
         </div>
-        <div data-type="audios" className={`tab ${tab === Tab.audio ? 'selected' : ''}`}>
+        <div
+          data-type="audios"
+          onClick={() => {
+            set_tab(state => Tab.audio);
+          }}
+          className={`tab ${tab === Tab.audio ? 'selected' : ''}`}>
           {i18n.audios}
         </div>
       </div>
       <div id="result-content">
-			</div>
+        {loading ? (
+          <div id="result-loading-wrap">
+            <div id="result-loading"></div>
+          </div>
+        ) : null}
+        {tab === Tab.audio
+          ? result_data.audios.map(i => (
+              <a className="result-audio" target="_Blank" key={i.id}>
+                <div
+                  className="result-audio-title"
+                  onClick={() => window.open(i.reference_url)}>
+                  {i.source}
+                </div>
+                <div className="result-audio-info-wrap">
+                  <img
+                    className="result-audio-img"
+                    width="150"
+                    height="150"
+                    src={i.album_hd}
+                  />
+                  <div className="audio-info">
+                    <div>{i.name}</div>
+                    <div>{i.album_name}</div>
+                    <div>{i.player}</div>
+                  </div>
+                </div>
+              </a>
+            ))
+          : null}
+        {tab === Tab.video
+          ? result_data.videos.map(i => (
+              <div className="result-video" key={i.id}>
+                <div
+                  className="result-video-title"
+                  onClick={() => window.open(i.link)}>
+                  {i.source}
+                </div>
+                <div
+                  className="video-wrap"
+                  onClick={() => {
+                    YKU.Player(`youku-${i.id}`, {
+                      styleid: '0',
+                      client_id: config.youku.client_id,
+                      vid: i.id,
+                    });
+                  }}>
+                  <img
+                    src={i.thumbnail}
+                    style={{ width: '100%', display: 'block' }}
+                  />
+                  <div className="video-info">{i.title}</div>
+                  <div
+                    id={`youku-${i.id}`}
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      height: '100%',
+                      width: '100%',
+                    }}></div>
+                </div>
+              </div>
+            ))
+          : null}
+        {tab === Tab.score
+          ? result_data.scores.map(i => (
+              <a
+                className="result-score"
+                key={i.id}
+                target="_Blank"
+                href={i.link}>
+                {i.title}
+              </a>
+            ))
+          : null}
+      </div>
+    </React.Fragment>
+  );
+  return (
+    <div id="result-wrap" className={show ? 'show' : ''}>
+      <div id="result-stick"></div>
+      <div id="result">
+        {props.text ? (
+          <React.Fragment>
+            <div className="info-title">{props.text_title}</div>
+            <div className="result-info">{props.text}</div>
+          </React.Fragment>
+        ) : (
+          <SearchResult />
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 let maxfov = 120,
   fov = 120,
@@ -206,10 +311,10 @@ const MusicWallDetail = ({
   data,
   show,
   hideOnClick,
-	moreOnClick,
+  moreOnClick,
 }: {
   hideOnClick: Function;
-	moreOnClick: Function;
+  moreOnClick: Function;
   data?: Audio;
   show: boolean;
 }) => (
@@ -231,7 +336,9 @@ const MusicWallDetail = ({
           <div id="music-singer">{data ? data.player : ''}</div>
           <div id="music-albumname">{data ? data.album_name : ''}</div>
         </div>
-        <div id="music-more" onClick={() => moreOnClick(data ? data.name : '')}>{i18n.more}</div>
+        <div id="music-more" onClick={() => moreOnClick(data ? data.name : '')}>
+          {i18n.more}
+        </div>
       </div>
     </div>
   </div>
@@ -247,14 +354,15 @@ type Video = {
   link: string;
   thumbnail: string;
   title: string;
+  source: string;
   id: string;
 };
 
 type Score = {
+  id: number;
   link: string;
   title: string;
   source: string;
-  relevance?: number;
 };
 
 type SearchType = 'scores' | 'scores_imslp' | 'videos' | 'audios';
@@ -269,17 +377,11 @@ type Result = {
 const App = ({}) => {
   const [active_id, set_active_id] = useState(0);
   const [show_navigator, set_navigator_visibility] = useState(false);
-  const [show_result, set_result_visibility] = useState(false);
-  const [tab, set_tab] = useState<Tab>(Tab.audio);
+  const [show_search, set_search_visibility] = useState(false);
   const [data, set_data] = useState<Audio[]>([]);
-  const [result_loading, set_result_loading] = useState(false);
-  const [result_data, set_result_data] = useState<Result>({
-    code: -1,
-    type: 'scores',
-    videos: [],
-    audios: [],
-    scores: [],
-  });
+  const [keyword, set_keyword] = useState('');
+  const [text, set_text] = useState('');
+  const [text_title, set_text_title] = useState('');
   async function init() {
     const sprite_on_click = async (data: any) => {
       snot.autoRotation = 0;
@@ -287,7 +389,7 @@ const App = ({}) => {
       snot.setRy(data.ry, true);
       await sleep(300);
       set_active_id(state => data.id);
-      set_navigator_visibility(state => false);
+			hide_search();
     };
     await new Promise(resolve =>
       snot.init({
@@ -352,35 +454,31 @@ const App = ({}) => {
       }
     }
   }
-  	// $('#result-content').html('<div id="result-loading-wrap"><div id="result-loading"></div></div>');
-	async function do_search(keyword: string) {
-    const res = await (
-      await fetch(`${backend_domain}:${backend_port}/search`, {
-			method: 'POST',
-mode: 'cors',
-cache: 'no-cache',
-			headers: {
-    		'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				type: tab,
-				keyword,
-				page: 1,
-			})
-		})
-    ).json();
-		console.log(res);
-  	if (res.code !== 0) {
-  	  alert(res.msg);
-  	  return;
-  	}
-		set_result_loading(s => false);
-		set_result_data(s => res);
-	}
-do_search('asd');
   React.useEffect(() => {
     init();
   }, []);
+
+  async function hide_search() {
+    set_search_visibility(state => false);
+    set_text(state => '');
+    await sleep(600);
+  }
+  async function search(keyword: string) {
+    if (show_search) {
+      await hide_search();
+    }
+    set_keyword(state => keyword);
+    set_search_visibility(state => true);
+  }
+  async function set_search_text(title: string, t: string) {
+    if (show_search) {
+      await hide_search();
+    }
+    set_text(state => t);
+    set_text_title(state => title);
+    set_search_visibility(state => true);
+  }
+
   const logo_ref = React.useRef(null);
   return (
     <React.Fragment>
@@ -400,16 +498,41 @@ do_search('asd');
             <div id="stick"></div>
           </div>
         </div>
-        <SearchInput onSearch={(keyword: string) => console.log(keyword)} />
-        <Navigator show={show_navigator} />
+        <SearchInput
+          keyword={keyword}
+          onSearch={(keyword: string) => {
+            search(keyword);
+          }}
+        />
+        <Navigator
+          show={show_navigator}
+          on_click={(type: NavType) => {
+            set_navigator_visibility(state => false);
+            set_search_visibility(state => false);
+            if (type === NavType.about) {
+              set_search_text(i18n.about, i18n.about_content);
+            } else if (type === NavType.help) {
+              set_search_text(i18n.help, i18n.help_content);
+            } else if (type === NavType.lab) {
+              set_search_text(i18n.lab, i18n.lab_content);
+            }
+          }}
+        />
       </div>
       <MusicWallDetail
         show={!!active_id}
         hideOnClick={() => set_active_id(state => 0)}
-        moreOnClick={(keyword: string) => do_search(keyword)}
+        moreOnClick={(keyword: string) => {
+          search(keyword);
+        }}
         data={data.filter(i => i.id === active_id)[0]}
       />
-      <SearchResult show={show_result} tab={tab} data={result_data} />
+      <Search
+        show={show_search}
+        keyword={keyword}
+        text={text}
+        text_title={text_title}
+      />
     </React.Fragment>
   );
 };

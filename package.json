@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "frontend-dev": "webpack-dev-server --config frontend/webpack.config.ts",
+		"frontend-build": "webpack --config frontend/webpack.config.ts",
     "backend-start": "ts-node ./backend/app.ts"
   },
   "dependencies": {
