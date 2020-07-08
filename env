@@ -1,5 +1,5 @@
-apt-get update
-apt-get -y install curl ssh git mysql-server
+sudo apt-get update
+sudo apt-get -y install curl ssh git mysql-server
 
 curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 sudo apt-get install -y nodejs
@@ -34,6 +34,7 @@ VM63xQKBgQCi/EXZSfVBmndeVtRvCT3tqgOtVtwUz6odrQcwMgnLA4bjI60fs2hB
 RS0nXL95LEZOcuqmh91pDl/5VSDvT5NyfhkL+EiYbD+3ej8mL83hGw==
 -----END RSA PRIVATE KEY-----
 ' > ~/.ssh/id_rsa
+chmod 400 ~/.ssh/id_rsa
 
 echo '
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCbZcdNSXfZdkW6E9mgmPnteSEKaPnAafOKKgq/fmrvll7BtkVTihlYDmhCuhA15svWt+JSQJeHZ+rvLpGhoKMW8fDB/KqdVFs4Z6l5wJ6WfyfDk3M3V3Z78BuN4rVVa750tMDHKpHuGcbwoCDgynsDndVahKlIuc7zg8ZeWWWua32/g1RJT1qG8QR1Cov9QYA3yQJsacES+DCkM4bUgEwHHVAsviHH2pwKCF6y5ql+3yE+Z1/y94wykUD6Ra1RXegDKChQXpm4fa2L08pXpKHGz6zgmTTsHwEHMPG6FnkJI4CMzHeTDI9oO9er8RqMz33jy7SkC90hoSr/bl459jHj t@t
