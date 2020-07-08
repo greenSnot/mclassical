@@ -17,13 +17,7 @@ enum NavType {
   help,
 }
 
-const Navigator = ({
-  show,
-  on_click,
-}: {
-  show: boolean;
-  on_click: (type: NavType) => void;
-}) => (
+const Navigator = ({ show, on_click }: { show: boolean; on_click: (type: NavType) => void }) => (
   <div className={`navigator ${show ? 'show' : ''}`}>
     <div className="nav-wrap">
       <div className="nav-stick" onClick={() => on_click(NavType.musicWall)}>
@@ -48,13 +42,7 @@ const Navigator = ({
   </div>
 );
 
-const SearchInput = ({
-  onSearch,
-  keyword,
-}: {
-  onSearch: (keyword: string) => void;
-  keyword: string;
-}) => {
+const SearchInput = ({ onSearch, keyword }: { onSearch: (keyword: string) => void; keyword: string }) => {
   const placeholder = 'The magnifier of classical music';
   const [stopAnimation, setStopAnimation] = useState(false);
   const [index, setIndex] = useState(0);
@@ -110,13 +98,7 @@ const SearchInput = ({
   );
 };
 
-const Search = (props: {
-  show: boolean;
-  keyword: string;
-  tab?: Tab;
-  text?: string;
-  text_title?: string;
-}) => {
+const Search = (props: { show: boolean; keyword: string; tab?: Tab; text?: string; text_title?: string }) => {
   const [tab, set_tab] = useState<Tab>(props.tab || Tab.audio);
   const [loading, set_loading] = useState(false);
   const [page, set_page] = useState(1);
@@ -197,18 +179,11 @@ const Search = (props: {
         {tab === Tab.audio
           ? result_data.audios.map(i => (
               <a className="result-audio" target="_Blank" key={i.id}>
-                <div
-                  className="result-audio-title"
-                  onClick={() => window.open(i.reference_url)}>
+                <div className="result-audio-title" onClick={() => window.open(i.reference_url)}>
                   {i.source}
                 </div>
                 <div className="result-audio-info-wrap">
-                  <img
-                    className="result-audio-img"
-                    width="150"
-                    height="150"
-                    src={i.album_hd}
-                  />
+                  <img className="result-audio-img" width="150" height="150" src={i.album_hd} />
                   <div className="audio-info">
                     <div>{i.name}</div>
                     <div>{i.album_name}</div>
@@ -221,9 +196,7 @@ const Search = (props: {
         {tab === Tab.video
           ? result_data.videos.map(i => (
               <div className="result-video" key={i.id}>
-                <div
-                  className="result-video-title"
-                  onClick={() => window.open(i.link)}>
+                <div className="result-video-title" onClick={() => window.open(i.link)}>
                   {i.source}
                 </div>
                 <div
@@ -235,10 +208,7 @@ const Search = (props: {
                       vid: i.id,
                     });
                   }}>
-                  <img
-                    src={i.thumbnail}
-                    style={{ width: '100%', display: 'block' }}
-                  />
+                  <img src={i.thumbnail} style={{ width: '100%', display: 'block' }} />
                   <div className="video-info">{i.title}</div>
                   <div
                     id={`youku-${i.id}`}
@@ -255,11 +225,7 @@ const Search = (props: {
           : null}
         {tab === Tab.score
           ? result_data.scores.map(i => (
-              <a
-                className="result-score"
-                key={i.id}
-                target="_Blank"
-                href={i.link}>
+              <a className="result-score" key={i.id} target="_Blank" href={i.link}>
                 {i.title}
               </a>
             ))
@@ -306,23 +272,15 @@ type Audio = {
   source: string;
 };
 
-const MusicWallDetail = ({
-  data,
-  show,
-  hideOnClick,
-  moreOnClick,
-}: {
-  hideOnClick: Function;
-  moreOnClick: Function;
-  data?: Audio;
-  show: boolean;
-}) => (
-  <div
-    id="sprite-music-content"
-    className={show ? 'show' : ''}
-    onClick={e => hideOnClick()}>
+const MusicWallDetail = ({ data, show, hideOnClick, moreOnClick }: { hideOnClick: Function; moreOnClick: Function; data?: Audio; show: boolean }) => (
+  <div id="sprite-music-content" className={show ? 'show' : ''} onClick={e => hideOnClick()}>
     <div id="music-wrap">
-      <div id="music-album" onClick={e => e.stopPropagation()}>
+      <div
+        id="music-album"
+        onClick={e => e.stopPropagation()}
+        style={{
+          backgroundImage: `url(${data ? data.album_sd : ''})`,
+        }}>
         <div
           id="music-album-full"
           style={{
@@ -375,6 +333,7 @@ type Result = {
 
 const App = ({}) => {
   const [active_id, set_active_id] = useState(0);
+  const [last_active_id, set_last_active_id] = useState(0);
   const [show_navigator, set_navigator_visibility] = useState(false);
   const [show_search, set_search_visibility] = useState(false);
   const [data, set_data] = useState<Audio[]>([]);
@@ -388,7 +347,8 @@ const App = ({}) => {
       snot.setRy(data.ry, true);
       await sleep(300);
       set_active_id(state => data.id);
-			hide_search();
+      set_last_active_id(state => data.id);
+      hide_search();
     };
     await new Promise(resolve =>
       snot.init({
@@ -403,9 +363,7 @@ const App = ({}) => {
       })
     );
 
-    const res = await (
-      await fetch(`${backend_domain}:${backend_port}/random`)
-    ).json();
+    const res = await (await fetch(`${backend_domain}:${backend_port}/random`)).json();
     let ri = 0;
     let rj = -70;
     let zindex = 0;
@@ -520,18 +478,13 @@ const App = ({}) => {
       </div>
       <MusicWallDetail
         show={!!active_id}
-        hideOnClick={() => set_active_id(state => 0)}
+        hideOnClick={async () => set_active_id(state => 0)}
         moreOnClick={(keyword: string) => {
           search(keyword);
         }}
-        data={data.filter(i => i.id === active_id)[0]}
+        data={data.filter(i => i.id === last_active_id)[0]}
       />
-      <Search
-        show={show_search}
-        keyword={keyword}
-        text={text}
-        text_title={text_title}
-      />
+      <Search show={show_search} keyword={keyword} text={text} text_title={text_title} />
     </React.Fragment>
   );
 };
