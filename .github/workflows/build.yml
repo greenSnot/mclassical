@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image:  node:10.16-jessie
+      options: --user 1001  # ← THIS IS THE IMPORTANT LINE!
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js
