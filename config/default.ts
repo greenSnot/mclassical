@@ -36,7 +36,7 @@ export const config = {
     help: '帮助',
     help_content: 'email: kasichdand@gmail.com',
     about: '关于',
-    about_content: '这是个充满野心与热情的业余项目，目的是希望古典音乐更容易被获取。这不仅仅是数据的收集工作，还包含对历史数据的数字化的工作（如乐谱识别）。',
+    about_content: '这是个充满热情的业余项目，目的是希望古典音乐更容易被获取。这不仅仅是数据的收集工作，还包含对历史数据的数字化的工作，如乐谱识别。',
     noResult: '未找到结果',
     musicWall: '音乐墙',
   },
@@ -44,6 +44,6 @@ export const config = {
   frontend_domain: 'http://mclassical.org',
   backend_port: 80,
   backend_domain: 'http://mclassical.org',
-  cdn_prefix: 'http://mclassical.org',
+  cdn_prefix: '.',
   version: '1.0',
 };

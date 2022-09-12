@@ -4,6 +4,8 @@ import ReactDOM from 'react-dom';
 import { sleep } from './utils';
 
 import config from '../config';
+import { Audio, Result, Tab } from './types';
+import { random, search } from './service';
 
 const { i18n, backend_domain, backend_port } = config;
 
@@ -104,7 +106,7 @@ const Search = (props: { show: boolean; keyword: string; tab?: Tab; text?: strin
   const [page, set_page] = useState(1);
   const [result_data, set_result_data] = useState<Result>({
     code: -1,
-    type: 'scores',
+    type: 'score',
     videos: [],
     audios: [],
     scores: [],
@@ -114,24 +116,7 @@ const Search = (props: { show: boolean; keyword: string; tab?: Tab; text?: strin
 
   async function do_search() {
     set_loading(s => true);
-    const res = await (
-      await fetch(`${backend_domain}:${backend_port}/search`, {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          type: tab,
-          keyword,
-          page,
-        }),
-      })
-    ).json();
-    if (res.code !== 0) {
-      alert(res.msg);
-      return;
-    }
+    const res = await search(tab, keyword, page);
     set_loading(s => false);
     set_result_data(s => res);
   }
@@ -260,18 +245,6 @@ if (isMobile()) {
   minfov = 100;
 }
 
-type Audio = {
-  id: number;
-  uid: string;
-  reference_url: string;
-  player: string;
-  album_name: string;
-  name: string;
-  album_sd: string;
-  album_hd: string;
-  source: string;
-};
-
 const MusicWallDetail = ({ data, show, hideOnClick, moreOnClick }: { hideOnClick: Function; moreOnClick: Function; data?: Audio; show: boolean }) => (
   <div id="sprite-music-content" className={show ? 'show' : ''} onClick={e => hideOnClick()}>
     <div id="music-wrap">
@@ -300,36 +273,6 @@ const MusicWallDetail = ({ data, show, hideOnClick, moreOnClick }: { hideOnClick
     </div>
   </div>
 );
-
-enum Tab {
-  audio = 'audio',
-  video = 'video',
-  score = 'score',
-}
-
-type Video = {
-  link: string;
-  thumbnail: string;
-  title: string;
-  source: string;
-  id: string;
-};
-
-type Score = {
-  id: number;
-  link: string;
-  title: string;
-  source: string;
-};
-
-type SearchType = 'scores' | 'scores_imslp' | 'videos' | 'audios';
-type Result = {
-  code: number;
-  type: SearchType;
-  videos: Video[];
-  audios: Audio[];
-  scores: Score[];
-};
 
 const App = ({}) => {
   const [active_id, set_active_id] = useState(0);
@@ -363,18 +306,13 @@ const App = ({}) => {
       })
     );
 
-    const res = await (await fetch(`${backend_domain}:${backend_port}/random`)).json();
+    const res = await random();
     let ri = 0;
     let rj = -70;
     let zindex = 0;
 
-    if (res.code != 0) {
-      alert(res.msg);
-      return;
-    }
-
-    var audios = res.data;
-    set_data(state => res.data);
+    var audios = res.audios;
+    set_data(state => res.audios);
     var counter = 0;
     for (let i = 0; i < 6; ++i) {
       for (let j = 0; j < 15; ++j, ++counter) {
