@@ -24,15 +24,18 @@ const player_names = [
 ];
 
 export function random_audios(): Audio[] {
-  return new Array(100).fill(0).map((i) => ({
-    id: Math.random(),
-    uid: Math.random().toString(),
-    reference_url: '',
-    player: player_names[Math.floor(Math.random() * player_names.length)],
-    album_name:  album_names[Math.floor(Math.random() * album_names.length)],
-    name:  names[Math.floor(Math.random() * names.length)],
-    album_sd: `./mock/test${Math.ceil(Math.random() * 70)}.jpg`,
-    album_hd: `./mock/test${Math.ceil(Math.random() * 70)}.jpg`,
-    source: '',
-  }));
+  return new Array(100).fill(0).map((i) => {
+    const idx = Math.ceil(Math.random() * 70);
+    return {
+      id: Math.random(),
+      uid: Math.random().toString(),
+      reference_url: '',
+      player: player_names[Math.floor(Math.random() * player_names.length)],
+      album_name: album_names[Math.floor(Math.random() * album_names.length)],
+      name: names[Math.floor(Math.random() * names.length)],
+      album_sd: `./mock/test${idx}.jpg`,
+      album_hd: `./mock/test${idx}.jpg`,
+      source: '',
+    };
+  });
 }
